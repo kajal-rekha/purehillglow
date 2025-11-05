@@ -4,8 +4,14 @@ const Schema = mongoose.Schema;
 const SubCategorySchema = new Schema(
     {
         name: {
-            type: String,
-            required: true,
+            en: {
+                type: String,
+                required: true,
+            },
+            bn: {
+                type: String,
+                required: true,
+            },
         },
 
         image: {

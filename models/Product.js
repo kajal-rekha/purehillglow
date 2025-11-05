@@ -4,8 +4,14 @@ const Schema = mongoose.Schema;
 const ProductSchema = new Schema(
     {
         name: {
-            type: String,
-            required: true,
+            en: {
+                type: String,
+                required: true,
+            },
+            bn: {
+                type: String,
+                required: true,
+            },
         },
 
         images: {
@@ -14,37 +20,81 @@ const ProductSchema = new Schema(
         },
 
         description: {
-            type: String,
-            required: true,
+            en: {
+                type: String,
+                required: true,
+            },
+            bn: {
+                type: String,
+                required: true,
+            },
         },
+
         benefits: {
-            type: [String],
-            default: [],
+            en: {
+                type: [String],
+                default: [],
+            },
+            bn: {
+                type: [String],
+                default: [],
+            },
         },
+
         ingredients: {
-            type: [String],
-            default: [],
+            en: {
+                type: [String],
+                default: [],
+            },
+            bn: {
+                type: [String],
+                default: [],
+            },
         },
+
         usage: {
-            type: [String],
-            required: true,
+            en: {
+                type: [String],
+                required: true,
+            },
+            bn: {
+                type: [String],
+                required: true,
+            },
         },
+
         price: {
-            type: String,
+            type: Number,
             required: true,
         },
+
         origin: {
-            type: String,
-            required: true,
+            en: {
+                type: String,
+                required: true,
+            },
+            bn: {
+                type: String,
+                required: true,
+            },
         },
+
         discount: {
             type: Number,
             default: 0,
         },
+
         unit: {
-            type: String,
-            required: true,
+            en: {
+                type: String,
+                required: true,
+            },
+            bn: {
+                type: String,
+                required: true,
+            },
         },
+
         stock: {
             type: Number,
             default: 0,
@@ -55,15 +105,18 @@ const ProductSchema = new Schema(
             ref: "Category",
             required: true,
         },
+
         subcategory_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "SubCategory",
             required: true,
         },
+
         featured: {
             type: Boolean,
             default: false,
         },
+
         tags: {
             type: [String],
             default: [],
