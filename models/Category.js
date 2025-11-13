@@ -7,12 +7,10 @@ const CategorySchema = new Schema(
             en: {
                 type: String,
                 required: true,
-                unique: true,
             },
             bn: {
                 type: String,
                 required: true,
-                unique: true,
             },
         },
 
