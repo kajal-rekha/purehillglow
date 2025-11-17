@@ -19,7 +19,7 @@ export const createProduct = async (req, res) => {
             discount,
             featured,
             category,
-            subCategory, 
+            subCategory,
             tags,
         } = req.body;
 
@@ -84,14 +84,11 @@ export const getAllProducts = async (req, res) => {
 };
 
 //==================== Get Single Product =================//
-export const getProduct = async (req, res) => {
+export const getProduct = async (req, res, id) => {
     try {
-        const { id } = req.query;
-
         const product = await Product.findById(id)
             .populate("category_id", "name")
             .populate("subcategory_id", "name");
-
         if (!product) {
             return res.status(404).json({ error: "Product not found" });
         }
@@ -115,8 +112,8 @@ export const searchProducts = async (req, res) => {
         const products = await Product.find({
             "name.en": { $regex: query, $options: "i" },
         })
-            .populate("category_id", "name")
-            .populate("subcategory_id", "name");
+            .populate("category", "name")
+            .populate("subCategory", "name");
 
         if (products.length === 0) {
             return res.status(404).json({ message: "No products found!" });
@@ -134,17 +131,15 @@ export const updateProduct = async (req, res) => {
         const { id } = req.query;
         const updates = req.body;
 
-        if (updates.category_id) {
-            const categoryExists = await Category.findById(updates.category_id);
+        if (updates.category) {
+            const categoryExists = await Category.findById(updates.category);
             if (!categoryExists) {
                 return res.status(400).json({ error: "Category not found" });
             }
         }
 
-        if (updates.subcategory_id) {
-            const subExists = await SubCategory.findById(
-                updates.subcategory_id
-            );
+        if (updates.subCategory) {
+            const subExists = await SubCategory.findById(updates.subCategory);
             if (!subExists) {
                 return res.status(400).json({ error: "Subcategory not found" });
             }
