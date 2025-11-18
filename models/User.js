@@ -56,11 +56,15 @@ UserSchema.statics.signup = async function (
         throw new Error("All fields must be filled");
     }
 
-    const exists = await this.findOne({ email });
-    if (exists) {
-        throw new Error("Email is already registered");
+    if (!validator.isEmail(email)) {
+        throw new Error("Invalied email");
     }
 
+    if (!validator.isStrongPassword(password)) {
+        throw new Error(
+            "Password is not strong  (must contain 8+ chars, uppercase, lowercase, number and symbol)"
+        );
+    }
     const salt = await bcrypt.genSalt(10);
     const hashPass = await bcrypt.hash(password, salt);
 
@@ -83,13 +87,14 @@ UserSchema.statics.login = async function (email, password) {
     }
 
     const user = await this.findOne({ email });
+
     if (!user) {
-        throw new Error("Incorrect email");
+        throw new Error("Incorrect email or password");
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-        throw new Error("Incorrect password");
+        throw new Error("Incorrect email or password");
     }
 
     return user;
