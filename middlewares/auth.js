@@ -1,18 +1,18 @@
+import User from "@/models/User";
 import jwt from "jsonwebtoken";
-
 
 const isAuthenticated = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
 
         if (!authHeader || !authHeader.startsWith("Bearer")) {
-            throw new error("Invalid token format.");
+            throw new Error("Invalid token format.");
         }
 
         const token = authHeader.split(" ")[1];
 
         if (!token) {
-            throw new error("No token provided");
+            throw new Error("No token provided");
         }
 
         const { id } = jwt.verify(token, process.env.JWT_SECRET);

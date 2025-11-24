@@ -49,7 +49,7 @@ const OrderSchema = new Schema(
 
                 cartQuantity: {
                     type: Number,
-                    required: true,
+                    required: false,
                 },
             },
         ],

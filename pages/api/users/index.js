@@ -1,5 +1,7 @@
 import { createUser, getAllUsers } from "@/controllers/userController";
 import { dbConnect } from "@/lib/db";
+import isAuthenticated from "@/middlewares/auth";
+import isAdmin from "@/middlewares/isAdmin";
 
 export default async function handler(req, res) {
     await dbConnect();
@@ -7,7 +9,11 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         return createUser(req, res);
     } else if (req.method === "GET") {
-        return getAllUsers(req, res);
+        await isAuthenticated(req, res, async () => {
+            await isAdmin(req, res, async () => {
+                return getAllUsers(req, res);
+            });
+        });
     } else {
         res.setHeader("Allow", ["GET", "POST"]);
         return res

@@ -1,5 +1,11 @@
-import { deleteProduct, getProduct, updateProduct } from "@/controllers/productController";
+import {
+    deleteProduct,
+    getProduct,
+    updateProduct,
+} from "@/controllers/productController";
 import { dbConnect } from "@/lib/db";
+import isAuthenticated from "@/middlewares/auth";
+import isAdmin from "@/middlewares/isAdmin";
 
 export default async function handler(req, res) {
     await dbConnect();
@@ -12,9 +18,17 @@ export default async function handler(req, res) {
     if (req.method === "GET") {
         return getProduct(req, res, id);
     } else if (req.method === "DELETE") {
-        return deleteProduct(req, res, id);
+        await isAuthenticated(req, res, async () => {
+            await isAdmin(req, res, async () => {
+                return deleteProduct(req, res, id);
+            });
+        });
     } else if (req.method === "PUT") {
-        return updateProduct(req, res, id);
+        await isAuthenticated(req, res, async () => {
+            await isAdmin(req, res, async () => {
+                return updateProduct(req, res, id);
+            });
+        });
     } else {
         res.status(405).json({ error: "Method Not Allowed" });
     }
