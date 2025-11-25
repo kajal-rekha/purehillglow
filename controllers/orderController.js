@@ -1,6 +1,5 @@
 import Order from "@/models/Order";
 
-
 //================== get all  Orders =====================//
 export const getAllOrders = async (req, res) => {
     try {
@@ -36,7 +35,7 @@ export const getAllOrders = async (req, res) => {
 //================== get an  Order =====================//
 export async function getAnOrder(req, res) {
     try {
-         const { id } = req.query;
+        const { id } = req.query;
         const order = await Order.findById(id).populate(
             "user_id",
             "username email phone address image"
@@ -89,7 +88,10 @@ export const updateOrder = async (req, res) => {
             return res.status(404).json({ error: "Order not found" });
         }
 
-        res.status(200).json(updatedOrder);
+        res.status(200).json({
+            message: "order updated successfully",
+            updatedOrder,
+        });
     } catch (error) {
         console.error("Error updating order:", error);
         res.status(500).json({ error: "Server error occurred" });
@@ -105,7 +107,7 @@ export const deleteOrder = async (req, res) => {
             return res.status(404).json({ error: "Order not found" });
         }
 
-        res.status(200).json({ message: "Order deleted successfully" });
+        res.status(200).json({ message: "Order deleted successfully" ,order});
     } catch (error) {
         console.error("[OrderController] Error deleting order:", error);
         res.status(500).json({ error: "Internal Server Error" });
@@ -120,7 +122,6 @@ export const placeOrder = async (req, res) => {
             return res.status(400).json({ error: "Missing order details" });
         }
 
-     
         const tran_id = `TXN-${Date.now()}-${Math.floor(
             Math.random() * 100000
         )}`;
@@ -144,4 +145,3 @@ export const placeOrder = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
-
