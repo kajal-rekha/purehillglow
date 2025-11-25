@@ -1,7 +1,7 @@
 import Hero from "@/models/Hero";
 
 //========= Create Hero Section =========//
-export const createHeroSection = async (req, res) => {
+export const createHero = async (req, res) => {
     try {
         const { title, imageURL } = req.body;
 
@@ -27,7 +27,7 @@ export const createHeroSection = async (req, res) => {
 //========= Get All Heros =========//
 export const getAllHeros = async (req, res) => {
     try {
-        const heroes = await Hero.find();
+        const heroes = await Hero.find({});
 
         if (!heroes || heroes.length === 0) {
             return res.status(404).json({ error: "Hero data not found" });
