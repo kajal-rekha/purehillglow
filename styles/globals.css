@@ -20,6 +20,7 @@
     --color-gray: #ebebf9;
     --color-orange: #ff8c42;
     --color-violet: #9c27b0;
+    --color-red: #ff0303fc;
 
     --font-sans: "Inter", "Poppins", sans-serif;
     --font-mono: "Roboto Mono", monospace;
@@ -71,7 +72,7 @@ p {
     line-height: 1.6;
 }
 
-button {
+/* button {
     font-family: var(--font-sans);
     font-size: 1.2rem;
     font-weight: 400;
@@ -81,7 +82,7 @@ button {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     cursor: pointer;
-}
+} */
 
 .wrapper {
     width: 95%;
