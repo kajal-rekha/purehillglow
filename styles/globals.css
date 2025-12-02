@@ -92,3 +92,10 @@ p {
 .eq {
     transition: 500ms cubic-bezier(0.25, 1, 0.5, 1);
 }
+
+.search-input::-webkit-search-decoration,
+.search-input::-webkit-search-cancel-button,
+.search-input::-webkit-search-results-button,
+.search-input::-webkit-search-results-decoration {
+    display: none;
+}
