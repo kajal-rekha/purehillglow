@@ -3,7 +3,7 @@ import { cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
 
 export const buttonVariants = cva(
-    "eq inline-block whitespace-nowrap rounded-md border px-2 md:px-3 py-1.5 md:py-2 text-center lg:text-[17px] disabled:cursor-default disabled:border-accent disabled:bg-gray disabled:text-black",
+    "eq inline-block whitespace-nowrap rounded-md border px-2 md:px-3.5 py-1.5 md:py-1.8 text-center lg:text-[17px] disabled:cursor-default disabled:border-accent disabled:bg-gray disabled:text-black",
     {
         variants: {
             variant: {
