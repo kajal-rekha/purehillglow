@@ -1,3 +1,4 @@
+import Hero from "@/components/Hero";
 import MainNavbar from "@/components/shared/Navbar/MainNavbar";
 import Navbar from "@/components/shared/Navbar/TopNavbar";
 
@@ -8,6 +9,8 @@ const HomePage = () => {
                 <Navbar />
                 <MainNavbar />
             </div>
+
+            <Hero />
         </div>
     );
 };

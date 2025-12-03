@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const MainNavbar = () => {
     return (
-        <div className="h-13 fixed top-20 left-0 right-0 z-[99]  flex items-center  shadow-sm bg-blue text-light ">
+        <div className="h-13 fixed top-20 left-0 right-0 z-[99]  md:flex items-center  shadow-sm bg-blue text-light hidden">
             <ul className="flex justify-between gap-10 wrapper">
                 <li className="text-[0.9rem] font-semibold">
                     <Link href="/">Home</Link>

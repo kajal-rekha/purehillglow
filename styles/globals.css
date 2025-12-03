@@ -28,6 +28,7 @@
     --font-playfair: "Playfair Display", "Cormorant Garamond", serif;
 
     --color-background: #ecedf8;
+    --color-background2: #e8f5e9;
     --color-background-light: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
     --color-background-soft: linear-gradient(120deg, #e8f5e9 0%, #fff8e1 100%);
     --color-background-green: linear-gradient(160deg, #0c9a5b 0%, #1fa76e 100%);

@@ -5,8 +5,8 @@ import { buttonVariants } from "../../ui/Button";
 
 const Navbar = () => {
     return (
-        <header className="h-20 fixed top-0 left-0 right-0 z-[99] flex items-center shadow-sm">
-            <nav className="flex justify-between items-center wrapper">
+        <header className="h-20 fixed top-0 left-0 right-0 z-[99] flex items-center shadow-sm bg-background2">
+            <nav className="flex justify-between items-center wrapper ">
                 <div>
                     <Link
                         href="/"
@@ -28,7 +28,7 @@ const Navbar = () => {
                 </div>
 
                 <div className="flex items-center gap-5 justify-center">
-                    <div className="flex  rounded-md overflow-hidden  justify-between h-7">
+                    <div className="flex  rounded-md overflow-hidden justify-between h-7">
                         <button
                             className="px-1.5 md:px-2 py-1 text-sm 
                                      bg-primary text-light"
@@ -52,7 +52,7 @@ const Navbar = () => {
                         Login
                     </Link>
 
-                    <div className="relative cursor-pointer">
+                    <div className="relative cursor-pointer hidden md:block">
                         <ShoppingBag className="text-dark/90 w-6 h-6" />
 
                         <span className="absolute -top-1 -right-1 bg-red text-light text-[10px] font-semibold px-1.5 py-0.5 rounded-full shadow">
