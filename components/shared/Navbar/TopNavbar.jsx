@@ -1,48 +1,34 @@
-import { ShoppingBag } from "lucide-react";
+import { Heart, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import ProductSearch from "../../ProductSearchForm";
 import { buttonVariants } from "../../ui/Button";
 
 const Navbar = () => {
     return (
-        <header className="h-20 fixed top-0 left-0 right-0 z-[99] flex items-center shadow-sm bg-background2">
+        <header className="fixed top-0 left-0 right-0 z-[999] bg-green-light shadow-lg border-b border-primary/20 h-14 md:h-20 flex items-center">
             <nav className="flex justify-between items-center wrapper ">
                 <div>
                     <Link
                         href="/"
-                        className=" font-semibold text-xl font-vibes"
+                        className="font-bold text-lg md:text-2xl text-primary hover:text-primary/80 eq"
                     >
                         Purehillglow
-                        {/* <Image
-                        src="https://res.cloudinary.com/dh0ado2ir/image/upload/v1764215598/purehillglow-logo-website_clw2mn.jpg"
-                        alt="pure hill glow logo"
-                        width={200}
-                        height={200}
-                        className="w-20 h-20 rounded-full"
-                    /> */}
                     </Link>
                 </div>
 
-                <div className="w-[50%]">
+                <div className="hidden lg:flex w-full">
                     <ProductSearch />
                 </div>
 
                 <div className="flex items-center gap-5 justify-center">
-                    <div className="flex  rounded-md overflow-hidden justify-between h-7">
-                        <button
-                            className="px-1.5 md:px-2 py-1 text-sm 
-                                     bg-primary text-light"
-                        >
+                    <div className="flex rounded-full overflow-hidden border-2 border-primary/40 bg-gradient-to-r from-primary/8 to-primary/12 h-9 sm:h-10">
+                        <button className="px-2.5 sm:px-3 md:px-4 py-1 text-xs sm:text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-all">
                             EN
                         </button>
-                        <button
-                            className="px-1.5 md:px-2 py-1  text-sm 
-                                     bg-primary text-light"
-                        >
+                        <button className="px-2.5 sm:px-3 md:px-4 py-1 text-xs sm:text-sm font-bold text-primary hover:bg-primary/10 transition-all">
                             BN
                         </button>
                     </div>
-
                     <Link
                         href="/"
                         className={buttonVariants({
@@ -51,13 +37,21 @@ const Navbar = () => {
                     >
                         Login
                     </Link>
+                    <button className="p-2 md:p-2.5 hover:bg-primary/15 rounded-lg transition-all text-primary hover:scale-110">
+                        <Heart
+                            size={22}
+                            className="md:w-6 md:h-6"
+                            fill="none"
+                        />
+                    </button>
 
-                    <div className="relative cursor-pointer hidden md:block">
-                        <ShoppingBag className="text-dark/90 w-6 h-6" />
-
-                        <span className="absolute -top-1 -right-1 bg-red text-light text-[10px] font-semibold px-1.5 py-0.5 rounded-full shadow">
-                            0
-                        </span>
+                    <div>
+                        <button className="p-2 md:p-2.5 hover:bg-primary/15 rounded-lg transition-all text-primary hover:scale-110 relative">
+                            <ShoppingBag size={22} className="md:w-6 md:h-6" />
+                            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red to-orange text-white text-[9px] md:text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">
+                                0
+                            </span>
+                        </button>
                     </div>
                 </div>
             </nav>
