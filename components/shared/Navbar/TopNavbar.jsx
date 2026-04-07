@@ -5,8 +5,8 @@ import { buttonVariants } from "../../ui/Button";
 
 const Navbar = () => {
     return (
-        <header className="fixed top-0 left-0 right-0 z-[999] bg-green-light shadow-lg border-b border-primary/20 h-14 md:h-20 flex items-center">
-            <nav className="flex justify-between items-center wrapper ">
+        <header className="fixed top-0 left-0 right-0 z-[999] bg-green-light shadow-lg border-b border-primary/20 h-12 md:h-14 flex items-center">
+            <nav className="flex justify-between items-center wrapper gap-20">
                 <div>
                     <Link
                         href="/"
@@ -16,7 +16,7 @@ const Navbar = () => {
                     </Link>
                 </div>
 
-                <div className="hidden lg:flex w-full">
+                <div className="hidden lg:flex flex-1">
                     <ProductSearch />
                 </div>
 

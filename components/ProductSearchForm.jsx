@@ -2,8 +2,8 @@ import { Search } from "lucide-react";
 
 const ProductSearch = () => {
     return (
-        <div className="hidden md:block mx-auto">
-            <form className="relative border border-dark/20 focus-within:border-primary/50 rounded-full w-full eq">
+        <div className=" flex items-center mx-auto">
+            <form className="relative border border-dark/20 focus-within:border-primary/50 rounded-full w-full hidden md:block eq">
                 <input
                     type="search"
                     placeholder="what are you looking for?"
