@@ -1,12 +1,16 @@
-import { Heart, ShoppingBag } from "lucide-react";
+"use client";
+import { Heart, Search, ShoppingBag } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import ProductSearch from "../../ProductSearchForm";
 import { buttonVariants } from "../../ui/Button";
 
 const Navbar = () => {
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+
     return (
         <header className="fixed top-0 left-0 right-0 z-[999] bg-green-light shadow-lg border-b border-primary/20 h-12 md:h-14 flex items-center">
-            <nav className="flex justify-between items-center wrapper gap-20">
+            <nav className="flex justify-between items-center wrapper gap-3 sm:gap-5 md:gap-10 lg:gap-20">
                 <div>
                     <Link
                         href="/"
@@ -20,20 +24,27 @@ const Navbar = () => {
                     <ProductSearch />
                 </div>
 
-                <div className="flex items-center gap-5 justify-center">
-                    <div className="flex rounded-full overflow-hidden border-2 border-primary/40 bg-gradient-to-r from-primary/8 to-primary/12 h-9 sm:h-10">
-                        <button className="px-2.5 sm:px-3 md:px-4 py-1 text-xs sm:text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-all">
+                <div className="flex items-center gap-1 sm:gap-2 justify-center">
+                    <button
+                        onClick={() => setIsSearchOpen(!isSearchOpen)}
+                        className="p-2 hover:bg-primary/15 rounded-lg transition-all text-primary lg:hidden"
+                        aria-label="Toggle search"
+                    >
+                        <Search size={22} className="md:w-6 md:h-6" />
+                    </button>
+                    <div className="hidden sm:flex rounded-full overflow-hidden border-2 border-primary/40 bg-gradient-to-r from-primary/8 to-primary/12 h-9 sm:h-10">
+                        <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-all">
                             EN
                         </button>
-                        <button className="px-2.5 sm:px-3 md:px-4 py-1 text-xs sm:text-sm font-bold text-primary hover:bg-primary/10 transition-all">
+                        <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold text-primary hover:bg-primary/10 transition-all">
                             BN
                         </button>
                     </div>
                     <Link
-                        href="/"
-                        className={buttonVariants({
+                        href="/login"
+                        className={`${buttonVariants({
                             variant: "primary",
-                        })}
+                        })} hidden sm:inline-flex`}
                     >
                         Login
                     </Link>
@@ -55,6 +66,11 @@ const Navbar = () => {
                     </div>
                 </div>
             </nav>
+            {isSearchOpen && (
+                <div className="absolute top-full left-0 w-full bg-green-light p-4 shadow-md border-b border-primary/20 lg:hidden">
+                    <ProductSearch />
+                </div>
+            )}
         </header>
     );
 };
