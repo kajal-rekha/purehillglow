@@ -1,5 +1,6 @@
 import {  createHero, getAllHeros } from "@/controllers/heroController";
-import { dbConnect } from "@/lib/db";
+import dbConnect from "@/lib/db";
+
 import isAuthenticated from "@/middlewares/auth";
 import isAdmin from "@/middlewares/isAdmin";
 
