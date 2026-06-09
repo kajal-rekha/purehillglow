@@ -202,7 +202,7 @@ const SignUpForm = () => {
                     <span className="text-black/50">
                         Allready have an account?
                     </span>
-                    <Link href="/sign-in" className="link-item">
+                    <Link href="/auth/login" className="link-item">
                         Login
                     </Link>
                 </p>

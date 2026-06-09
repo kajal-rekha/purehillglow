@@ -22,7 +22,14 @@ export default async function handler(req, res) {
                 { expiresIn: "7d" }
             );
 
-            res.status(200).json({ message: "Login successful", token, user });
+            // Do not send the password hash to the client
+            const { password, ...userWithoutPassword } = user.toObject();
+
+            res.status(200).json({
+                message: "Login successful",
+                token,
+                user: userWithoutPassword,
+            });
         } catch (error) {
             console.error("Login Error:", error.message);
             res.status(400).json({ error: error.message });

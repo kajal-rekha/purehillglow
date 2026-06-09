@@ -2,11 +2,15 @@
 import { Heart, Search, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/redux/features/auth/authSlice";
 import ProductSearch from "../../ProductSearchForm";
 import { buttonVariants } from "../../ui/Button";
 
 const Navbar = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const { userAndToken } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
 
     return (
         <header className="fixed top-0 left-0 right-0 z-[999] bg-green-light shadow-lg border-b border-primary/20 h-12 md:h-14 flex items-center">
@@ -40,14 +44,25 @@ const Navbar = () => {
                             BN
                         </button>
                     </div>
-                    <Link
-                        href="/login"
-                        className={`${buttonVariants({
-                            variant: "primary",
-                        })} hidden sm:inline-flex`}
-                    >
-                        Login
-                    </Link>
+                    {userAndToken ? (
+                        <button
+                            onClick={() => dispatch(logout())}
+                            className={`${buttonVariants({
+                                variant: "primary",
+                            })} hidden sm:inline-flex`}
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                        <Link
+                            href="/auth/signup"
+                            className={`${buttonVariants({
+                                variant: "primary",
+                            })} hidden sm:inline-flex`}
+                        >
+                            Login
+                        </Link>
+                    )}
                     <button className="p-2 md:p-2.5 hover:bg-primary/15 rounded-lg transition-all text-primary hover:scale-110">
                         <Heart
                             size={22}
