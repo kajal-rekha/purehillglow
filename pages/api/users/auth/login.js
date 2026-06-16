@@ -23,7 +23,7 @@ export default async function handler(req, res) {
             );
 
             // Do not send the password hash to the client
-            const { password, ...userWithoutPassword } = user.toObject();
+            const { password: userPassword, ...userWithoutPassword } = user.toObject();
 
             res.status(200).json({
                 message: "Login successful",

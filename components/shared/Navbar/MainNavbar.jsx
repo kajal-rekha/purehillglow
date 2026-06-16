@@ -2,18 +2,33 @@
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const MainNavbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
+    const language = useSelector((state) => state.language.language);
+
     const navLinks = [
-        { href: "/", label: "Home" },
-        { href: "/beauty-skincare", label: "Beauty & Skincare" },
-        { href: "/pickels", label: "Organic Hill Pickles" },
-        { href: "/hill-accessories", label: "Hill Accessories" },
-        { href: "/hill-clothes", label: "Traditional Hill Clothes" },
-        { href: "/combo-offer", label: "Combo Offer" },
-        { href: "/new-arrivals", label: "New Arrivals" },
+        { href: "/", label: { en: "Home", bn: "হোম" } },
+        {
+            href: "/beauty-skincare",
+            label: { en: "Beauty & Skincare", bn: "বিউটি ও স্কিনকেয়ার" },
+        },
+        {
+            href: "/pickels",
+            label: { en: "Organic Hill Pickles", bn: "অর্গানিক হিল পিকেল" },
+        },
+        {
+            href: "/hill-accessories",
+            label: { en: "Hill Accessories", bn: "হিল এক্সেসরিজ" },
+        },
+        {
+            href: "/hill-clothes",
+            label: { en: "Traditional Hill Clothes", bn: "ঐতিহ্যবাহী হিল পোশাক" },
+        },
+        { href: "/combo-offer", label: { en: "Combo Offer", bn: "কম্বো অফার" } },
+        { href: "/new-arrivals", label: { en: "New Arrivals", bn: "নতুন প্রোডাক্ট" } },
     ];
 
     return (
@@ -30,7 +45,7 @@ const MainNavbar = () => {
                                 href={link.href}
                                 className="!text-light hover:!text-light/80 no-underline hover:no-underline transition-colors duration-300 pb-1 border-b-2 border-transparent hover:border-light/80"
                             >
-                                {link.label}
+                                {language === "bn" ? link.label.bn : link.label.en}
                             </Link>
                         </li>
                     ))}
@@ -45,7 +60,9 @@ const MainNavbar = () => {
                 >
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
-                <span className="ml-4 font-semibold text-sm">Categories</span>
+                <span className="ml-4 font-semibold text-sm">
+                    {language === "bn" ? "ক্যাটাগরিস" : "Categories"}
+                </span>
             </div>
 
             {/*========== Mobile Menu =========*/}
@@ -59,7 +76,7 @@ const MainNavbar = () => {
                                     onClick={() => setIsOpen(false)}
                                     className="block px-6 py-3 text-sm font-semibold !text-light hover:!text-light/80 no-underline hover:no-underline hover:bg-primary/30 border-l-4 border-transparent hover:border-primary transition-all duration-300"
                                 >
-                                    {link.label}
+                                    {language === "bn" ? link.label.bn : link.label.en}
                                 </Link>
                             </li>
                         ))}

@@ -4,12 +4,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/redux/features/auth/authSlice";
+import { setLanguage } from "@/redux/features/language/languageSlice";
 import ProductSearch from "../../ProductSearchForm";
 import { buttonVariants } from "../../ui/Button";
 
 const Navbar = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const { userAndToken } = useSelector((state) => state.auth);
+    const { language } = useSelector((state) => state.language);
     const dispatch = useDispatch();
 
     return (
@@ -32,38 +34,59 @@ const Navbar = () => {
                     <button
                         onClick={() => setIsSearchOpen(!isSearchOpen)}
                         className="p-2 hover:bg-primary/15 rounded-lg transition-all text-primary lg:hidden"
-                        aria-label="Toggle search"
+                        aria-label={language === "bn" ? "সার্চ টগল করুন" : "Toggle search"}
+                        title={language === "bn" ? "সার্চ" : "Search"}
                     >
                         <Search size={22} className="md:w-6 md:h-6" />
                     </button>
                     <div className="hidden sm:flex rounded-full overflow-hidden border-2 border-primary/40 bg-gradient-to-r from-primary/8 to-primary/12 h-9 sm:h-10">
-                        <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold bg-primary text-white hover:bg-primary/90 transition-all">
+                        {/** Language toggle buttons wired to Redux */}
+                        <button
+                            onClick={() => dispatch(setLanguage("en"))}
+                            aria-pressed={language === "en"}
+                            className={`px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold transition-all ${
+                                language === "en"
+                                    ? "bg-primary text-white hover:bg-primary/90"
+                                    : "text-primary hover:bg-primary/10"
+                            }`}
+                        >
                             EN
                         </button>
-                        <button className="px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold text-primary hover:bg-primary/10 transition-all">
+                        <button
+                            onClick={() => dispatch(setLanguage("bn"))}
+                            aria-pressed={language === "bn"}
+                            className={`px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold transition-all ${
+                                language === "bn"
+                                    ? "bg-primary text-white hover:bg-primary/90"
+                                    : "text-primary hover:bg-primary/10"
+                            }`}
+                        >
                             BN
                         </button>
                     </div>
+
+                   
                     {userAndToken ? (
                         <button
                             onClick={() => dispatch(logout())}
-                            className={`${buttonVariants({
-                                variant: "primary",
-                            })} hidden sm:inline-flex`}
+                            className={`${buttonVariants({ variant: "primary" })} hidden sm:inline-flex ml-2`}
                         >
-                            Logout
+                            {language === "bn" ? "লগআউট" : "Logout"}
                         </button>
                     ) : (
                         <Link
-                            href="/auth/signup"
-                            className={`${buttonVariants({
-                                variant: "primary",
-                            })} hidden sm:inline-flex`}
+                            href="/auth/login"
+                            className={`${buttonVariants({ variant: "primary" })} hidden sm:inline-flex ml-2`}
                         >
-                            Login
+                            {language === "bn" ? "লগইন" : "Login"}
                         </Link>
                     )}
-                    <button className="p-2 md:p-2.5 hover:bg-primary/15 rounded-lg transition-all text-primary hover:scale-110">
+                    
+                    <button
+                        className="p-2 md:p-2.5 hover:bg-primary/15 rounded-lg transition-all text-primary hover:scale-110"
+                        aria-label={language === "bn" ? "ইচ্ছেতালিকা" : "Wishlist"}
+                        title={language === "bn" ? "ইচ্ছেতালিকা" : "Wishlist"}
+                    >
                         <Heart
                             size={22}
                             className="md:w-6 md:h-6"
@@ -72,7 +95,11 @@ const Navbar = () => {
                     </button>
 
                     <div>
-                        <button className="p-2 md:p-2.5 hover:bg-primary/15 rounded-lg transition-all text-primary hover:scale-110 relative">
+                        <button
+                            className="p-2 md:p-2.5 hover:bg-primary/15 rounded-lg transition-all text-primary hover:scale-110 relative"
+                            aria-label={language === "bn" ? "শপিং ব্যাগ" : "Cart"}
+                            title={language === "bn" ? "শপিং ব্যাগ" : "Cart"}
+                        >
                             <ShoppingBag size={22} className="md:w-6 md:h-6" />
                             <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red to-orange text-white text-[9px] md:text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">
                                 0
