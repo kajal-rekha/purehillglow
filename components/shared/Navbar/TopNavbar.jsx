@@ -7,6 +7,7 @@ import { logout } from "@/redux/features/auth/authSlice";
 import { setLanguage } from "@/redux/features/language/languageSlice";
 import ProductSearch from "../../ProductSearchForm";
 import { buttonVariants } from "../../ui/Button";
+import Image from "next/image";
 
 const Navbar = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -67,12 +68,23 @@ const Navbar = () => {
 
                    
                     {userAndToken ? (
-                        <button
-                            onClick={() => dispatch(logout())}
-                            className={`${buttonVariants({ variant: "primary" })} hidden sm:inline-flex ml-2`}
-                        >
-                            {language === "bn" ? "লগআউট" : "Logout"}
-                        </button>
+                        <>
+                            <Link href="/dashboard" className="hidden sm:inline-block ml-2">
+                                <Image
+                                    src={userAndToken?.user?.image}
+                                    alt={userAndToken?.user?.username || "user"}
+                                    width={32}
+                                    height={32}
+                                    className="w-8 h-8 rounded-full object-cover border-2 border-primary/40"
+                                />
+                            </Link>
+                            <button
+                                onClick={() => dispatch(logout())}
+                                className={`${buttonVariants({ variant: "primary" })} hidden sm:inline-flex ml-2`}
+                            >
+                                {language === "bn" ? "লগআউট" : "Logout"}
+                            </button>
+                        </>
                     ) : (
                         <Link
                             href="/auth/login"
