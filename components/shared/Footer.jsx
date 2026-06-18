@@ -117,32 +117,11 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/*============ Newsletter ============*/}
-                <div className="border-t border-gray/30 pt-12 mb-12">
-                    <div className="max-w-2xl mx-auto text-center">
-                        <h4 className="text-xl font-bold mb-4">
-                            Subscribe to Our Newsletter
-                        </h4>
-                        <p className="text-gray mb-6">
-                            Get exclusive offers and updates on new authentic
-                            Bandarban products
-                        </p>
-                        <div className="flex gap-3">
-                            <input
-                                type="email"
-                                placeholder="Your email"
-                                className="flex-1 px-4 py-2 rounded-lg bg-gray/20 text-light border border-primary focus:outline-none focus:bg-gray/30 transition-colors"
-                            />
-                            <button className="bg-primary hover:bg-secondary text-dark px-6 py-2 rounded-lg font-semibold transition-colors">
-                                Subscribe
-                            </button>
-                        </div>
-                    </div>
-                </div>
+               
 
                 {/*=========== Bottom Footer ===========*/}
                 <div className="border-t border-gray/30 pt-8">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray">
+                    <div className="text-center text-sm text-gray">
                         <div>
                             <p>
                                 &copy; {currentYear} PureHillGlow. All rights
@@ -150,30 +129,9 @@ const Footer = () => {
                             </p>
                         </div>
 
-                        <div className="md:text-center">
-                            <p>
-                                Made with{" "}
-                                <span className="text-primary">❤️</span> for
-                                Bandarban Communities
-                            </p>
-                        </div>
+                       
 
-                        <div className="md:text-right">
-                            <div className="flex gap-4 justify-end">
-                                <Link
-                                    href="#"
-                                    className="hover:text-primary transition-colors"
-                                >
-                                    Privacy Policy
-                                </Link>
-                                <Link
-                                    href="#"
-                                    className="hover:text-primary transition-colors"
-                                >
-                                    Terms & Conditions
-                                </Link>
-                            </div>
-                        </div>
+                      
                     </div>
                 </div>
             </div>

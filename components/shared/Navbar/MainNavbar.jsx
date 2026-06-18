@@ -29,17 +29,20 @@ const MainNavbar = () => {
         },
         { href: "/combo-offer", label: { en: "Combo Offer", bn: "কম্বো অফার" } },
         { href: "/new-arrivals", label: { en: "New Arrivals", bn: "নতুন প্রোডাক্ট" } },
+        { href: "/combo-offer", label: { en: "Combo Offer", bn: "কম্বো অফার" } },
+        { href: "/new-arrivals", label: { en: "New Arrivals", bn: "নতুন প্রোডাক্ট" } },
+    
     ];
 
     return (
         <>
              {/*======== Desktop Navigation  ==========*/}
             <div className="h-14 lg:h-16 fixed top-12 md:top-14 left-0 right-0 z-[98] hidden lg:flex items-center shadow-sm bg-gradient-to-r from-blue via-blue to-blue text-light border-primary/50">
-                <ul className="flex justify-start gap-4 lg:gap-6 xl:gap-12 wrapper flex-wrap">
+                <ul className="flex justify-start gap-4 lg:gap-6 xl:gap-8 wrapper flex-nowrap  whitespace-nowrap">
                     {navLinks.map((link) => (
                         <li
                             key={link.href}
-                            className="text-[0.85rem] xl:text-[0.95rem] font-semibold"
+                            className="text-[0.85rem] xl:text-[0.95rem] font-semibold whitespace-nowrap flex-shrink-0"
                         >
                             <Link
                                 href={link.href}
