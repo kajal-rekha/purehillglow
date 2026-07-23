@@ -1,15 +1,13 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import Image from "next/legacy/image";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Loading from "./ui/Loading";
 import Error from "./ui/Error";
+import Image from "next/image";
 
 const Hero = () => {
     const language = useSelector((state) => state.language.language);
@@ -61,23 +59,25 @@ const Hero = () => {
     if (heroes.length === 0) {
         return (
             <div className="mt-28 md:mt-32 h-[50vh] w-full flex items-center justify-center bg-gray rounded-lg">
-                <p className="text-dark">No hero images available at the moment.</p>
+                <p className="text-dark">No hero images available at the moment...</p>
             </div>
         );
     }
 
     return (
-        <div className="mt-28 md:mt-32 rounded-lg overflow-hidden shadow-lg">
+        <div className="w-full md:mt-28 mt-10   overflow-hidden shadow-lg">
             <Swiper
-                spaceBetween={30}
-                centeredSlides={true}
-                autoplay={{
-                    delay: 4000,
-                    disableOnInteraction: false,
-                }}
-                pagination={{ clickable: true }}
-                navigation={true}
-                modules={[Autoplay, Pagination, Navigation]}
+                 pagination={false}
+                        loop={true}
+                        autoplay={{
+                            delay: 5000,
+                            disableOnInteraction: false
+                        }}
+                        grabCursor={true}
+                        speed={500}
+                        modules={[Navigation, Pagination, Autoplay]}
+                        slidesPerView={1}
+                        spaceBetween={20}
                 className="mySwiper h-[40vh] md:h-[calc(100vh-128px)]"
             >
                 {heroes.map((hero) => (
@@ -85,7 +85,7 @@ const Hero = () => {
                         <div className="relative w-full h-full">
                             <Image src={hero.imageURL} alt={language === "bn" ? hero.title.bn : hero.title.en} layout="fill" objectFit="cover" priority />
                             <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center text-light p-4">
-                                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-lg">
+                                <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold drop-shadow-lg">
                                     {language === "bn" ? hero.title.bn : hero.title.en}
                                 </h1>
                             </div>
