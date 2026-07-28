@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 const ProductSearch = () => {
     const language = useSelector((state) => state.language.language);
 
-    const placeholderText = language === "bn" ? "আপনি কি খুঁজছেন?" : "what are you looking for?";
+    const placeholderText = language === "bn" ? "পণ্য অনুসন্ধান করুন..." : "Search products...";
     const ariaLabel = language === "bn" ? "অনুসন্ধান" : "Search";
 
     return (

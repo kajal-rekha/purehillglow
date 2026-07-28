@@ -65,7 +65,7 @@ const Hero = () => {
     }
 
     return (
-        <div className="w-full md:mt-28 mt-10   overflow-hidden shadow-lg">
+        <div className="w-full md:mt-10 mt-10   overflow-hidden shadow-lg">
             <Swiper
                  pagination={false}
                         loop={true}
@@ -74,7 +74,7 @@ const Hero = () => {
                             disableOnInteraction: false
                         }}
                         grabCursor={true}
-                        speed={500}
+                        speed={500} 
                         modules={[Navigation, Pagination, Autoplay]}
                         slidesPerView={1}
                         spaceBetween={20}
