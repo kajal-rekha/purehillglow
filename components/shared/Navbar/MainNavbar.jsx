@@ -39,18 +39,6 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 md:top-9 left-0 right-0 z-[999] bg-green-light shadow-lg border-b border-primary/20 h-14 md:h-16 flex items-center">
       <nav className="flex justify-between items-center wrapper gap-3 sm:gap-5 md:gap-10 lg:gap-20 w-full">
-        {/* <div className="w-[160px] h-[45px] flex items-center justify-center">
-          <Link href="/">
-            <Image
-              src="/assets/purehillglowweblogo .png"
-              alt="Pure Hill Glow"
-              width={180}
-              height={60}
-              className="w-full h-full object-contain"
-              priority
-            />
-          </Link>
-        </div> */}
 
         <div className="w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px] h-14 relative">
           <Link href="/" className="block w-full h-full">
