@@ -1,29 +1,9 @@
-
-import {LeafyGreen, Package, Truck, Users} from "lucide-react" ;
+import { useSelector } from "react-redux";
+import featureData from "@/data/featureData";
 
 const Feature = () => {
-  const features = [
-    {
-      icon: <LeafyGreen/>,
-      title: "Authentic Products",
-      description: "Carefully selected from trusted sources",
-    },
-    {
-      icon: <Package/>,
-      title: "Safe Packaging",
-      description: "Products packed carefully to ensure safety",
-    },
-    {
-      icon: <Truck/>,
-      title: "Nationwide Delivery",
-      description: "Fast & reliable delivery across Bangladesh",
-    },
-    {
-      icon: <Users/>,
-      title: "Customer Support",
-      description: "We are always here to help you",
-    },
-  ];
+  const language = useSelector((state) => state.language.language);
+  const features = featureData[language] || featureData.en;
 
   return (
     <div className="pt-4">
