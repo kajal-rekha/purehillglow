@@ -6,7 +6,7 @@ const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="bg-dark text-light mt-auto">
+        <footer className="bg-light text-dark mt-auto">
             {/*====== Main Footer Content =======*/}
             <div className="wrapper py-14">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
@@ -15,7 +15,7 @@ const Footer = () => {
                         <h3 className="text-2xl font-bold mb-4 text-primary font-playfair">
                             PureHillGlow
                         </h3>
-                        <p className="text-gray text-sm mb-6">
+                        <p className="text-sm mb-6">
                             Authentic Bandarban products bringing natural beauty
                             and tradition to your life.
                         </p>
@@ -52,7 +52,7 @@ const Footer = () => {
                                 <li key={i}>
                                     <Link
                                         href={link.href}
-                                        className="text-gray hover:text-primary transition-colors"
+                                        className=" hover:text-primary transition-colors"
                                     >
                                         {link.label}
                                     </Link>
@@ -74,7 +74,7 @@ const Footer = () => {
                                 <li key={i}>
                                     <Link
                                         href="#"
-                                        className="text-gray hover:text-primary transition-colors"
+                                        className=" hover:text-primary transition-colors"
                                     >
                                         {cat}
                                     </Link>
@@ -86,7 +86,7 @@ const Footer = () => {
                     {/*========== Contact Info ===========*/}
                     <div>
                         <h4 className="text-lg font-bold mb-6">Contact Info</h4>
-                        <ul className="space-y-4 text-gray text-sm">
+                        <ul className="space-y-4  text-sm">
                             <li className="flex gap-3">
                                 <span className="text-primary">📍</span>
                                 <span>
@@ -119,8 +119,10 @@ const Footer = () => {
 
                
 
-                {/*=========== Bottom Footer ===========*/}
-                <div className="border-t border-gray/30 pt-8">
+               
+            </div>
+             {/*=========== Bottom Footer ===========*/}
+                <div className="border-t border-gray/30 pt-8 bg-primary pb-5">
                     <div className="text-center text-sm text-gray">
                         <div>
                             <p>
@@ -134,7 +136,6 @@ const Footer = () => {
                       
                     </div>
                 </div>
-            </div>
         </footer>
     );
 };

@@ -1,11 +1,14 @@
 import Hero from "@/components/Hero";
-import Stats from "@/components/Stats";
+import Category from "@/components/Category";
+import Feature from "@/components/Feature";
+
 
 const HomePage = () => {
     return (
         <div className="w-full">
             <Hero />
-            <Stats/>
+            <Feature/>
+            <Category />
         </div>
     );
 };

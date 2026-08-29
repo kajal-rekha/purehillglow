@@ -1,31 +1,69 @@
-import { BadgeCheck, Flower2, Truck } from "lucide-react";
+import { Flower2, Truck, Phone } from "lucide-react";
+import Link from "next/link";
 
 const TopNavbar = () => {
+  const whatsappNumber = "8801234567890";
+  const phoneNumber = "+8801234567890";
+  const messengerUrl = "https://m.me/purehillglow";
+
   return (
-    <div className="fixed top-0 inset-x-0 z-50 h-9 bg-primary  hidden md:block">
+    <div className="fixed top-0 inset-x-0 z-50 h-9 bg-primary hidden md:block">
       <div className="wrapper mx-auto h-full px-4">
-        <ul className="flex gap-5 h-full items-center justify-between text-light w-[50%] mx-auto">
-          <li className="flex items-center gap-1 whitespace-nowrap">
-            <Flower2 size={13} className="text-green-300" />
-            <span className="text-xs  font-medium">
-              100% Authentic Products
-            </span>
-          </li>
+        <div className="flex h-full items-center justify-between text-light">
+          {/*========== Left side ==========*/}
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-1 whitespace-nowrap">
+              <Flower2 size={13} className="text-green-300" />
+              <span className="text-xs font-medium">
+                100% Authentic Products
+              </span>
+            </div>
 
-          <li className="hidden md:flex items-center gap-1 whitespace-nowrap">
-            <Truck size={13} className="text-green-300" />
-            <span className="text-xs  font-medium">
-              Fast Delivery All Over Bangladesh
-            </span>
-          </li>
+            <div className="flex items-center gap-1 whitespace-nowrap">
+              <Truck size={13} className="text-green-300" />
+              <span className="text-xs font-medium">
+                Fast Delivery All Over Bangladesh
+              </span>
+            </div>
+          </div>
 
-          <li className="hidden lg:flex items-center gap-1 whitespace-nowrap">
-            <BadgeCheck size={13} className="text-green-300" />
-            <span className="text-xs  font-medium">
-              Cash On Delivery Available
-            </span>
-          </li>
-        </ul>
+          {/*========== Right side ==========*/}
+          <div className="flex items-center gap-4 text-xs font-medium">
+            {/*============ Messenger =============*/}
+
+            {/*============ WhatsApp ============*/}
+            <Link
+              href={`https://wa.me/${whatsappNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1  hover:opacity-80 eq"
+            >
+              Order in WhatsApp
+            </Link>
+
+            <span className="opacity-50">|</span>
+            <Link
+              href={messengerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-80 eq"
+            >
+             Inbox
+            </Link>
+
+            <span className="opacity-50">|</span>
+
+            {/*============ Phone Call ============*/}
+            <Link
+              href={`tel:${phoneNumber}`}
+              className="flex items-center gap-1  hover:opacity-80 eq"
+            >
+              <Phone size={13} className="text-green-300" />
+
+              <span>{phoneNumber}</span>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
