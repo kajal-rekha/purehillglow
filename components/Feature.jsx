@@ -1,22 +1,25 @@
+
+import {LeafyGreen, Package, Truck, Users} from "lucide-react" ;
+
 const Feature = () => {
   const features = [
     {
-      icon: "🌿",
+      icon: <LeafyGreen/>,
       title: "Authentic Products",
       description: "Carefully selected from trusted sources",
     },
     {
-      icon: "📦",
+      icon: <Package/>,
       title: "Safe Packaging",
       description: "Products packed carefully to ensure safety",
     },
     {
-      icon: "🚚",
+      icon: <Truck/>,
       title: "Nationwide Delivery",
       description: "Fast & reliable delivery across Bangladesh",
     },
     {
-      icon: "👥",
+      icon: <Users/>,
       title: "Customer Support",
       description: "We are always here to help you",
     },
@@ -28,7 +31,7 @@ const Feature = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, i) => (
             <div key={i} className="flex items-center gap-4 p-5">
-              <div className="shrink-0 w-12 h-12 text-2xl rounded-full bg-primary/20 flex items-center justify-center">
+              <div className="shrink-0 w-12 h-12 text-2xl rounded-full bg-primary/20 flex items-center justify-center text-primary">
                 {feature.icon}
               </div>
 

@@ -1,4 +1,4 @@
-import { Flower2, Truck, Phone } from "lucide-react";
+import { Flower2, Truck, Phone, MessageCircleCode } from "lucide-react";
 import Link from "next/link";
 
 const TopNavbar = () => {
@@ -38,7 +38,8 @@ const TopNavbar = () => {
               rel="noopener noreferrer"
               className="flex items-center gap-1  hover:opacity-80 eq"
             >
-              Order in WhatsApp
+              <MessageCircleCode size={13} className="text-green-300" />
+              <span>Order in WhatsApp</span>
             </Link>
 
             <span className="opacity-50">|</span>
@@ -48,7 +49,7 @@ const TopNavbar = () => {
               rel="noopener noreferrer"
               className="hover:opacity-80 eq"
             >
-             Inbox
+              Inbox
             </Link>
 
             <span className="opacity-50">|</span>
