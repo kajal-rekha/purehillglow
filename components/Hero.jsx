@@ -67,7 +67,7 @@ const Hero = () => {
           }}
           loop={true}
           grabCursor={true}
-          speed={500}
+          speed={1000}
           modules={[Navigation, Pagination, Autoplay]}
           className="mySwiper h-full w-full"
         >

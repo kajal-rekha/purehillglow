@@ -1,104 +1,119 @@
 "use client";
-import { Heart, Search, ShoppingBag, X, Menu } from "lucide-react";
+
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/redux/features/auth/authSlice";
 import { setLanguage } from "@/redux/features/language/languageSlice";
 import ProductSearch from "../../ProductSearchForm";
 import { buttonVariants } from "../../ui/Button";
-import Image from "next/image";
+
+import {
+  Heart,
+  Search,
+  ShoppingBag,
+  X,
+  Menu,
+  UserRound,
+  Package,
+  LogOut,
+  DoorOpenIcon,
+} from "lucide-react";
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { userAndToken } = useSelector((state) => state.auth);
-  const { language } = useSelector((state) => state.language);
-  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
 
-  const navLinks = [
-    { href: "/", label: { en: "Home", bn: "হোম" } },
+  const { userAndToken } = useSelector((state) => state.auth);
+  const { language } = useSelector((state) => state.language);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const categoryLinks = [
+    { href: "/products", label: { en: "All Products", bn: "সব পণ্য" } },
+    { href: "/categories/thanaka", label: { en: "Thanaka", bn: "থানাকা" } },
     {
-      href: "/products",
-      label: { en: "Products", bn: "প্রোডাক্টস" },
+      href: "/categories/face-care",
+      label: { en: "Face Care", bn: "ফেস কেয়ার" },
     },
     {
-      href: "/categories",
-      label: { en: "Categories", bn: "বিভাগসমূহ" },
+      href: "/categories/soap-cleansing",
+      label: { en: "Soap & Cleansing", bn: "সাবান ও ক্লিনজিং" },
     },
     {
-      href: "/about-us",
-      label: { en: "About Us", bn: "আমাদের সম্পর্কে" },
+      href: "/categories/lotion-moisturizer",
+      label: { en: "Lotion & Moisturizer", bn: "লোশন ও ময়েশ্চারাইজার" },
     },
     {
-      href: "/contact",
-      label: { en: "Contact", bn: "যোগাযোগ" },
+      href: "/categories/chandan-sandalwood",
+      label: { en: "Chandan & Sandalwood", bn: "চন্দন ও চন্দনজাত" },
+    },
+    {
+      href: "/categories/balm-wellness",
+      label: { en: "Balm & Wellness", bn: "বাম ও ওয়েলনেস" },
+    },
+
+    {
+      href: "/categories/combo-packs",
+      label: { en: "Combo Packs", bn: "কম্বো প্যাক" },
+    },
+
+    {
+      href: "/products?filter=offers",
+      label: { en: "Offers", bn: "অফার" },
+      offer: true,
     },
   ];
 
   return (
-    <header className="fixed top-0 md:top-9 left-0 right-0 z-[999] bg-green-light shadow-lg border-b border-primary/20 h-14 md:h-16 flex items-center">
-      <nav className="flex justify-between items-center wrapper gap-3 sm:gap-5 md:gap-10 lg:gap-20 w-full">
-
-        <div className="w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px] h-14 relative">
-          <Link href="/" className="block w-full h-full">
+    <header className="fixed left-0 right-0 top-9 z-[999] h-20 border-b border-primary/10 bg-green-light/95 backdrop-blur-md">
+      <nav className="wrapper mx-auto flex h-full w-full items-center gap-5 px-4">
+        <div className="relative h-14 w-[100px] shrink-0 sm:w-[170px] md:w-[190px]">
+          <Link href="/" className="block h-full w-full">
             <Image
               src="/assets/purehillglowweblogo.png"
               alt="Pure Hill Glow"
               fill
               priority
-              className="object-contain"
+              className="object-contain object-left"
             />
           </Link>
         </div>
 
-        <div className="hidden md:flex flex-1 justify-center">
-          <ul className="flex justify-between gap-5 flex-nowrap whitespace-nowrap">
-            {navLinks.map((link) => (
-              <li
-                key={link.href}
-                className="border-b-2 border-transparent hover:border-primary text-[15px] font-semibold text-dark/90 eq"
-              >
-                <Link href={link.href} className="inline-flex items-center">
-                  {language === "bn" ? link.label.bn : link.label.en}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <div className="hidden flex-1 lg:flex">
+          <ProductSearch />
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-2 justify-end flex-1">
-          <div className="hidden lg:flex flex-1">
-            <ProductSearch />
-          </div>
-
+        <div className="ml-auto flex items-center gap-1 sm:gap-2">
           <button
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-            className="p-2 hover:bg-primary/15 rounded-lg text-primary md:hidden"
-            aria-label={language === "bn" ? "সার্চ টগল করুন" : "Toggle search"}
-            title={language === "bn" ? "সার্চ" : "Search"}
+            onClick={() => {
+              setIsSearchOpen(!isSearchOpen);
+              setIsOpen(false);
+            }}
+            className="rounded-full p-2 text-primary hover:bg-primary/10 lg:hidden eq"
+            aria-label="Search"
           >
-            <Search size={22} className="md:w-6 md:h-6" />
+            {isSearchOpen ? <X size={21} /> : <Search size={21} />}
           </button>
 
-          <div className="hidden sm:flex rounded-full overflow-hidden border-2 border-primary/40 bg-gradient-to-r from-primary/8 to-primary/12 h-9 sm:h-10">
+          <div className="hidden overflow-hidden rounded-md border border-primary/30 bg-primary/20 sm:flex">
             <button
               onClick={() => dispatch(setLanguage("en"))}
-              aria-pressed={language === "en"}
-              className={`px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold transition-all ${
+              className={`px-2 py-1.5 text-xs font-semibold eq ${
                 language === "en"
-                  ? "bg-primary text-white hover:bg-primary/90"
+                  ? "bg-primary text-light"
                   : "text-primary hover:bg-primary/10"
               }`}
             >
               EN
             </button>
+
             <button
               onClick={() => dispatch(setLanguage("bn"))}
-              aria-pressed={language === "bn"}
-              className={`px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold transition-all ${
+              className={`px-2 py-1.5 text-xs font-semibold eq ${
                 language === "bn"
-                  ? "bg-primary text-white hover:bg-primary/90"
+                  ? "bg-primary text-white"
                   : "text-primary hover:bg-primary/10"
               }`}
             >
@@ -106,65 +121,188 @@ const Navbar = () => {
             </button>
           </div>
 
+          {/* ================= ACCOUNT ================= */}
           {userAndToken ? (
-            <>
-              <Link href="/dashboard" className="hidden sm:inline-block ml-2">
-                <Image
-                  src={userAndToken?.user?.image}
-                  alt={userAndToken?.user?.username || "user"}
-                  width={32}
-                  height={32}
-                  className="w-8 h-8 rounded-full object-cover border-2 border-primary/40"
-                />
-              </Link>
+            <div className="relative">
+              {/*=========== User Button =========== */}
               <button
-                onClick={() => dispatch(logout())}
-                className={`${buttonVariants({ variant: "primary" })} hidden sm:inline-flex ml-2`}
+                type="button"
+                onClick={() => setIsAccountOpen((prev) => !prev)}
+                className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-dark eq hover:bg-primary/10 cursor-pointer"
               >
-                {language === "bn" ? "লগআউট" : "Logout"}
+                {/* =============== User Image ==============*/}
+                {userAndToken?.user?.image ? (
+                  <Image
+                    src={userAndToken.user.image}
+                    alt={userAndToken?.user?.username || "User"}
+                    width={34}
+                    height={34}
+                    className="h-6 w-6 md:h-8 md:w-8 rounded-full border border-primary/30 object-cover "
+                  />
+                ) : (
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <UserRound size={18} />
+                  </div>
+                )}
+
+                {/* ============ Username ============*/}
+                <span className="hidden max-w-[100px] truncate text-sm font-medium md:block">
+                  {userAndToken?.user?.username || "Account"}
+                </span>
+
+                {/* ============ dropdown icon ===========*/}
+                <span
+                  className={`hidden text-xs transition-transform duration-200 md:block ${
+                    isAccountOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  ▾
+                </span>
               </button>
-            </>
+
+              {/* ================= ACCOUNT DROPDOWN ================= */}
+              {isAccountOpen && (
+                <div className="absolute right-0 top-full z-[1000] mt-2 w-56 overflow-hidden rounded-xl border border-primary/10 bg-white shadow-xl">
+                  {/* Profile */}
+                  <Link
+                    href="/profile"
+                    onClick={() => setIsAccountOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-sm text-dark eq hover:bg-primary/10 hover:text-primary"
+                  >
+                    <UserRound size={18} />
+
+                    <span>{language === "bn" ? "প্রোফাইল" : "Profile"}</span>
+                  </Link>
+
+                  {/*================ My Orders ==============*/}
+                  <Link
+                    href="/my-orders"
+                    onClick={() => setIsAccountOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-sm text-dark eq hover:bg-primary/10 hover:text-primary"
+                  >
+                    <Package size={18} />
+
+                    <span>
+                      {language === "bn" ? "আমার অর্ডার" : "My Orders"}
+                    </span>
+                  </Link>
+
+                  <div className="border-t border-gray-100" />
+
+                  {/*========== Logout ===========*/}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAccountOpen(false);
+                      dispatch(logout());
+                    }}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red eq hover:bg-red/10"
+                  >
+                    <LogOut size={18} />
+
+                    <span>{language === "bn" ? "লগআউট" : "Logout"}</span>
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
+            /* ================= LOGIN ================= */
             <Link
               href="/auth/login"
-              className={`${buttonVariants({ variant: "primary" })} hidden sm:inline-flex ml-2`}
+              className={`${buttonVariants({
+                variant: "primary",
+              })} ml-2 hidden items-center gap-2 sm:inline-flex`}
             >
+              <UserRound size={17} />
+
               {language === "bn" ? "লগইন" : "Login"}
             </Link>
           )}
 
-          <div>
-            <button
-              className="p-2 md:p-2.5 hover:bg-primary/15 rounded-lg transition-all text-primary hover:scale-110 relative"
-              aria-label={language === "bn" ? "শপিং ব্যাগ" : "Cart"}
-              title={language === "bn" ? "শপিং ব্যাগ" : "Cart"}
-            >
-              <ShoppingBag size={22} className="md:w-6 md:h-6" />
-              <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red to-orange text-white text-[9px] md:text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md">
-                0
-              </span>
-            </button>
-          </div>
+          {/*========== Wishlist ==========*/}
+          <Link
+            href="/wishlist"
+            className="relative hidden rounded-full p-2 text-dark eq hover:bg-primary/10 hover:text-primary md:block "
+            aria-label="Wishlist"
+            title="Wishlist"
+          >
+            <Heart size={21} strokeWidth={1.8} />
+            <span className="absolute -right-0.5 -top-0.5 hidden min-w-4 rounded-full bg-primary px-1 text-center text-[9px] font-bold text-light">
+              0
+            </span>
+          </Link>
+          {/*================ cart============= */}
+          <Link
+            href="/cart"
+            className="relative rounded-full p-2 text-dark eq hover:bg-primary/10 hover:text-primary"
+            aria-label="Cart"
+            title="Cart"
+          >
+            <ShoppingBag size={21} strokeWidth={1.8} />
+            <span className="absolute -right-0.5 -top-0.5 min-w-4 rounded-full bg-red px-1 text-center text-[9px] font-bold text-white">
+              0
+            </span>
+          </Link>
 
+          {/*========== Mobile Menu Button ===========*/}
           <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="p-2 hover:bg-primary/15 rounded-lg transition text-primary md:hidden"
-            aria-label={language === "bn" ? "মেনু টগল করুন" : "Toggle menu"}
+            onClick={() => {
+              setIsOpen(!isOpen);
+              setIsSearchOpen(false);
+            }}
+            className="rounded-full p-2 text-primary eq hover:bg-primary/10 md:hidden"
+            aria-label="Toggle menu"
           >
             {isOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </nav>
+      {/*============= search form ===============*/}
+      {isSearchOpen && (
+        <div className="absolute left-0 right-0 top-full border-b border-primary/10 bg-green-light p-4 shadow-md lg:hidden">
+          <ProductSearch />
+        </div>
+      )}
 
-      {isOpen && (
-        <div className="absolute top-full left-0 right-0 z-[97] md:hidden bg-green-light shadow-lg border-b border-primary/20 pb-5 pt-2">
-          <ul className="flex flex-col gap-0 py-2">
-            {navLinks.map((link) => (
+      <div
+        className={`fixed inset-0 z-[998] bg-black/20 transition-opacity duration-300 md:hidden ${
+          isOpen
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }`}
+        onClick={() => setIsOpen(false)}
+      />
+
+      <div
+        className={`fixed left-0 top-20 z-[999] h-[calc(100vh-5rem)] w-[82%] max-w-xs border-r border-primary/10 bg-green-light shadow-2xl transition-transform duration-300 ease-out md:hidden ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-primary/10 px-5 py-4">
+          <span className="text-sm font-bold uppercase tracking-[0.2em] text-primary">
+            Menu
+          </span>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="rounded-full p-2 text-primary transition hover:bg-primary/10"
+            aria-label="Close menu"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="max-h-[calc(100vh-10rem)] overflow-y-auto pb-1">
+          <ul className="flex flex-col py-3">
+            {categoryLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="block px-6 py-3 text-sm font-semibold text-dark hover:text-primary hover:bg-primary/10 transition-all duration-300"
+                  className={`block border-b border-primary/5 px-6 py-3 text-base font-medium transition ${
+                    link.offer
+                      ? "text-red hover:bg-red/5 hover:text-red"
+                      : "text-dark hover:bg-primary/10 hover:text-primary"
+                  }`}
                 >
                   {language === "bn" ? link.label.bn : link.label.en}
                 </Link>
@@ -172,13 +310,7 @@ const Navbar = () => {
             ))}
           </ul>
         </div>
-      )}
-
-      {isSearchOpen && (
-        <div className="absolute top-full left-0 w-full bg-green-light p-4 shadow-md border-b border-primary/20 md:hidden">
-          <ProductSearch />
-        </div>
-      )}
+      </div>
     </header>
   );
 };

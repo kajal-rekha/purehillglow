@@ -41,6 +41,29 @@ body {
   font-size: 16px;
   line-height: 1.6;
   background: var(--color-background-soft);
+  scrollbar-color: rgba(12, 154, 91, 0.7) transparent;
+}
+
+* {
+  scrollbar-color: rgba(12, 154, 91, 0.7) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 14px;
+  height: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(12, 154, 91, 0.75);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(12, 154, 91, 0.9);
 }
 
 /********* TYPOGRAPHY STYLES *********/

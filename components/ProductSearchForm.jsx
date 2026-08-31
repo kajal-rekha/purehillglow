@@ -9,7 +9,7 @@ const ProductSearch = () => {
 
     return (
         <div className=" flex items-center mx-auto">
-            <form className="relative border border-dark/20 focus-within:border-primary/50 rounded-full w-full hidden md:block eq">
+            <form className="relative border border-dark/30 focus-within:border-primary/50 rounded-xl min-w-xl  eq">
                 <input
                     type="search"
                     placeholder={placeholderText}
@@ -18,7 +18,7 @@ const ProductSearch = () => {
 
                 <button
                     type="submit"
-                    className="absolute right-0 top-0 h-full px-3 rounded-r text-dark hover:bg-primary hover:text-light eq"
+                    className="absolute right-0 top-0 h-full px-3.5 rounded-r text-light bg-primary hover:bg-primary/90 eq"
                     aria-label={ariaLabel}
                     title={ariaLabel}
                 >
