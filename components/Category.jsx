@@ -49,7 +49,7 @@ const Category = () => {
   }, []);
 
   return (
-    <section className="w-full  bg-light-gray mt-5 pt-12 pb-14">
+    <section className="w-full  bg-light-gray mt-5 pt-10 pb-14">
       {loading ? (
         <div className="w-full py-8 flex justify-center">
           <Loading />
@@ -124,7 +124,7 @@ const Category = () => {
         md:min-w-0
       "
                   >
-                    {/* Category Image */}
+                    {/*============ Category Image============ */}
                     <div className="relative aspect-square w-full overflow-hidden ">
                       <Image
                         src={category.image}

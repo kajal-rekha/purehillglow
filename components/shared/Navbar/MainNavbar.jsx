@@ -27,6 +27,11 @@ const Navbar = () => {
 
   const { userAndToken } = useSelector((state) => state.auth);
   const { language } = useSelector((state) => state.language);
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const cartCount = cartItems.reduce(
+    (total, item) => total + (Number(item.cartQuantity) || 0),
+    0
+  );
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -235,12 +240,19 @@ const Navbar = () => {
           <Link
             href="/cart"
             className="relative rounded-full p-2 text-dark eq hover:bg-primary/10 hover:text-primary"
-            aria-label="Cart"
-            title="Cart"
+            aria-label={
+              language === "bn"
+                ? `কার্ট, ${cartCount} টি পণ্য`
+                : `Cart, ${cartCount} items`
+            }
+            title={language === "bn" ? "কার্ট" : "Cart"}
           >
             <ShoppingBag size={21} strokeWidth={1.8} />
-            <span className="absolute -right-0.5 -top-0.5 min-w-4 rounded-full bg-red px-1 text-center text-[9px] font-bold text-white">
-              0
+            <span
+              aria-live="polite"
+              className="absolute -right-0.5 -top-0.5 min-w-4 rounded-full bg-red px-1 text-center text-[9px] font-bold text-white"
+            >
+              {cartCount > 99 ? "99+" : cartCount}
             </span>
           </Link>
 

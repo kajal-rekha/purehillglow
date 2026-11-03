@@ -1,7 +1,7 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import { useSelector } from "react-redux";
@@ -44,7 +44,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="w-full h-[calc(100vh-5rem)] mt-20 md:mt-24 overflow-hidden">
+    <section className="w-full  mt-20 md:mt-32 overflow-hidden">
       {loading ? (
         <div className="h-full w-full flex items-center justify-center bg-gray animate-pulse rounded-lg">
           <Loading />
@@ -60,66 +60,136 @@ const Hero = () => {
         </div>
       ) : (
         <Swiper
-          pagination={{ clickable: true }}
+          pagination={{
+            clickable: true,
+          }}
           autoplay={{
             delay: 5000,
             disableOnInteraction: false,
           }}
           loop={true}
           grabCursor={true}
-          speed={1000}
-          modules={[Navigation, Pagination, Autoplay]}
-          className="mySwiper h-full w-full"
+          speed={3000}
+          // modules={[Autoplay]}
+          className="purehill-hero-swiper"
         >
-          {heroes.map((hero) => (
+          {heroes.map((hero, index) => (
             <SwiperSlide key={hero._id}>
-              <div className="relative h-full w-full">
-                {/*============= Background Image =============*/}
-                <Image
-                  src={hero.imageURL}
-                  alt={hero.title.en}
-                  fill
-                  priority
-                  className="object-cover object-center"
-                />
+              <div className="relative overflow-hidden ">
+                {/* ================= BACKGROUND DECORATION ================= */}
 
-                {/*=============== Overlay ===============*/}
-                <div className="absolute inset-0 bg-gradient-to-r from-dark/70 via-dark/35 to-transparent" />
+                {/* <div className="pointer-events-none absolute -right-32 -top-32 h-[350px] w-[350px] rounded-full bg-primary/2 md:h-[500px] md:w-[500px]" /> */}
 
-                {/*=============== Content ===============*/}
-                <div className="absolute inset-0 flex items-center pt-8">
-                  <div className="wrapper mx-auto px-6 lg:px-12">
-                    <div className="max-w-xl text-light">
-                      <span className="inline-flex rounded-2xl bg-primary px-4 py-2 text-sm font-medium font-mono">
-                        🌿 100% Authentic Products From Bandarban
+                {/* <div className="pointer-events-none absolute -bottom-40 -left-40 h-[350px] w-[350px] rounded-full bg-primary/20 md:h-[500px] md:w-[500px]" /> */}
+
+                {/* ================= MAIN CONTENT ================= */}
+
+                <div className="wrapper relative mx-auto grid min-h-[430px] items-center gap-4 px-5 py-8 sm:px-6 md:min-h-[500px] md:grid-cols-2 md:gap-28 md:px-8 md:py-10 lg:min-h-[560px] lg:px-10">
+                  {/* ================= LEFT CONTENT ================= */}
+
+                  <div className="relative z-10 ">
+                    {/* ======= Badge =======*/}
+
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-light/70 px-3 py-1.5 text-xs font-semibold text-primary shadow-sm backdrop-blur-sm sm:px-4 sm:py-2">
+                      <span className="text-sm">🌿</span>
+
+                      <span>
+                        {language === "bn"
+                          ? "পাহাড়ের খাঁটি সৌন্দর্য"
+                          : "Authentic Beauty From The Hills"}
                       </span>
+                    </div>
 
-                      <h1 className="mt-6 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight font-poppins">
-                        {language === "bn"
-                          ? hero.title.bn.slice(0, 50)
-                          : hero.title.en.slice(0, 50)}
-                      </h1>
+                    {/*========== Heading ==========*/}
 
-                      <p className="mt-6 text-lg leading-8 text-gray/95 line-clamp-3 max-w-lg">
+                    <h1 className="max-w-xl font-poppins text-3xl font-bold leading-[1.15] text-dark sm:text-4xl md:text-4xl lg:text-5xl xl:text-6xl">
+                      {language === "bn"
+                        ? hero.title?.bn?.slice(0, 70)
+                        : hero.title?.en?.slice(0, 70)}
+                    </h1>
+
+                    {/*=========== Description ===========*/}
+
+                    <p className="mt-4 max-w-lg text-sm leading-7 text-dark/65 sm:text-base sm:leading-8 md:mt-5 lg:text-lg line-clamp-2">
+                      {language === "bn"
+                        ? hero.description?.bn
+                        : hero.description?.en}
+                    </p>
+
+                    {/*========== Buttons ==========*/}
+
+                    <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
+                      <Link
+                        href="/products"
+                        className={`${buttonVariants({
+                          variant: "primary",
+                        })}px-3 py-2 shadow-md transition hover:-translate-y-0.5 hover:shadow-lg sm:px-4 text-[12px]`}
+                      >
+                        {language === "bn" ? "শপ করুন" : "Shop Now"}
+                      </Link>
+
+                      <Link
+                        href="/categories"
+                        className={`${buttonVariants({
+                          variant: "primary",
+                        })}  px-3 py-2 text-[12px] shadow-md transition hover:-translate-y-0.5 hover:shadow-lg sm:px-4`}
+                      >
                         {language === "bn"
-                          ? hero.description?.bn
-                          : hero.description?.en}
+                          ? "কালেকশন দেখুন"
+                          : "Explore Collection"}
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* ================= RIGHT PRODUCT IMAGE ================= */}
+
+                  <div className="relative order-1 flex h-[250px] items-center justify-center sm:h-[300px] md:order-2 md:h-[400px] lg:h-[480px]">
+                    {/*========= Product Background Circle ==========*/}
+
+                    <div className="absolute h-[220px] w-[220px] rounded-full bg-light/20 shadow-[0_20px_60px_rgba(0,0,0,0.05)] sm:h-[280px] sm:w-[280px] md:h-[350px] md:w-[350px] lg:h-[430px] lg:w-[430px]" />
+
+                    {/*=========== Decorative Circle============== */}
+
+                    <div className="absolute h-[240px] w-[240px] rounded-full border border-primary/10 sm:h-[300px] sm:w-[300px] md:h-[380px] md:w-[380px] lg:h-[460px] lg:w-[460px]" />
+
+                    {/*============== Product Image ===============*/}
+
+                    <div className="relative z-10 h-[240px] w-full sm:h-[290px] md:h-[450px] lg:h-[500px] rounded-lg">
+                      <Image
+                        src={hero.imageURL}
+                        alt={
+                          language === "bn"
+                            ? hero.title?.bn || "Pure Hill Glow"
+                            : hero.title?.en || "Pure Hill Glow"
+                        }
+                        fill
+                        priority={index === 0}
+                        sizes="(max-width: 768px) 90vw, 50vw"
+                        className="object-contain drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)] "
+                      />
+                    </div>
+
+                    {/*============ Floating Authentic Badge============== */}
+
+                    <div className="absolute bottom-2 left-1 z-20 hidden rounded-2xl border border-primary/14 bg-light/90 px-4 py-3 shadow-lg backdrop-blur-sm sm:block md:bottom-5 md:left-0 ">
+                      <p className="text-[10px] font-medium tracking-wider text-dark/80">
+                        {language === "bn" ? "খাঁটি পণ্য" : "100% Authentic"}
                       </p>
+                    </div>
 
-                      <div className="mt-8 flex gap-4">
-                        <Link
-                          href="/products"
-                          className={`${buttonVariants({ variant: "primary" })} `}
-                        >
-                          Shop Now
-                        </Link>
+                    {/*============ Floating Natural Badge============== */}
 
-                        <Link
-                          href="/categories"
-                          className={`${buttonVariants({ variant: "secondary" })}  hover:bg-primary outline-none focus:outline-none`}
-                        >
-                          Explore
-                        </Link>
+                    <div className="absolute right-1 top-3 z-20 hidden rounded-2xl border border-primary/14 bg-light/80 px-4 py-3 shadow-lg backdrop-blur-sm sm:block md:right-0 md:top-8">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">🌿</span>
+
+                        <div>
+                          <p className="text-[10px] text-dark/80">
+                            {language === "bn"
+                              ? "প্রাকৃতিক যত্ন"
+                              : "Natural Care"}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

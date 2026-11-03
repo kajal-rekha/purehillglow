@@ -6,7 +6,7 @@ const Feature = () => {
   const features = featureData[language] || featureData.en;
 
   return (
-    <div className="pt-4">
+    <div className="pt-4 bg-green-light">
       <div className="wrapper">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, i) => (
