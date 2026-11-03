@@ -112,20 +112,6 @@ const CartPage = () => {
     .filter((item) => !cartItems.some((cartItem) => cartItem._id === item._id))
     .slice(0, 4);
 
-  const checkoutMessage = [
-    isBangla ? "আমি এই পণ্যগুলো অর্ডার করতে চাই:" : "I'd like to order:",
-    ...cartItems.map(
-      (item) =>
-        `${localized(item.name, language)} × ${item.cartQuantity} — ${formatPrice(
-          Number(item.price) * Number(item.cartQuantity)
-        )}`
-    ),
-    `${isBangla ? "সর্বমোট" : "Total"}: ${formatPrice(totals.total)}`,
-  ].join("\n");
-  const checkoutUrl = `https://wa.me/8801234567890?text=${encodeURIComponent(
-    checkoutMessage
-  )}`;
-
   return (
     <main className="min-h-screen bg-[#fbf8f2] pb-10 pt-[125px] md:pt-[150px]">
       <section className="relative overflow-hidden bg-[linear-gradient(110deg,#14391f_0%,#1d4929_55%,#375c37_100%)] text-white">
@@ -392,16 +378,14 @@ const CartPage = () => {
                       </span>
                     </div>
                   </div>
-                  <a
-                    href={checkoutUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    href="/checkout"
                     className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#edbd68] px-4 text-sm font-bold text-[#33240c] shadow-sm transition hover:bg-[#e6ad4f]"
                   >
                     <ShoppingBag size={16} />
                     {isBangla ? "অর্ডার সম্পন্ন করুন" : "Proceed to Checkout"}
                     <ArrowRight size={16} />
-                  </a>
+                  </Link>
                   <div className="flex items-center justify-center gap-2 rounded-lg bg-[#f0f2e4] px-3 py-2 text-center text-[10px] leading-4 text-[#344b31]">
                     <ShieldCheck size={17} className="shrink-0" />
                     {isBangla

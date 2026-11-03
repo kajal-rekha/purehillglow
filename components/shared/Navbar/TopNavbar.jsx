@@ -10,8 +10,8 @@ import {
 import Link from "next/link";
 
 const TopNavbar = () => {
-  const whatsappNumber = "8801234567890";
-  const phoneNumber = "+8801234567890";
+  const whatsappNumber = "8801762144200";
+  const phoneNumber = "+8801762144200";
   const messengerUrl = "https://m.me/purehillglow";
 
   return (

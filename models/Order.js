@@ -1,6 +1,18 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
+const DeliveryDetailsSchema = new Schema(
+    {
+        name: { type: String, required: true },
+        phone: { type: String, required: true },
+        address: { type: String, required: true },
+        district: { type: String, required: true },
+        thana: { type: String, required: true },
+        note: { type: String, default: "" },
+    },
+    { _id: false }
+);
+
 const OrderSchema = new Schema(
     {
         user_id: {
@@ -9,10 +21,21 @@ const OrderSchema = new Schema(
             required: true,
         },
 
+        deliveryDetails: {
+            type: DeliveryDetailsSchema,
+            required: true,
+        },
+
         tran_id: {
             type: String,
             required: true,
             unique: true,
+        },
+
+        deliveryCharge: {
+            type: Number,
+            required: true,
+            default: 150,
         },
 
         totalAmount: {

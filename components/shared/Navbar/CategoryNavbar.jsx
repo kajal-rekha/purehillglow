@@ -10,10 +10,7 @@ const CategoryNavbar = () => {
   const { language } = useSelector((state) => state.language);
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const hasCategoryDrawer = [
-    "/products/[id]",
-    "/cart",
-  ].includes(router.pathname);
+  const hasCategoryDrawer = router.pathname !== "/";
 
   const categoryLinks = [
     {

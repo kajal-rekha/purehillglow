@@ -35,7 +35,7 @@ const Footer = () => {
         },
         {
             label: isBangla ? "ডেলিভারি তথ্য" : "Delivery Information",
-            href: "https://wa.me/8801234567890",
+            href: "https://wa.me/8801762144200",
             external: true,
         },
         {
@@ -78,7 +78,7 @@ const Footer = () => {
                         </p>
                         <div className="mt-4 flex items-center gap-2">
                             <Link
-                                href="https://wa.me/8801234567890"
+                                href="https://wa.me/8801762144200"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="WhatsApp"
@@ -174,10 +174,10 @@ const Footer = () => {
                                     className="shrink-0 text-[#c5d29a]"
                                 />
                                 <a
-                                    href="tel:+8801234567890"
+                                    href="tel:+8801762144200"
                                     className={textLinkClass}
                                 >
-                                    +880 123 456 7890
+                                    +880 1762 144200
                                 </a>
                             </li>
                             <li className="flex items-center gap-2">

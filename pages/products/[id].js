@@ -403,7 +403,7 @@ const ProductDetailsPage = () => {
               </button>
             </div>
             <Link
-              href="https://wa.me/8801234567890"
+              href="https://wa.me/8801762144200"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-3 inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#78947d] text-sm font-semibold text-[#24452c] transition hover:bg-[#eef3e8]"

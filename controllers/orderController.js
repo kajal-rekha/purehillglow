@@ -1,4 +1,6 @@
 import Order from "@/models/Order";
+import Product from "@/models/Product";
+import mongoose from "mongoose";
 
 //================== get all  Orders =====================//
 export const getAllOrders = async (req, res) => {
@@ -116,22 +118,102 @@ export const deleteOrder = async (req, res) => {
 
 export const placeOrder = async (req, res) => {
     try {
-        const { user_id, orderItems, totalAmount, paymentMethod } = req.body;
+        const { orderItems, deliveryDetails, language } = req.body;
 
-        if (!user_id || !orderItems || orderItems.length === 0) {
+        if (!req.user?._id) {
+            return res.status(401).json({ error: "Please sign in to place an order" });
+        }
+
+        if (!Array.isArray(orderItems) || orderItems.length === 0) {
             return res.status(400).json({ error: "Missing order details" });
         }
 
+        const requiredDeliveryFields = [
+            "name",
+            "phone",
+            "address",
+            "district",
+            "thana",
+        ];
+        if (
+            !deliveryDetails ||
+            requiredDeliveryFields.some(
+                (field) =>
+                    typeof deliveryDetails[field] !== "string" ||
+                    !deliveryDetails[field].trim()
+            )
+        ) {
+            return res.status(400).json({ error: "Missing delivery details" });
+        }
+
+        if (language && !["en", "bn"].includes(language)) {
+            return res.status(400).json({ error: "Invalid language" });
+        }
+
+        const normalizedItems = [];
+        for (const item of orderItems) {
+            const quantity = Number(item.cartQuantity);
+            if (
+                !mongoose.Types.ObjectId.isValid(item.product_id) ||
+                !Number.isInteger(quantity) ||
+                quantity < 1
+            ) {
+                return res.status(400).json({ error: "Invalid order item" });
+            }
+            normalizedItems.push({
+                product_id: item.product_id,
+                cartQuantity: quantity,
+            });
+        }
+
+        const productIds = normalizedItems.map((item) => item.product_id);
+        const products = await Product.find({ _id: { $in: productIds } });
+        if (products.length !== new Set(productIds.map(String)).size) {
+            return res.status(400).json({ error: "One or more products were not found" });
+        }
+
+        const productsById = new Map(
+            products.map((product) => [product._id.toString(), product])
+        );
+        const normalizedOrderItems = normalizedItems.map((item) => {
+            const product = productsById.get(item.product_id.toString());
+            const locale = language === "bn" ? "bn" : "en";
+            return {
+                product_id: product._id,
+                name: product.name[locale] || product.name.en,
+                price: product.price,
+                discount: product.discount,
+                unit: product.unit[locale] || product.unit.en,
+                cartQuantity: item.cartQuantity,
+            };
+        });
+
+        const deliveryCharge = 150;
+        const subtotal = normalizedOrderItems.reduce(
+            (total, item) => total + item.price * item.cartQuantity,
+            0
+        );
         const tran_id = `TXN-${Date.now()}-${Math.floor(
             Math.random() * 100000
         )}`;
 
         const order = await Order.create({
-            user_id,
+            user_id: req.user._id,
+            deliveryDetails: {
+                name: deliveryDetails.name.trim(),
+                phone: deliveryDetails.phone.trim(),
+                address: deliveryDetails.address.trim(),
+                district: deliveryDetails.district.trim(),
+                thana: deliveryDetails.thana.trim(),
+                note: typeof deliveryDetails.note === "string"
+                    ? deliveryDetails.note.trim()
+                    : "",
+            },
             tran_id,
-            orderItems,
-            totalAmount,
-            paymentMethod,
+            deliveryCharge,
+            totalAmount: subtotal + deliveryCharge,
+            orderItems: normalizedOrderItems,
+            paymentMethod: "cod",
             paymentStatus: "pending",
             orderStatus: "pending",
         });

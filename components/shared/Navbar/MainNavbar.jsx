@@ -12,7 +12,6 @@ import { buttonVariants } from "../../ui/Button";
 import {
   Heart,
   Search,
-  ShoppingBag,
   X,
   Menu,
   UserRound,
@@ -27,11 +26,6 @@ const Navbar = () => {
 
   const { userAndToken } = useSelector((state) => state.auth);
   const { language } = useSelector((state) => state.language);
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const cartCount = cartItems.reduce(
-    (total, item) => total + (Number(item.cartQuantity) || 0),
-    0
-  );
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -73,8 +67,8 @@ const Navbar = () => {
 
   return (
     <header className="fixed left-0 right-0 top-9 z-[999] h-20 border-b border-primary/10 bg-green-light/95 backdrop-blur-md">
-      <nav className="wrapper mx-auto flex h-full w-full items-center gap-5 px-4">
-        <div className="relative h-14 w-[100px] shrink-0 sm:w-[170px] md:w-[190px]">
+      <nav className="wrapper mx-auto flex h-full w-full items-center gap-0 px-2 sm:gap-2 sm:px-4 md:gap-5">
+        <div className="relative h-14 w-[72px] shrink-0 sm:w-[170px] md:w-[190px]">
           <Link href="/" className="block h-full w-full">
             <Image
               src="/assets/purehillglowweblogo.png"
@@ -90,22 +84,22 @@ const Navbar = () => {
           <ProductSearch />
         </div>
 
-        <div className="ml-auto flex items-center gap-1 sm:gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-2">
           <button
             onClick={() => {
               setIsSearchOpen(!isSearchOpen);
               setIsOpen(false);
             }}
-            className="rounded-full p-2 text-primary hover:bg-primary/10 lg:hidden eq"
+            className="shrink-0 rounded-full p-1 text-primary hover:bg-primary/10 sm:p-2 lg:hidden eq"
             aria-label="Search"
           >
             {isSearchOpen ? <X size={21} /> : <Search size={21} />}
           </button>
 
-          <div className="hidden overflow-hidden rounded-md border border-primary/30 bg-primary/20 sm:flex">
+          <div className="flex shrink-0 overflow-hidden rounded-md border border-primary/30 bg-primary/20">
             <button
               onClick={() => dispatch(setLanguage("en"))}
-              className={`px-2 py-1.5 text-xs font-semibold eq ${
+              className={`px-1 py-1.5 text-[10px] font-semibold eq sm:px-2 sm:text-xs ${
                 language === "en"
                   ? "bg-primary text-light"
                   : "text-primary hover:bg-primary/10"
@@ -116,7 +110,7 @@ const Navbar = () => {
 
             <button
               onClick={() => dispatch(setLanguage("bn"))}
-              className={`px-2 py-1.5 text-xs font-semibold eq ${
+              className={`px-1 py-1.5 text-[10px] font-semibold eq sm:px-2 sm:text-xs ${
                 language === "bn"
                   ? "bg-primary text-white"
                   : "text-primary hover:bg-primary/10"
@@ -216,18 +210,22 @@ const Navbar = () => {
               href="/auth/login"
               className={`${buttonVariants({
                 variant: "primary",
-              })} ml-2 hidden items-center gap-2 sm:inline-flex`}
+              })} ml-0 inline-flex shrink-0 items-center gap-0 px-1 sm:ml-2 sm:gap-2 sm:px-2`}
+              aria-label={language === "bn" ? "লগইন" : "Login"}
+              title={language === "bn" ? "লগইন" : "Login"}
             >
-              <UserRound size={17} />
+              <UserRound size={17} className="shrink-0" />
 
-              {language === "bn" ? "লগইন" : "Login"}
+              <span className="hidden sm:inline">
+                {language === "bn" ? "লগইন" : "Login"}
+              </span>
             </Link>
           )}
 
           {/*========== Wishlist ==========*/}
           <Link
             href="/wishlist"
-            className="relative hidden rounded-full p-2 text-dark eq hover:bg-primary/10 hover:text-primary md:block "
+            className="relative shrink-0 rounded-full p-1 text-dark eq hover:bg-primary/10 hover:text-primary sm:p-2"
             aria-label="Wishlist"
             title="Wishlist"
           >
@@ -236,33 +234,13 @@ const Navbar = () => {
               0
             </span>
           </Link>
-          {/*================ cart============= */}
-          <Link
-            href="/cart"
-            className="relative rounded-full p-2 text-dark eq hover:bg-primary/10 hover:text-primary"
-            aria-label={
-              language === "bn"
-                ? `কার্ট, ${cartCount} টি পণ্য`
-                : `Cart, ${cartCount} items`
-            }
-            title={language === "bn" ? "কার্ট" : "Cart"}
-          >
-            <ShoppingBag size={21} strokeWidth={1.8} />
-            <span
-              aria-live="polite"
-              className="absolute -right-0.5 -top-0.5 min-w-4 rounded-full bg-red px-1 text-center text-[9px] font-bold text-white"
-            >
-              {cartCount > 99 ? "99+" : cartCount}
-            </span>
-          </Link>
-
           {/*========== Mobile Menu Button ===========*/}
           <button
             onClick={() => {
               setIsOpen(!isOpen);
               setIsSearchOpen(false);
             }}
-            className="rounded-full p-2 text-primary eq hover:bg-primary/10 md:hidden"
+            className="shrink-0 rounded-full p-1 text-primary eq hover:bg-primary/10 sm:p-2 md:hidden"
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={22} /> : <Menu size={22} />}

@@ -46,8 +46,8 @@ const Hero = () => {
   return (
     <section className="w-full  mt-20 md:mt-32 overflow-hidden">
       {loading ? (
-        <div className="h-full w-full flex items-center justify-center bg-gray animate-pulse rounded-lg">
-          <Loading />
+        <div className="h-[calc(100vh-5rem)] w-full flex items-center justify-center bg-gray animate-pulse rounded-lg md:h-[calc(100vh-8rem)]">
+          <Loading isLoading={loading} />
         </div>
       ) : error ? (
         <div className="h-full w-full flex flex-col items-center justify-center bg-gray/60 rounded-lg text-center p-4">
