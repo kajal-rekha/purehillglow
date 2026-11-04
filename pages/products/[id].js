@@ -167,7 +167,7 @@ const ProductDetailsPage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-[#fbf8f2] pb-12 pt-[130px] md:pt-[178px]">
+    <main className="min-h-screen bg-[#fbf8f2] pb-12 pt-[130px]">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
         <nav
           aria-label={isBangla ? "ব্রেডক্রাম্ব" : "Breadcrumb"}

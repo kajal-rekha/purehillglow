@@ -1,4 +1,5 @@
 import Category from "@/models/Category";
+import Order from "@/models/Order";
 import Product from "@/models/Product";
 import SubCategory from "@/models/SubCategory";
 
@@ -65,7 +66,7 @@ export const createProduct = async (req, res) => {
 //==================== Get All Products ===================//
 export const getAllProducts = async (req, res) => {
     try {
-        const { subCategory } = req.query;
+        const { subCategory, sort } = req.query;
 
         const query = {};
 
@@ -73,10 +74,55 @@ export const getAllProducts = async (req, res) => {
             query.subcategory_id = subCategory;
         }
 
-        const products = await Product.find(query)
+        if (sort === "bestseller" || sort === "best-selling") {
+            const salesPipeline = [
+                { $match: { orderStatus: { $ne: "cancelled" } } },
+                { $unwind: "$orderItems" },
+                {
+                    $match: {
+                        "orderItems.product_id": { $ne: null },
+                        "orderItems.cartQuantity": { $gt: 0 },
+                    },
+                },
+                {
+                    $group: {
+                        _id: "$orderItems.product_id",
+                        unitsSold: { $sum: "$orderItems.cartQuantity" },
+                    },
+                },
+                { $sort: { unitsSold: -1, _id: 1 } },
+            ];
+            if (sort === "bestseller") salesPipeline.push({ $limit: 8 });
+
+            const sales = await Order.aggregate(salesPipeline);
+
+            const productIds = sales.map(({ _id }) => _id);
+            const products = await Product.find({
+                ...query,
+                _id: { $in: productIds },
+            })
+                .populate("category_id", "name")
+                .populate("subcategory_id", "name");
+            const productsById = new Map(
+                products.map((product) => [product._id.toString(), product])
+            );
+
+            return res.status(200).json(
+                productIds
+                    .map((productId) => productsById.get(productId.toString()))
+                    .filter(Boolean)
+            );
+        }
+
+        let productsQuery = Product.find(query)
             .populate("category_id", "name")
             .populate("subcategory_id", "name");
 
+        if (sort === "newest") {
+            productsQuery = productsQuery.sort({ createdAt: -1 }).limit(6);
+        }
+
+        const products = await productsQuery;
         res.status(200).json(products);
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -29,7 +29,7 @@ const BestSeller = () => {
   useEffect(() => {
     const fetchBestSellers = async () => {
       try {
-        const response = await fetch("/api/products");
+        const response = await fetch("/api/products?sort=bestseller");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

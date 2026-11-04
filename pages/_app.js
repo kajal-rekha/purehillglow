@@ -6,14 +6,19 @@ import { Toaster } from "react-hot-toast";
 import TopNavbar from "@/components/shared/Navbar/TopNavbar";
 import CategoryNavbar from "@/components/shared/Navbar/CategoryNavbar";
 import FloatingCart from "@/components/shared/FloatingCart";
+import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps }) {
+  const router = useRouter();
+
   return (
     <ReduxProvider>
       <TopNavbar />
       <Navbar />
-      <CategoryNavbar/>
-      <Component {...pageProps} />
+      {router.pathname === "/" && <CategoryNavbar />}
+      <div className="min-h-screen">
+        <Component {...pageProps} />
+      </div>
       <FloatingCart />
       <Footer />
       <Toaster position="top-center" />

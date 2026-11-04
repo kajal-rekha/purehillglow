@@ -129,7 +129,7 @@ const CheckoutPage = () => {
   };
 
   return (
-    <main className="min-h-screen bg-[#fbf8f2] pb-12 pt-[130px] md:pt-[178px]">
+    <main className="min-h-screen bg-[#fbf8f2] pb-12 pt-[130px]">
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <h1 className="mb-6 text-center font-playfair text-2xl font-bold text-[#24452c] sm:text-3xl">
           {isBangla ? "অর্ডার সম্পন্ন করুন" : "Checkout"}

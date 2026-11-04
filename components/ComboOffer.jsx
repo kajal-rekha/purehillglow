@@ -75,13 +75,16 @@ const ComboOffer = () => {
 
           <div className="pointer-events-none relative flex min-h-[220px] items-end justify-center sm:min-h-[240px]">
             <div className="absolute bottom-[-68px] right-[8%] h-52 w-52 rounded-full bg-white/50 sm:bottom-[-55px] sm:right-[10%] sm:h-64 sm:w-64" />
-            <div className="relative z-10 flex h-full w-full items-end justify-center gap-1 px-2 sm:gap-2 sm:px-4">
+            <div className="relative z-10 flex h-full w-full items-end justify-center gap-0 px-2 sm:px-4">
               {products.map((product, index) => (
                 <div
                   key={product._id}
-                  className={`relative h-[70%] w-[23%] max-w-[92px] ${
-                    index % 2 === 1 ? "h-[58%]" : ""
-                  }`}
+                  className={`relative h-[70%] w-[25%] max-w-[96px] ${
+                    index > 0 ? "-ml-2 sm:-ml-3" : ""
+                  } ${index % 2 === 1 ? "h-[58%]" : ""}`}
+                  style={{
+                    zIndex: index + 1,
+                  }}
                 >
                   <Image
                     src={product.images[0]}
