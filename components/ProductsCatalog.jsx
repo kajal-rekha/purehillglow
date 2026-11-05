@@ -66,8 +66,23 @@ const ProductsCatalog = () => {
       setSearch(
         typeof router.query.search === "string" ? router.query.search : ""
       );
+      const queryCategoryId =
+        typeof router.query.category === "string" ? router.query.category : "";
+      const querySubcategoryId =
+        typeof router.query.subCategory === "string"
+          ? router.query.subCategory
+          : "";
+      setCategoryId(queryCategoryId);
+      setSubcategoryId(querySubcategoryId);
+      setExpandedCategoryId(queryCategoryId);
     }
-  }, [router.isReady, router.query.filter, router.query.search]);
+  }, [
+    router.isReady,
+    router.query.category,
+    router.query.filter,
+    router.query.search,
+    router.query.subCategory,
+  ]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -307,7 +322,7 @@ const ProductsCatalog = () => {
   };
 
   const inputClass =
-    "w-full rounded-lg border border-[#e5dfd1] bg-[#fffdf8] px-3 py-2 text-xs text-[#344a31] outline-none transition placeholder:text-[#9b9b8c] focus:border-[#78904f] focus:ring-2 focus:ring-[#78904f]/10";
+    "w-full rounded-lg border border-[#e5dfd1] bg-[#fffdf8] px-3 py-2 text-sm text-[#344a31] outline-none transition placeholder:text-[#9b9b8c] focus:border-[#78904f] focus:ring-2 focus:ring-[#78904f]/10";
 
   return (
     <main className="min-h-screen bg-[#fbf8f2] pb-10 pt-[125px] md:pt-[130px]">
@@ -322,13 +337,13 @@ const ProductsCatalog = () => {
           }}
         >
           <div className="relative z-10 max-w-xl">
-            <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#71814d]">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#71814d]">
               {isBangla ? "পাহাড়ের প্রাকৃতিক যত্ন" : "Natural care from the hills"}
             </p>
             <h1 className="font-playfair text-3xl font-bold text-[#24452c] sm:text-4xl">
               {isBangla ? "আমাদের পণ্য" : "Our Products"}
             </h1>
-            <p className="mt-1 max-w-sm text-xs leading-5 text-[#59634e] sm:text-sm">
+            <p className="mt-1 max-w-sm text-sm leading-5 text-[#59634e] sm:text-base">
               {isBangla
                 ? "আপনার ত্বক ও চুলের যত্নে খুঁজে নিন পছন্দের প্রাকৃতিক পণ্য।"
                 : "Discover natural skincare and beauty products made for your everyday routine."}
@@ -338,7 +353,7 @@ const ProductsCatalog = () => {
 
         <nav
           aria-label={isBangla ? "ব্রেডক্রাম্ব" : "Breadcrumb"}
-          className="mb-3 flex items-center gap-1.5 text-[10px] text-[#6d7159]"
+          className="mb-3 flex items-center gap-1.5 text-xs text-[#6d7159]"
         >
           <Link href="/" className="font-semibold text-[#55713e] hover:underline">
             {isBangla ? "হোম" : "Home"}
@@ -349,7 +364,7 @@ const ProductsCatalog = () => {
 
         <div className="mb-4 flex justify-end">
           <div className="flex items-center gap-2">
-            <span className="hidden text-[11px] text-[#6d7159] sm:inline">
+            <span className="hidden text-sm text-[#6d7159] sm:inline">
               {isBangla ? "সাজান:" : "Sort by:"}
             </span>
             <div className="relative">
@@ -357,7 +372,7 @@ const ProductsCatalog = () => {
                 value={sort}
                 onChange={(event) => setSort(event.target.value)}
                 aria-label={isBangla ? "পণ্য সাজান" : "Sort products"}
-                className="appearance-none rounded-lg border border-[#e5dfd1] bg-[#fffdf8] py-2 pl-3 pr-8 text-[11px] font-semibold text-[#344a31] outline-none focus:border-[#78904f]"
+                className="appearance-none rounded-lg border border-[#e5dfd1] bg-[#fffdf8] py-2 pl-3 pr-8 text-sm font-semibold text-[#344a31] outline-none focus:border-[#78904f]"
               >
                 <option value="newest">{isBangla ? "নতুন" : "Newest"}</option>
                 <option value="price-low">
@@ -379,8 +394,8 @@ const ProductsCatalog = () => {
           </div>
         </div>
 
-        <div className="mb-3 flex items-center justify-between gap-3 lg:hidden">
-          <p className="text-[11px] text-[#6d7159]">
+        <div className="mb-3 flex items-center justify-between gap-3 md:hidden">
+          <p className="text-sm text-[#6d7159]">
             {loading
               ? isBangla
                 ? "পণ্য লোড হচ্ছে..."
@@ -392,24 +407,41 @@ const ProductsCatalog = () => {
           <button
             type="button"
             onClick={() => setFiltersOpen((open) => !open)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-[#dce3cf] bg-white px-3 py-2 text-xs font-semibold text-[#355b3d]"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[#dce3cf] bg-white px-3 py-2 text-sm font-semibold text-[#355b3d]"
           >
             <Filter size={14} />
             {isBangla ? "ফিল্টার" : "Filters"}
           </button>
         </div>
 
-        <div className="grid items-start gap-4 lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)]">
+        <div className="grid items-start gap-4 md:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)]">
           <aside
             className={`${
               filtersOpen ? "block" : "hidden"
-            } space-y-3 lg:sticky lg:top-36 lg:block`}
+            } space-y-3 md:sticky md:top-36 md:block`}
           >
             <section className="rounded-xl border border-[#eee5d6] bg-[#fffdf8] p-3 shadow-sm">
-              <h2 className="mb-2 flex items-center gap-2 text-xs font-bold text-[#344a31]">
+              <h2 className="mb-2 flex items-center gap-2 text-sm font-bold text-[#344a31]">
                 <Leaf size={15} className="text-[#55713e]" />
                 {isBangla ? "ক্যাটাগরি অনুযায়ী খুঁজুন" : "Shop by Category"}
               </h2>
+              <button
+                type="button"
+                onClick={clearFilters}
+                aria-pressed={
+                  !search &&
+                  !categoryId &&
+                  !subcategoryId &&
+                  !showOffers &&
+                  !brand &&
+                  availability === "all" &&
+                  minPrice === "" &&
+                  maxPrice === ""
+                }
+                className="mb-1 w-full rounded-lg px-2 py-2 text-left text-[13px] font-semibold text-[#355b3d] transition hover:bg-[#edf0df]"
+              >
+                {isBangla ? "সব পণ্য দেখুন" : "All Products"}
+              </button>
               <div className="max-h-56 space-y-0.5 overflow-y-auto pr-1">
                 {categories.map((category) => {
                   const name = localized(category.name, language);
@@ -438,7 +470,7 @@ const ProductsCatalog = () => {
                             setSubcategoryId("");
                           }}
                           aria-pressed={categoryId === category._id}
-                          className="flex min-w-0 flex-1 items-center gap-2 px-2 py-2 text-left text-[11px]"
+                          className="flex min-w-0 flex-1 items-center gap-2 px-2 py-2 text-left text-[13px]"
                         >
                           <Leaf size={14} className="shrink-0 text-[#78904f]" />
                           <span className="truncate">{name}</span>
@@ -485,7 +517,7 @@ const ProductsCatalog = () => {
                               setFiltersOpen(false);
                             }}
                             aria-pressed={subcategoryId === subcategory._id}
-                            className={`flex w-full items-center rounded-lg px-2 py-1.5 text-left text-[10px] transition ${
+                            className={`flex w-full items-center rounded-lg px-2 py-1.5 text-left text-xs transition ${
                               subcategoryId === subcategory._id
                                 ? "font-semibold text-[#355b3d]"
                                 : "text-[#66695c] hover:bg-[#f4f3e9]"
@@ -497,7 +529,7 @@ const ProductsCatalog = () => {
                           </button>
                         ))}
                         {categorySubcategories.length === 0 && (
-                          <p className="px-2 py-1.5 text-[10px] text-[#858477]">
+                          <p className="px-2 py-1.5 text-xs text-[#858477]">
                             {isBangla
                               ? "কোনো সাবক্যাটাগরি নেই"
                               : "No subcategories available"}
@@ -509,12 +541,12 @@ const ProductsCatalog = () => {
                   );
                 })}
                 {subcategoryError && (
-                  <p role="alert" className="px-2 py-1 text-[10px] text-red">
+                  <p role="alert" className="px-2 py-1 text-xs text-red">
                     {subcategoryError}
                   </p>
                 )}
                 {categories.length === 0 && (
-                  <p className="text-[10px] text-[#858477]">
+                  <p className="text-xs text-[#858477]">
                     {isBangla ? "ক্যাটাগরি পাওয়া যায়নি" : "No categories available"}
                   </p>
                 )}
@@ -522,7 +554,7 @@ const ProductsCatalog = () => {
             </section>
 
             <section className="rounded-xl border border-[#eee5d6] bg-[#fffdf8] p-3 shadow-sm">
-              <h2 className="mb-3 flex items-center gap-2 text-xs font-bold text-[#242a22]">
+              <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-[#242a22]">
                 <Tag size={18} fill="currentColor" className="text-[#24452c]" />
                 {isBangla ? "দাম অনুযায়ী ফিল্টার" : "Filter by Price"}
               </h2>
@@ -568,7 +600,7 @@ const ProductsCatalog = () => {
                     className="price-range-input z-10"
                   />
                 </div>
-                <div className="mt-2 flex justify-between text-[11px] font-semibold text-[#363a33]">
+                <div className="mt-2 flex justify-between text-sm font-semibold text-[#363a33]">
                   <span>{formatPriceFilterLabel(minPriceValue)}</span>
                   <span>
                     {formatPriceFilterLabel(maxPriceValue)}
@@ -579,7 +611,7 @@ const ProductsCatalog = () => {
             </section>
 
             {/* <section className="rounded-xl border border-[#eee5d6] bg-[#fffdf8] p-3 shadow-sm">
-              <h2 className="mb-2 text-xs font-bold text-[#344a31]">
+              <h2 className="mb-2 text-sm font-bold text-[#344a31]">
                 {isBangla ? "ব্র্যান্ড" : "Brand"}
               </h2>
               {brands.length > 0 ? (
@@ -587,7 +619,7 @@ const ProductsCatalog = () => {
                   {brands.map((brandName) => (
                     <label
                       key={brandName}
-                      className="flex cursor-pointer items-center gap-2 text-[10px] text-[#55594d]"
+                      className="flex cursor-pointer items-center gap-2 text-xs text-[#55594d]"
                     >
                       <input
                         type="radio"
@@ -603,7 +635,7 @@ const ProductsCatalog = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-[10px] leading-4 text-[#858477]">
+                <p className="text-xs leading-5 text-[#858477]">
                   {isBangla
                     ? "পণ্যের তথ্যের সঙ্গে ব্র্যান্ড যোগ করা হলে এখানে দেখাবে।"
                     : "Brand filters will appear when brand details are added to products."}
@@ -612,18 +644,18 @@ const ProductsCatalog = () => {
             </section> */}
 
             <section className="rounded-xl border border-[#eee5d6] bg-[#fffdf8] p-3 shadow-sm">
-              <h2 className="mb-2 text-xs font-bold text-[#344a31]">
+              <h2 className="mb-2 text-sm font-bold text-[#344a31]">
                 {isBangla ? "পণ্যের প্রাপ্যতা" : "Availability"}
               </h2>
               <div className="space-y-1.5">
                 {[
-                  ["all", isBangla ? "সব পণ্য" : "All products"],
+                  ["all", isBangla ? "যেকোনো প্রাপ্যতা" : "Any availability"],
                   ["in-stock", isBangla ? "স্টকে আছে" : "In stock"],
                   ["out-of-stock", isBangla ? "স্টকে নেই" : "Out of stock"],
                 ].map(([value, label]) => (
                   <label
                     key={value}
-                    className="flex cursor-pointer items-center gap-2 text-[10px] text-[#55594d]"
+                    className="flex cursor-pointer items-center gap-2 text-xs text-[#55594d]"
                   >
                     <input
                       type="radio"
@@ -641,7 +673,7 @@ const ProductsCatalog = () => {
             <button
               type="button"
               onClick={clearFilters}
-              className="w-full rounded-lg border border-[#78947d] bg-transparent px-3 py-2 text-[10px] font-semibold text-[#355b3d] transition hover:bg-[#355b3d] hover:text-white"
+              className="w-full rounded-lg border border-[#78947d] bg-transparent px-3 py-2 text-xs font-semibold text-[#355b3d] transition hover:bg-[#355b3d] hover:text-white"
             >
               {isBangla ? "সব ফিল্টার মুছুন" : "Clear All Filters"}
             </button>
@@ -649,7 +681,7 @@ const ProductsCatalog = () => {
 
           <section aria-label={isBangla ? "পণ্য" : "Products"}>
             <div className="mb-3 hidden items-center justify-between lg:flex">
-              <p className="text-[11px] text-[#6d7159]">
+              <p className="text-sm text-[#6d7159]">
                 {loading
                   ? isBangla
                     ? "পণ্য লোড হচ্ছে..."
@@ -665,7 +697,7 @@ const ProductsCatalog = () => {
                     setCategoryId("");
                     setSubcategoryId("");
                   }}
-                  className="inline-flex items-center gap-1 rounded-full bg-[#edf0df] px-2.5 py-1 text-[10px] font-semibold text-[#526c3c]"
+                  className="inline-flex items-center gap-1 rounded-full bg-[#edf0df] px-2.5 py-1 text-xs font-semibold text-[#526c3c]"
                 >
                   {localized(
                     categories.find((item) => item._id === categoryId)?.name,
@@ -712,7 +744,7 @@ const ProductsCatalog = () => {
                 <p className="text-sm font-semibold text-[#46543b]">
                   {isBangla ? "কোনো পণ্য পাওয়া যায়নি" : "No products found"}
                 </p>
-                <p className="mt-1 text-xs text-[#81816f]">
+                <p className="mt-1 text-sm text-[#81816f]">
                   {isBangla
                     ? "ফিল্টার পরিবর্তন করে আবার চেষ্টা করুন।"
                     : "Try changing or clearing your filters."}
@@ -720,7 +752,7 @@ const ProductsCatalog = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-3 text-xs font-semibold text-[#55713e] underline underline-offset-2"
+                  className="mt-3 text-sm font-semibold text-[#55713e] underline underline-offset-2"
                 >
                   {isBangla ? "ফিল্টার মুছুন" : "Clear filters"}
                 </button>
@@ -766,12 +798,12 @@ const ProductsCatalog = () => {
                                 className="object-contain p-1.5 transition-transform duration-300 group-hover:scale-105 sm:p-2"
                               />
                             ) : (
-                              <div className="flex h-full items-center justify-center text-xs text-dark/60">
+                              <div className="flex h-full items-center justify-center text-sm text-dark/60">
                                 {isBangla ? "ছবি নেই" : "No image"}
                               </div>
                             )}
                             {(isNew || product.featured || discount > 0) && (
-                              <span className="absolute left-1.5 top-1.5 rounded-full bg-[#fffdf8]/95 px-2 py-1 text-[9px] font-bold text-[#355b3d] shadow-sm">
+                              <span className="absolute left-1.5 top-1.5 rounded-full bg-[#fffdf8]/95 px-2 py-1 text-[11px] font-bold text-[#355b3d] shadow-sm">
                                 {discount > 0
                                   ? `-${discount}%`
                                   : isNew
@@ -784,21 +816,21 @@ const ProductsCatalog = () => {
                               </span>
                             )}
                           </div>
-                          <p className="mt-2 line-clamp-2 min-h-8 text-[10px] font-semibold leading-4 text-[#344a31] sm:text-xs">
+                          <p className="mt-2 line-clamp-2 min-h-8 text-xs font-semibold leading-5 text-[#344a31] sm:text-sm">
                             {name}
                           </p>
                         </Link>
 
                         <div className="mt-1 flex min-h-6 flex-wrap items-center gap-x-1.5 gap-y-0.5">
-                          <span className="text-xs font-bold text-[#285b35] sm:text-sm">
+                          <span className="text-sm font-bold text-[#285b35] sm:text-base">
                             {formatPrice(product.price)}
                           </span>
                           {originalPrice && (
                             <>
-                              <span className="text-[9px] text-dark/45 line-through">
+                              <span className="text-[11px] text-dark/45 line-through">
                                 {formatPrice(originalPrice)}
                               </span>
-                              <span className="rounded-full bg-[#ffe4df] px-1.5 py-0.5 text-[8px] font-semibold text-[#c4473e]">
+                              <span className="rounded-full bg-[#ffe4df] px-1.5 py-0.5 text-[10px] font-semibold text-[#c4473e]">
                                 {discount}% {isBangla ? "ছাড়" : "OFF"}
                               </span>
                             </>
@@ -809,7 +841,7 @@ const ProductsCatalog = () => {
                           type="button"
                           onClick={() => dispatch(addToCart(product))}
                           disabled={Number(product.stock) <= 0}
-                          className="mt-auto w-full rounded-md border border-[#78947d] px-1.5 py-1.5 text-[10px] font-semibold text-[#355b3d] transition hover:bg-[#355b3d] hover:text-white disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-500 sm:mt-2 sm:text-xs"
+                          className="mt-auto w-full rounded-md border border-[#78947d] px-1.5 py-1.5 text-xs font-semibold text-[#355b3d] transition hover:bg-[#355b3d] hover:text-white disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-500 sm:mt-2 sm:text-sm"
                         >
                           {Number(product.stock) <= 0
                             ? isBangla
@@ -849,7 +881,7 @@ const ProductsCatalog = () => {
                           type="button"
                           onClick={() => setPage(pageNumber)}
                           aria-current={page === pageNumber ? "page" : undefined}
-                          className={`h-8 min-w-8 rounded-full px-2 text-[11px] font-semibold ${
+                          className={`h-8 min-w-8 rounded-full px-2 text-sm font-semibold ${
                             page === pageNumber
                               ? "bg-[#24452c] text-white"
                               : "border border-[#e5dfd1] bg-white text-[#526c3c]"
