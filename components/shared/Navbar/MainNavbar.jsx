@@ -26,6 +26,9 @@ const Navbar = () => {
 
   const { userAndToken } = useSelector((state) => state.auth);
   const { language } = useSelector((state) => state.language);
+  const wishlistItems = useSelector(
+    (state) => state.wishlist?.wishlistItems || []
+  );
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const dispatch = useDispatch();
 

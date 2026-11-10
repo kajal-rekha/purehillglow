@@ -3,7 +3,7 @@ import Loading from "@/components/ui/Loading";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { useState, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/redux/features/auth/authSlice";
 import Link from "next/link";
 import { Eye, EyeOff, Lock, LogIn, Mail } from "lucide-react";
@@ -14,6 +14,8 @@ const LoginForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const dispatch = useDispatch();
+    const language = useSelector((state) => state.language?.language);
+    const isBangla = language === "bn";
 
     const handleSubmit = useCallback(
         async (e) => {
@@ -22,7 +24,11 @@ const LoginForm = () => {
 
             if (!formData.email || !formData.password) {
                 setIsLoading(false);
-                toast.error("Email and password are required.");
+                toast.error(
+                    isBangla
+                        ? "ইমেইল এবং পাসওয়ার্ড দেওয়া আবশ্যক।"
+                        : "Email and password are required."
+                );
                 return;
             }
 
@@ -33,7 +39,9 @@ const LoginForm = () => {
                 });
 
                 if (res.data) {
-                    toast.success("Login successful!");
+                    toast.success(
+                        isBangla ? "লগইন সফল হয়েছে!" : "Login successful!"
+                    );
                     dispatch(
                         login({ user: res.data.user, token: res.data.token })
                     );
@@ -45,11 +53,13 @@ const LoginForm = () => {
                 setIsLoading(false);
                 toast.error(
                     err?.response?.data?.error ||
-                        "Login failed. Please try again."
+                        (isBangla
+                            ? "লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
+                            : "Login failed. Please try again.")
                 );
             }
         },
-        [formData, router, dispatch]
+        [formData, router, dispatch, isBangla]
     );
 
     const inputClass =
@@ -64,10 +74,12 @@ const LoginForm = () => {
                         <LogIn size={22} />
                     </div>
                     <h2 className="text-2xl font-bold text-dark">
-                        Welcome back!
+                        {isBangla ? "স্বাগতম!" : "Welcome back!"}
                     </h2>
                     <p className="mt-1 text-sm text-black/55">
-                        Please sign in to your account
+                        {isBangla
+                            ? "আপনার অ্যাকাউন্টে সাইন ইন করুন"
+                            : "Please sign in to your account"}
                     </p>
                 </div>
 
@@ -81,7 +93,7 @@ const LoginForm = () => {
                             htmlFor="email"
                             className="text-sm font-medium text-dark"
                         >
-                            Email address
+                            {isBangla ? "ইমেইল অ্যাড্রেস" : "Email address"}
                         </label>
                         <div className="relative flex w-full items-center">
                             <Mail
@@ -109,7 +121,7 @@ const LoginForm = () => {
                             htmlFor="password"
                             className="text-sm font-medium text-dark"
                         >
-                            Password
+                            {isBangla ? "পাসওয়ার্ড" : "Password"}
                         </label>
                         <div className="relative flex w-full items-center">
                             <Lock
@@ -126,7 +138,11 @@ const LoginForm = () => {
                                 }
                                 type={showPassword ? "text" : "password"}
                                 id="password"
-                                placeholder="Write your password"
+                                placeholder={
+                                    isBangla
+                                        ? "পাসওয়ার্ড লিখুন"
+                                        : "Write your password"
+                                }
                                 className="eq w-full rounded-xl border border-[#cfe0d5] bg-[#f8fbf9] py-3 pl-10 pr-10 text-sm text-dark outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/15"
                             />
                             <button
@@ -155,6 +171,8 @@ const LoginForm = () => {
                     >
                         {isLoading ? (
                             <Loading isLoading={isLoading} />
+                        ) : isBangla ? (
+                            "লগইন"
                         ) : (
                             "Login"
                         )}
@@ -162,13 +180,15 @@ const LoginForm = () => {
 
                     <div className="border-t border-primary/10 pt-4 text-center text-sm">
                         <span className="text-black/55">
-                            {`Don't have an account?`}{" "}
+                            {isBangla
+                                ? "অ্যাকাউন্ট নেই? "
+                                : `Don't have an account? `}
                         </span>
                         <Link
                             href="/auth/signup"
                             className="font-semibold text-primary hover:underline"
                         >
-                            Register
+                            {isBangla ? "রেজিস্টার করুন" : "Register"}
                         </Link>
                     </div>
                 </form>

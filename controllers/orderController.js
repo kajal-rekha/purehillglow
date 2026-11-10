@@ -11,16 +11,16 @@ export const getAllOrders = async (req, res) => {
         let orders;
         if (userRole === "admin") {
             //=========== Admin can access all orders ============//
-            orders = await Order.find({}).populate(
-                "user_id",
-                "username email phone address image"
-            );
+            orders = await Order.find({})
+                .sort({ createdAt: -1 })
+                .populate("user_id", "username email phone address image")
+                .populate("orderItems.product_id", "images name unit");
         } else {
             //====== Regular user can only access their own orders ======//
-            orders = await Order.find({ user_id: userId }).populate(
-                "user_id",
-                "username email phone address image"
-            );
+            orders = await Order.find({ user_id: userId })
+                .sort({ createdAt: -1 })
+                .populate("user_id", "username email phone address image")
+                .populate("orderItems.product_id", "images name unit");
         }
 
         if (!orders || orders.length === 0) {

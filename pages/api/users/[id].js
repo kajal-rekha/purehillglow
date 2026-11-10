@@ -14,7 +14,13 @@ export default async function handler(req, res) {
         return getAnUser(req, res);
     } else if (req.method === "PUT") {
         await isAuthenticated(req, res, async () => {
-            await isAdmin(req, res, async () => {
+            if (
+                req.user?.role === "admin" ||
+                String(req.user?._id) === String(req.query.id)
+            ) {
+                return updateUser(req, res);
+            }
+            return isAdmin(req, res, async () => {
                 return updateUser(req, res);
             });
         });

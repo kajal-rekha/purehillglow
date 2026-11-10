@@ -25,6 +25,9 @@ import cartReducer, {
 } from "./features/cart/cartSlice";
 import languageSlice from "./features/language/languageSlice";
 import orderSlice from "./features/order/orderSlice";
+import wishlistReducer, {
+    toggleWishlist,
+} from "./features/wishlist/wishlistSlice";
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -75,6 +78,31 @@ listenerMiddleware.startListening({
     },
 });
 
+listenerMiddleware.startListening({
+    actionCreator: toggleWishlist,
+    effect: (action, listenerApi) => {
+        const state = listenerApi.getState();
+        const language = state.language.language;
+        const productName = getProductName(action.payload, language);
+        const isAdded = state.wishlist?.wishlistItems?.some(
+            (item) => item._id === action.payload?._id
+        );
+        if (isAdded) {
+            toast.success(
+                language === "bn"
+                    ? `${productName} উইশলিস্টে যোগ করা হয়েছে`
+                    : `${productName} added to wishlist`
+            );
+        } else {
+            toast.success(
+                language === "bn"
+                    ? `${productName} উইশলিস্ট থেকে সরানো হয়েছে`
+                    : `${productName} removed from wishlist`
+            );
+        }
+    },
+});
+
 const persistConfig = {
     key: "root",
     version: 1,
@@ -86,6 +114,7 @@ const rootReducer = combineReducers({
     cart: cartReducer,
     language: languageSlice,
     order: orderSlice,
+    wishlist: wishlistReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

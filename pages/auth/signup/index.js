@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const SignUpForm = () => {
     const [formData, setFormData] = useState({
@@ -24,6 +24,8 @@ const SignUpForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const dispatch = useDispatch();
+    const language = useSelector((state) => state.language?.language);
+    const isBangla = language === "bn";
 
     //======= handle local image upload & compress =======//
     const handleImageChange = (e) => {
@@ -31,7 +33,11 @@ const SignUpForm = () => {
         if (!file) return;
 
         if (!file.type.startsWith("image/")) {
-            toast.error("Please select a valid image file.");
+            toast.error(
+                isBangla
+                    ? "অনুগ্রহ করে একটি সঠিক ছবির ফাইল সিলেক্ট করুন।"
+                    : "Please select a valid image file."
+            );
             return;
         }
 
@@ -66,7 +72,11 @@ const SignUpForm = () => {
                 setImageName(file.name);
             };
             img.onerror = () => {
-                toast.error("Failed to load image. Please try another file.");
+                toast.error(
+                    isBangla
+                        ? "ছবিটি লোড করা যায়নি। অন্য একটি ফাইল চেষ্টা করুন।"
+                        : "Failed to load image. Please try another file."
+                );
             };
             img.src = event.target.result;
         };
@@ -96,7 +106,11 @@ const SignUpForm = () => {
                 !formData.phone
             ) {
                 setIsLoading(false);
-                toast.error("All fields are required.");
+                toast.error(
+                    isBangla
+                        ? "সবগুলো ঘর পূরণ করা আবশ্যক।"
+                        : "All fields are required."
+                );
                 return;
             }
 
@@ -111,7 +125,9 @@ const SignUpForm = () => {
                 });
 
                 if (res.data) {
-                    toast.success("Signup successful!");
+                    toast.success(
+                        isBangla ? "সাইনআপ সফল হয়েছে!" : "Signup successful!"
+                    );
 
                     dispatch(
                         signup({
@@ -136,11 +152,13 @@ const SignUpForm = () => {
                 setIsLoading(false);
                 toast.error(
                     err?.response?.data?.error ||
-                        "Signup failed. Please try again."
+                        (isBangla
+                            ? "সাইনআপ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
+                            : "Signup failed. Please try again.")
                 );
             }
         },
-        [formData, router, dispatch]
+        [formData, router, dispatch, isBangla]
     );
 
     const inputClass =
@@ -151,10 +169,14 @@ const SignUpForm = () => {
             <div className="mx-auto w-full max-w-lg rounded-2xl border border-primary/15 bg-white p-6 shadow-[0_8px_30px_rgba(12,154,91,0.08)] sm:p-8">
                 <div className="mb-6 flex flex-col gap-1 border-b border-primary/10 pb-4 text-center">
                     <h2 className="text-2xl font-bold text-dark">
-                        Create an account!
+                        {isBangla
+                            ? "নতুন অ্যাকাউন্ট তৈরি করুন!"
+                            : "Create an account!"}
                     </h2>
                     <p className="text-sm text-black/55">
-                        Please provide your details to register
+                        {isBangla
+                            ? "রেজিস্টার করতে আপনার তথ্যগুলো দিন"
+                            : "Please provide your details to register"}
                     </p>
                 </div>
 
@@ -168,7 +190,7 @@ const SignUpForm = () => {
                                 htmlFor="name"
                                 className="text-sm font-medium text-dark"
                             >
-                                Name
+                                {isBangla ? "নাম" : "Name"}
                             </label>
                             <input
                                 value={formData.username}
@@ -180,7 +202,9 @@ const SignUpForm = () => {
                                 }
                                 type="text"
                                 id="name"
-                                placeholder="Sarah Parker"
+                                placeholder={
+                                    isBangla ? "আপনার নাম লিখুন" : "Sarah Parker"
+                                }
                                 className={inputClass}
                             />
                         </div>
@@ -190,7 +214,7 @@ const SignUpForm = () => {
                                 htmlFor="phone"
                                 className="text-sm font-medium text-dark"
                             >
-                                Phone
+                                {isBangla ? "ফোন নম্বর" : "Phone"}
                             </label>
                             <input
                                 value={formData.phone}
@@ -202,7 +226,11 @@ const SignUpForm = () => {
                                 }
                                 type="text"
                                 id="phone"
-                                placeholder="Enter phone number"
+                                placeholder={
+                                    isBangla
+                                        ? "ফোন নম্বর লিখুন"
+                                        : "Enter phone number"
+                                }
                                 className={inputClass}
                             />
                         </div>
@@ -213,7 +241,7 @@ const SignUpForm = () => {
                             htmlFor="email"
                             className="text-sm font-medium text-dark"
                         >
-                            Email address
+                            {isBangla ? "ইমেইল অ্যাড্রেস" : "Email address"}
                         </label>
                         <input
                             value={formData.email}
@@ -235,7 +263,7 @@ const SignUpForm = () => {
                             htmlFor="password"
                             className="text-sm font-medium text-dark"
                         >
-                            Password
+                            {isBangla ? "পাসওয়ার্ড" : "Password"}
                         </label>
                         <input
                             value={formData.password}
@@ -247,7 +275,11 @@ const SignUpForm = () => {
                             }
                             type="password"
                             id="password"
-                            placeholder="Write your password"
+                            placeholder={
+                                isBangla
+                                    ? "পাসওয়ার্ড লিখুন"
+                                    : "Write your password"
+                            }
                             className={inputClass}
                         />
                     </div>
@@ -257,7 +289,7 @@ const SignUpForm = () => {
                             htmlFor="image"
                             className="text-sm font-medium text-dark"
                         >
-                            Image
+                            {isBangla ? "ছবি" : "Image"}
                         </label>
                         <input
                             ref={fileInputRef}
@@ -279,7 +311,10 @@ const SignUpForm = () => {
                                     />
                                     <div className="flex flex-col overflow-hidden">
                                         <span className="truncate text-sm font-medium text-dark">
-                                            {imageName || "Selected image"}
+                                            {imageName ||
+                                                (isBangla
+                                                    ? "নির্বাচিত ছবি"
+                                                    : "Selected image")}
                                         </span>
                                         <button
                                             type="button"
@@ -288,7 +323,9 @@ const SignUpForm = () => {
                                             }
                                             className="w-fit text-xs font-medium text-primary underline hover:opacity-80"
                                         >
-                                            Change photo
+                                            {isBangla
+                                                ? "ছবি পরিবর্তন করুন"
+                                                : "Change photo"}
                                         </button>
                                     </div>
                                 </div>
@@ -308,7 +345,9 @@ const SignUpForm = () => {
                             >
                                 <ImagePlus size={19} className="shrink-0" />
                                 <span>
-                                    Upload your photo from device / gallery
+                                    {isBangla
+                                        ? "ডিভাইস / গ্যালারি থেকে আপনার ছবি আপলোড করুন"
+                                        : "Upload your photo from device / gallery"}
                                 </span>
                             </label>
                         )}
@@ -319,7 +358,7 @@ const SignUpForm = () => {
                             htmlFor="address"
                             className="text-sm font-medium text-dark"
                         >
-                            Address
+                            {isBangla ? "ঠিকানা" : "Address"}
                         </label>
                         <input
                             value={formData.address}
@@ -331,7 +370,11 @@ const SignUpForm = () => {
                             }
                             type="text"
                             id="address"
-                            placeholder="Enter your full address"
+                            placeholder={
+                                isBangla
+                                    ? "আপনার পূর্ণ ঠিকানা লিখুন"
+                                    : "Enter your full address"
+                            }
                             className={inputClass}
                         />
                     </div>
@@ -347,6 +390,8 @@ const SignUpForm = () => {
                     >
                         {isLoading ? (
                             <Loading isLoading={isLoading} />
+                        ) : isBangla ? (
+                            "সাইন আপ"
                         ) : (
                             "Sign Up"
                         )}
@@ -354,13 +399,15 @@ const SignUpForm = () => {
 
                     <p className="mt-1 text-center text-sm">
                         <span className="text-black/55">
-                            Already have an account?{" "}
+                            {isBangla
+                                ? "ইতিমধ্যে অ্যাকাউন্ট আছে? "
+                                : "Already have an account? "}
                         </span>
                         <Link
                             href="/auth/login"
                             className="font-semibold text-primary hover:underline"
                         >
-                            Login
+                            {isBangla ? "লগইন" : "Login"}
                         </Link>
                     </p>
                 </form>
