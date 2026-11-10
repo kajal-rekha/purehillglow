@@ -328,25 +328,22 @@ const ProductsCatalog = () => {
     <main className="min-h-screen bg-[#fbf8f2] pb-10 pt-[125px] md:pt-[130px]">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
         <section
-          className="relative mb-5 min-h-[190px] overflow-hidden rounded-2xl border border-[#eee5d6] bg-[#f7f3e5] bg-cover bg-center px-5 py-5 sm:min-h-[190px] sm:px-8 sm:py-7"
+          className="relative mb-5 min-h-[140px] overflow-hidden rounded-xl border border-[#eee5d6] bg-[#f7f3e5] bg-cover bg-center px-5 py-4 sm:min-h-[180px] sm:px-8 sm:py-6 lg:min-h-[210px]"
           style={{
             backgroundImage:
-              "linear-gradient(90deg, rgba(247,243,229,0.78) 0%, rgba(247,243,229,0.58) 42%, rgba(247,243,229,0.08) 100%), url('/assets/purebanner.jpg')",
-            backgroundPosition: "center, center 58%",
+              "linear-gradient(90deg, rgba(247,243,229,0.34) 0%, rgba(247,243,229,0.2) 42%, rgba(247,243,229,0.02) 100%), url('/assets/purebanner.jpg')",
+            backgroundPosition: "center, center center",
             backgroundSize: "cover, cover",
           }}
         >
           <div className="relative z-10 max-w-xl">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#71814d]">
-              {isBangla ? "পাহাড়ের প্রাকৃতিক যত্ন" : "Natural care from the hills"}
-            </p>
-            <h1 className="font-playfair text-3xl font-bold text-[#24452c] sm:text-4xl">
+            <h1 className="font-playfair text-2xl font-bold text-[#162d20] sm:text-3xl">
               {isBangla ? "আমাদের পণ্য" : "Our Products"}
             </h1>
-            <p className="mt-1 max-w-sm text-sm leading-5 text-[#59634e] sm:text-base">
+            <p className="mt-0.5 max-w-sm text-xs leading-4 text-[#344333] sm:text-sm sm:leading-5">
               {isBangla
-                ? "আপনার ত্বক ও চুলের যত্নে খুঁজে নিন পছন্দের প্রাকৃতিক পণ্য।"
-                : "Discover natural skincare and beauty products made for your everyday routine."}
+                ? "মিয়ানমার ও থাইল্যান্ডের পাহাড়ি অঞ্চলের খাঁটি বিউটি পণ্য আবিষ্কার করুন।"
+                : "Discover authentic beauty products from the hills of Myanmar & Thailand."}
             </p>
           </div>
         </section>
