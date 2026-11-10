@@ -1,9 +1,11 @@
 import Loading from "@/components/ui/Loading";
 import { signup } from "@/redux/features/auth/authSlice";
 import axios from "axios";
+import { ImagePlus, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
@@ -16,10 +18,68 @@ const SignUpForm = () => {
         address: "",
         phone: "",
     });
+    const [imageName, setImageName] = useState("");
+    const fileInputRef = useRef(null);
 
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const dispatch = useDispatch();
+
+    //======= handle local image upload & compress =======//
+    const handleImageChange = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            toast.error("Please select a valid image file.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new window.Image();
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                const MAX_SIZE = 300;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_SIZE) {
+                        height = Math.round((height * MAX_SIZE) / width);
+                        width = MAX_SIZE;
+                    }
+                } else {
+                    if (height > MAX_SIZE) {
+                        width = Math.round((width * MAX_SIZE) / height);
+                        height = MAX_SIZE;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.85);
+                setFormData((prev) => ({ ...prev, image: compressedDataUrl }));
+                setImageName(file.name);
+            };
+            img.onerror = () => {
+                toast.error("Failed to load image. Please try another file.");
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleRemoveImage = () => {
+        setFormData((prev) => ({ ...prev, image: "" }));
+        setImageName("");
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
 
     //======= handle submit =======//
     const handleSubmit = useCallback(
@@ -67,6 +127,7 @@ const SignUpForm = () => {
                         address: "",
                         phone: "",
                     });
+                    setImageName("");
 
                     setIsLoading(false);
                     router.push("/");
@@ -81,132 +142,229 @@ const SignUpForm = () => {
         },
         [formData, router, dispatch]
     );
+
+    const inputClass =
+        "eq w-full rounded-xl border border-[#cfe0d5] bg-[#f8fbf9] px-4 py-3 text-sm text-dark outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/15";
+
     return (
-        <div className="flex flex-col gap-10">
-            <div className="flex flex-col gap-1.5">
-                <h2>Create an account!</h2>
-                <p className="text-black/50">
-                    Please provide your details to register
-                </p>
-            </div>
-            <form
-                onSubmit={handleSubmit}
-                className="flex w-full flex-col gap-5 text-lg"
-            >
-                <div className="flex flex-col items-start gap-1.5">
-                    <label htmlFor="username">Name</label>
-                    <input
-                        value={formData.username}
-                        onChange={(e) =>
-                            setFormData({
-                                ...formData,
-                                username: e.target.value,
-                            })
-                        }
-                        type="text"
-                        id="name"
-                        placeholder="sarah paraker"
-                        className="eq w-full rounded-xl border border-gray bg-transparent px-3 py-5 outline-none focus:border-accent"
-                    />
+        <div className="min-h-screen px-4 pb-16 pt-36">
+            <div className="mx-auto w-full max-w-lg rounded-2xl border border-primary/15 bg-white p-6 shadow-[0_8px_30px_rgba(12,154,91,0.08)] sm:p-8">
+                <div className="mb-6 flex flex-col gap-1 border-b border-primary/10 pb-4 text-center">
+                    <h2 className="text-2xl font-bold text-dark">
+                        Create an account!
+                    </h2>
+                    <p className="text-sm text-black/55">
+                        Please provide your details to register
+                    </p>
                 </div>
 
-                <div className="flex flex-col items-start gap-1.5">
-                    <label htmlFor="email">Email address</label>
-                    <input
-                        value={formData.email}
-                        onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                        }
-                        type="email"
-                        id="email"
-                        placeholder="hello@example.com"
-                        className="eq w-full rounded-xl border border-gray bg-transparent px-3 py-5 outline-none focus:border-accent"
-                    />
-                </div>
-                <div className="flex flex-col items-start gap-1.5">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        value={formData.password}
-                        onChange={(e) =>
-                            setFormData({
-                                ...formData,
-                                password: e.target.value,
-                            })
-                        }
-                        type="password"
-                        id="password"
-                        placeholder="Write your password"
-                        className="eq w-full rounded-xl border border-gray bg-transparent px-3 py-5 outline-none focus:border-accent"
-                    />
-                </div>
-
-                <div className="flex flex-col items-start gap-1.5">
-                    <label htmlFor="image">Image</label>
-                    <input
-                        value={formData.image}
-                        onChange={(e) =>
-                            setFormData({ ...formData, image: e.target.value })
-                        }
-                        type="url"
-                        id="image"
-                        placeholder="Past your image url from pexels/unsplash/cloudinary"
-                        className="eq w-full rounded-xl border border-gray bg-transparent px-3 py-5 outline-none focus:border-accent"
-                    />
-                </div>
-
-                <div className="flex flex-col items-start gap-1.5">
-                    <label htmlFor="address">Address</label>
-                    <input
-                        value={formData.address}
-                        onChange={(e) =>
-                            setFormData({
-                                ...formData,
-                                address: e.target.value,
-                            })
-                        }
-                        type="text"
-                        id="address"
-                        placeholder="Past your image url from pexels/unsplash/cloudinary"
-                        className="eq w-full rounded-xl border border-gray bg-transparent px-3 py-5 outline-none focus:border-accent"
-                    />
-                </div>
-                <div className="flex flex-col items-start gap-1.5">
-                    <label htmlFor="phone">Phone</label>
-                    <input
-                        value={formData.phone}
-                        onChange={(e) =>
-                            setFormData({
-                                ...formData,
-                                phone: e.target.value,
-                            })
-                        }
-                        type="text"
-                        id="phone"
-                        placeholder="Enter phone number"
-                        className="eq w-full rounded-xl border border-gray bg-transparent px-3 py-5 outline-none focus:border-accent"
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    className={`py-3 px-4 rounded ${
-                        isLoading
-                            ? "bg-gray cursor-not-allowed"
-                            : "bg-secondary text-light hover:bg-primary mt-2 eq"
-                    }`}
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex w-full flex-col gap-4"
                 >
-                    {isLoading ? <Loading isLoading={isLoading} /> : "Sign Up"}
-                </button>
-                <p>
-                    <span className="text-black/50">
-                        Allready have an account?
-                    </span>
-                    <Link href="/auth/login" className="link-item">
-                        Login
-                    </Link>
-                </p>
-            </form>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div className="flex flex-col items-start gap-1.5">
+                            <label
+                                htmlFor="name"
+                                className="text-sm font-medium text-dark"
+                            >
+                                Name
+                            </label>
+                            <input
+                                value={formData.username}
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        username: e.target.value,
+                                    })
+                                }
+                                type="text"
+                                id="name"
+                                placeholder="Sarah Parker"
+                                className={inputClass}
+                            />
+                        </div>
+
+                        <div className="flex flex-col items-start gap-1.5">
+                            <label
+                                htmlFor="phone"
+                                className="text-sm font-medium text-dark"
+                            >
+                                Phone
+                            </label>
+                            <input
+                                value={formData.phone}
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        phone: e.target.value,
+                                    })
+                                }
+                                type="text"
+                                id="phone"
+                                placeholder="Enter phone number"
+                                className={inputClass}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-start gap-1.5">
+                        <label
+                            htmlFor="email"
+                            className="text-sm font-medium text-dark"
+                        >
+                            Email address
+                        </label>
+                        <input
+                            value={formData.email}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    email: e.target.value,
+                                })
+                            }
+                            type="email"
+                            id="email"
+                            placeholder="hello@example.com"
+                            className={inputClass}
+                        />
+                    </div>
+
+                    <div className="flex flex-col items-start gap-1.5">
+                        <label
+                            htmlFor="password"
+                            className="text-sm font-medium text-dark"
+                        >
+                            Password
+                        </label>
+                        <input
+                            value={formData.password}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    password: e.target.value,
+                                })
+                            }
+                            type="password"
+                            id="password"
+                            placeholder="Write your password"
+                            className={inputClass}
+                        />
+                    </div>
+
+                    <div className="flex flex-col items-start gap-1.5">
+                        <label
+                            htmlFor="image"
+                            className="text-sm font-medium text-dark"
+                        >
+                            Image
+                        </label>
+                        <input
+                            ref={fileInputRef}
+                            onChange={handleImageChange}
+                            type="file"
+                            id="image"
+                            accept="image/*"
+                            className="hidden"
+                        />
+                        {formData.image ? (
+                            <div className="flex w-full items-center justify-between gap-3 rounded-xl border border-[#cfe0d5] bg-[#f8fbf9] px-3.5 py-2.5">
+                                <div className="flex items-center gap-3 overflow-hidden">
+                                    <Image
+                                        src={formData.image}
+                                        alt="Preview"
+                                        width={44}
+                                        height={44}
+                                        className="h-11 w-11 shrink-0 rounded-full border border-primary/30 object-cover"
+                                    />
+                                    <div className="flex flex-col overflow-hidden">
+                                        <span className="truncate text-sm font-medium text-dark">
+                                            {imageName || "Selected image"}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                fileInputRef.current?.click()
+                                            }
+                                            className="w-fit text-xs font-medium text-primary underline hover:opacity-80"
+                                        >
+                                            Change photo
+                                        </button>
+                                    </div>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveImage}
+                                    className="rounded-full p-1.5 text-black/50 hover:bg-red/10 hover:text-red eq"
+                                    aria-label="Remove image"
+                                >
+                                    <X size={18} />
+                                </button>
+                            </div>
+                        ) : (
+                            <label
+                                htmlFor="image"
+                                className="eq flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-dashed border-[#b8d4c2] bg-[#f8fbf9] px-4 py-3.5 text-sm text-black/60 hover:border-primary hover:bg-green-light/40 hover:text-primary"
+                            >
+                                <ImagePlus size={19} className="shrink-0" />
+                                <span>
+                                    Upload your photo from device / gallery
+                                </span>
+                            </label>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col items-start gap-1.5">
+                        <label
+                            htmlFor="address"
+                            className="text-sm font-medium text-dark"
+                        >
+                            Address
+                        </label>
+                        <input
+                            value={formData.address}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    address: e.target.value,
+                                })
+                            }
+                            type="text"
+                            id="address"
+                            placeholder="Enter your full address"
+                            className={inputClass}
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className={`mt-2 w-full rounded-xl py-3 px-4 text-sm font-semibold ${
+                            isLoading
+                                ? "cursor-not-allowed bg-gray text-black/50"
+                                : "cursor-pointer bg-secondary text-light hover:bg-primary eq"
+                        }`}
+                    >
+                        {isLoading ? (
+                            <Loading isLoading={isLoading} />
+                        ) : (
+                            "Sign Up"
+                        )}
+                    </button>
+
+                    <p className="mt-1 text-center text-sm">
+                        <span className="text-black/55">
+                            Already have an account?{" "}
+                        </span>
+                        <Link
+                            href="/auth/login"
+                            className="font-semibold text-primary hover:underline"
+                        >
+                            Login
+                        </Link>
+                    </p>
+                </form>
+            </div>
         </div>
     );
 };
