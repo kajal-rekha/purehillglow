@@ -70,9 +70,18 @@ export const getAnUser = async (req, res) => {
 export const updateUser = async (req, res) => {
     try {
         const { id } = req.query;
-        const { username, email, password, image, address, phone } = req.body;
+        const { username, email, password, image, address, phone, role } =
+            req.body;
 
-        const updateData = { username, email, image, address, phone };
+        const updateData = {};
+        if (username !== undefined) updateData.username = username;
+        if (email !== undefined) updateData.email = email;
+        if (image !== undefined) updateData.image = image;
+        if (address !== undefined) updateData.address = address;
+        if (phone !== undefined) updateData.phone = phone;
+        if (role !== undefined && req.user?.role === "admin") {
+            updateData.role = role;
+        }
         if (password) {
             const salt = await bcrypt.genSalt(10);
             updateData.password = await bcrypt.hash(password, salt);

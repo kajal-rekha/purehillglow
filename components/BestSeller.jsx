@@ -13,16 +13,19 @@ import {
 } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { addToCart } from "@/redux/features/cart/cartSlice";
+import { toggleWishlist } from "@/redux/features/wishlist/wishlistSlice";
 import Error from "./ui/Error";
 import Loading from "./ui/Loading";
 import "swiper/css";
 
 const BestSeller = () => {
   const language = useSelector((state) => state.language.language);
+  const wishlistItems = useSelector(
+    (state) => state.wishlist?.wishlistItems || []
+  );
   const dispatch = useDispatch();
   const swiperRef = useRef(null);
   const [products, setProducts] = useState([]);
-  const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -56,14 +59,6 @@ const BestSeller = () => {
       language === "bn" ? "bn-BD" : "en-BD"
     );
     return `৳${formattedPrice}`;
-  };
-
-  const toggleFavorite = (productId) => {
-    setFavorites((currentFavorites) =>
-      currentFavorites.includes(productId)
-        ? currentFavorites.filter((id) => id !== productId)
-        : [...currentFavorites, productId]
-    );
   };
 
   return (
@@ -128,7 +123,9 @@ const BestSeller = () => {
                 language === "bn"
                   ? product.name?.bn || product.name?.en
                   : product.name?.en || product.name?.bn;
-              const isFavorite = favorites.includes(product._id);
+              const isFavorite = wishlistItems.some(
+                (item) => item._id === product._id
+              );
 
               return (
                 <SwiperSlide key={product._id} className="h-auto">
@@ -158,7 +155,7 @@ const BestSeller = () => {
                       )}
                       <button
                         type="button"
-                        onClick={() => toggleFavorite(product._id)}
+                        onClick={() => dispatch(toggleWishlist(product))}
                         aria-label={
                           isFavorite
                             ? language === "bn"
@@ -169,7 +166,7 @@ const BestSeller = () => {
                               : "Add to favorites"
                         }
                         aria-pressed={isFavorite}
-                        className="absolute right-1.5 top-1.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/95 text-[#a66d65] shadow-sm transition hover:scale-105 sm:right-2 sm:top-2"
+                        className="absolute right-1.5 top-1.5 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/95 text-[#a66d65] shadow-sm transition hover:scale-105 sm:right-2 sm:top-2"
                       >
                         <Heart
                           size={15}

@@ -49,7 +49,10 @@ const Category = () => {
   }, []);
 
   return (
-    <section className="w-full  bg-light-gray mt-5 pt-10 pb-14">
+    <section
+      id="shop-by-category"
+      className="mt-5 w-full scroll-mt-36 bg-light-gray pb-14 pt-10"
+    >
       {loading ? (
         <div className="w-full py-8 flex justify-center">
           <Loading />

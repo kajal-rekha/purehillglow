@@ -84,7 +84,9 @@ export const updateOrder = async (req, res) => {
             id,
             { $set: updates },
             { new: true }
-        ).populate("user_id", "username email phone address image");
+        )
+            .populate("user_id", "username email phone address image")
+            .populate("orderItems.product_id", "images name unit");
 
         if (!updatedOrder) {
             return res.status(404).json({ error: "Order not found" });

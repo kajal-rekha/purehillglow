@@ -66,9 +66,19 @@ const CheckoutPage = () => {
 
       const order = data.order;
       const orderSubtotal = order.totalAmount - order.deliveryCharge;
+      const orderDate = new Date(
+        order.createdAt || Date.now()
+      ).toLocaleString(isBangla ? "bn-BD" : "en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
       const orderMessage = [
         isBangla ? "নতুন অর্ডার — Pure Hill Glow" : "New order — Pure Hill Glow",
         `${isBangla ? "অর্ডার আইডি" : "Order ID"}: ${order.tran_id}`,
+        `${isBangla ? "অর্ডারের তারিখ ও সময়" : "Order date"}: ${orderDate}`,
         `${isBangla ? "ওয়েবসাইট অ্যাকাউন্ট" : "Website account"}: ${
           userAndToken.user.username
         }`,

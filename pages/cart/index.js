@@ -518,28 +518,70 @@ const CartPage = () => {
           </>
         )}
 
-        <section className="relative mt-8 flex flex-wrap items-center justify-between gap-4 overflow-hidden rounded-2xl bg-[linear-gradient(105deg,#163d24_0%,#31583a_58%,#81926b_100%)] px-5 py-5 text-white sm:px-8">
-          <div className="relative z-10">
-            <p className="font-vibes text-2xl sm:text-3xl">
-              {isBangla ? "পাহাড় থেকে আপনার ঘরে" : "From the Hills to Your Home"}
-            </p>
-            <p className="mt-1 text-[11px] text-white/80 sm:text-xs">
-              {isBangla
-                ? "Pure Hill Glow — প্রাকৃতিক সৌন্দর্য আপনার কাছে"
-                : "Pure Hill Glow — Bringing natural beauty closer to you."}
-            </p>
-          </div>
+        <section className="relative mt-10 overflow-hidden rounded-3xl border border-[#2d5a3c] bg-[linear-gradient(115deg,#13361e_0%,#1f4d2c_52%,#2f633c_100%)] p-6 text-white shadow-[0_14px_36px_rgba(20,57,31,0.16)] sm:px-9 sm:py-8">
+          <div className="pointer-events-none absolute -right-12 -top-16 h-52 w-52 rounded-full border-[24px] border-white/5" />
+          <div className="pointer-events-none absolute -bottom-16 left-1/3 h-44 w-44 rounded-full bg-[#efc477]/10 blur-2xl" />
           <Leaf
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-8 left-1/2 h-28 w-28 rotate-[-30deg] text-white/10"
+            className="pointer-events-none absolute -bottom-6 right-[22%] h-32 w-32 rotate-[-25deg] text-white/7"
           />
-          <Link
-            href="/"
-            className="relative z-10 inline-flex items-center gap-2 rounded-full border border-[#efc477] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#efc477] hover:text-[#203c28]"
-          >
-            {isBangla ? "কেনাকাটা চালিয়ে যান" : "Continue Shopping"}
-            <ArrowRight size={14} />
-          </Link>
+
+          <div className="relative z-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
+            <div className="flex items-start gap-4">
+              <span className="hidden h-13 w-13 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-[#efc477] shadow-inner backdrop-blur-xs sm:flex">
+                <Leaf size={24} />
+              </span>
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#efc477]/35 bg-[#efc477]/15 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#f5d491]">
+                  {isBangla ? "খাঁটি পাহাড়ি যত্ন" : "Pure Hill Glow Promise"}
+                </span>
+                <h3 className="mt-1.5 font-playfair !text-2xl !font-bold leading-tight text-white sm:!text-3xl">
+                  {isBangla ? (
+                    <>
+                      পাহাড় থেকে{" "}
+                      <span className="text-[#efc477]">আপনার ঘরে</span>
+                    </>
+                  ) : (
+                    <>
+                      From the Hills to{" "}
+                      <span className="text-[#efc477]">Your Home</span>
+                    </>
+                  )}
+                </h3>
+                <p className="mt-1 max-w-md !text-xs text-white/80 sm:!text-sm">
+                  {isBangla
+                    ? "বান্দরবানের প্রাকৃতিক সৌন্দর্য ও খাঁটি স্কিনকেয়ার পণ্য পৌঁছে যাচ্ছে আপনার হাতের মুঠোয়।"
+                    : "Bringing authentic, chemical-free botanical skincare from Bandarban closer to you."}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              <div className="hidden items-center gap-2.5 xl:flex">
+                <span className="inline-flex items-center gap-1.5 rounded-xl border border-white/12 bg-white/8 px-3.5 py-2 text-xs font-medium text-white/90 backdrop-blur-xs">
+                  <ShieldCheck size={15} className="text-[#efc477]" />
+                  {isBangla ? "১০০% অরিজিনাল" : "100% Authentic"}
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-xl border border-white/12 bg-white/8 px-3.5 py-2 text-xs font-medium text-white/90 backdrop-blur-xs">
+                  <Truck size={15} className="text-[#efc477]" />
+                  {isBangla ? "দ্রুত ডেলিভারি" : "Fast Delivery"}
+                </span>
+              </div>
+
+              <Link
+                href="/products"
+                className="group inline-flex items-center gap-2 rounded-xl bg-[#efc477] px-5 py-3 text-xs font-bold text-[#153820] shadow-md transition duration-300 hover:-translate-y-0.5 hover:bg-[#f6d38c] hover:shadow-lg sm:text-sm"
+              >
+                <span>
+                  {isBangla ? "কেনাকাটা চালিয়ে যান" : "Continue Shopping"}
+                </span>
+                <ArrowRight
+                  size={15}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
+          </div>
         </section>
       </div>
     </main>

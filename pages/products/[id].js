@@ -21,6 +21,7 @@ import {
   Zap,
 } from "lucide-react";
 import { addToCart } from "@/redux/features/cart/cartSlice";
+import { toggleWishlist } from "@/redux/features/wishlist/wishlistSlice";
 import Loading from "@/components/ui/Loading";
 
 const localized = (value, language) => {
@@ -33,15 +34,18 @@ const ProductDetailsPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const language = useSelector((state) => state.language.language);
+  const wishlistItems = useSelector(
+    (state) => state.wishlist?.wishlistItems || []
+  );
   const isBangla = language === "bn";
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const isFavorite = wishlistItems.some((item) => item._id === product?._id);
 
   useEffect(() => {
     if (!router.isReady || typeof router.query.id !== "string") return;
@@ -243,7 +247,7 @@ const ProductDetailsPage = () => {
               )}
               <button
                 type="button"
-                onClick={() => setIsFavorite((value) => !value)}
+                onClick={() => dispatch(toggleWishlist(product))}
                 aria-label={
                   isFavorite
                     ? isBangla

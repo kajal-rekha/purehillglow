@@ -44,7 +44,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="w-full  mt-20 md:mt-32 overflow-hidden">
+    <section className="w-full overflow-hidden pt-[168px]">
       {loading ? (
         <div className="h-[calc(100vh-5rem)] w-full flex items-center justify-center bg-gray animate-pulse rounded-lg md:h-[calc(100vh-8rem)]">
           <Loading isLoading={loading} />
@@ -129,7 +129,7 @@ const Hero = () => {
                       </Link>
 
                       <Link
-                        href="/categories"
+                        href="#shop-by-category"
                         className={`${buttonVariants({
                           variant: "primary",
                         })}  px-3 py-2 text-[12px] shadow-md transition hover:-translate-y-0.5 hover:shadow-lg sm:px-4`}

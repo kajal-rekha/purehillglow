@@ -9,11 +9,13 @@ import {
   ChevronDown,
   ChevronRight,
   Filter,
+  Heart,
   Leaf,
   Tag,
   X,
 } from "lucide-react";
 import { addToCart } from "@/redux/features/cart/cartSlice";
+import { toggleWishlist } from "@/redux/features/wishlist/wishlistSlice";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
 
@@ -35,6 +37,9 @@ const getBrand = (product, language) => {
 const ProductsCatalog = () => {
   const router = useRouter();
   const language = useSelector((state) => state.language.language);
+  const wishlistItems = useSelector(
+    (state) => state.wishlist?.wishlistItems || []
+  );
   const dispatch = useDispatch();
   const isBangla = language === "bn";
   const [products, setProducts] = useState([]);
@@ -771,11 +776,28 @@ const ProductsCatalog = () => {
                       Date.now() - new Date(product.createdAt).getTime() <
                         30 * 24 * 60 * 60 * 1000;
 
+                    const isFavorite = wishlistItems.some(
+                      (item) => item._id === product._id
+                    );
+
                     return (
                       <article
                         key={product._id}
-                        className="flex h-full flex-col overflow-hidden rounded-xl border border-[#eee8df] bg-white p-2 shadow-sm transition-shadow hover:shadow-md sm:p-2.5"
+                        className="relative flex h-full flex-col overflow-hidden rounded-xl border border-[#eee8df] bg-white p-2 shadow-sm transition-shadow hover:shadow-md sm:p-2.5"
                       >
+                        <button
+                          type="button"
+                          onClick={() => dispatch(toggleWishlist(product))}
+                          aria-label="Toggle wishlist"
+                          aria-pressed={isFavorite}
+                          className="absolute right-3.5 top-3.5 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/95 text-[#a66d65] shadow-sm transition hover:scale-105"
+                        >
+                          <Heart
+                            size={15}
+                            fill={isFavorite ? "currentColor" : "none"}
+                            strokeWidth={2}
+                          />
+                        </button>
                         <Link
                           href={`/products/${product._id}`}
                           aria-label={

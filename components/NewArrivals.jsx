@@ -4,15 +4,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Cannabis, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { Cannabis, ChevronLeft, ChevronRight, Heart, Star } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { addToCart } from "@/redux/features/cart/cartSlice";
+import { toggleWishlist } from "@/redux/features/wishlist/wishlistSlice";
 import Error from "./ui/Error";
 import Loading from "./ui/Loading";
 import "swiper/css";
 
 const NewArrivals = () => {
   const language = useSelector((state) => state.language.language);
+  const wishlistItems = useSelector(
+    (state) => state.wishlist?.wishlistItems || []
+  );
   const dispatch = useDispatch();
   const swiperRef = useRef(null);
   const [products, setProducts] = useState([]);
@@ -116,6 +120,9 @@ const NewArrivals = () => {
                 language === "bn"
                   ? product.name?.bn || product.name?.en
                   : product.name?.en || product.name?.bn;
+              const isFavorite = wishlistItems.some(
+                (item) => item._id === product._id
+              );
 
               return (
                 <SwiperSlide key={product._id} className="h-auto">
@@ -146,6 +153,19 @@ const NewArrivals = () => {
                       <span className="absolute left-2 top-2 z-[2] rounded-full bg-[#d6e5ad] px-2 py-1 text-[9px] font-semibold text-[#24452c]">
                         {language === "bn" ? "নতুন" : "New"}
                       </span>
+                      <button
+                        type="button"
+                        onClick={() => dispatch(toggleWishlist(product))}
+                        aria-label="Toggle wishlist"
+                        aria-pressed={isFavorite}
+                        className="absolute right-1.5 top-1.5 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/95 text-[#a66d65] shadow-sm transition hover:scale-105 sm:right-2 sm:top-2"
+                      >
+                        <Heart
+                          size={15}
+                          fill={isFavorite ? "currentColor" : "none"}
+                          strokeWidth={2}
+                        />
+                      </button>
                     </div>
 
                     <h3 className="mt-2 line-clamp-2 min-h-8 text-left text-[10px] font-semibold leading-4 text-dark sm:text-xs">

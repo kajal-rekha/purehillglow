@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "@/redux/features/auth/authSlice";
+import { login, logout } from "@/redux/features/auth/authSlice";
 import { setLanguage } from "@/redux/features/language/languageSlice";
 import ProductSearch from "../../ProductSearchForm";
 import { buttonVariants } from "../../ui/Button";
@@ -17,7 +17,7 @@ import {
   UserRound,
   Package,
   LogOut,
-  DoorOpenIcon,
+  LayoutDashboard,
 } from "lucide-react";
 
 const Navbar = () => {
@@ -31,6 +31,31 @@ const Navbar = () => {
   );
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const dispatch = useDispatch();
+  const userId = userAndToken?.user?._id;
+  const userRole = userAndToken?.user?.role;
+  const token = userAndToken?.token;
+
+  useEffect(() => {
+    if (!userId || !token) return;
+    let isMounted = true;
+
+    fetch(`/api/users/${userId}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((freshUser) => {
+        if (
+          isMounted &&
+          freshUser?._id &&
+          freshUser.role !== userRole
+        ) {
+          dispatch(login({ user: freshUser, token }));
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
+  }, [userId, userRole, token, dispatch]);
 
   const categoryLinks = [
     { href: "/products", label: { en: "All Products", bn: "সব পণ্য" } },
@@ -165,6 +190,22 @@ const Navbar = () => {
               {/* ================= ACCOUNT DROPDOWN ================= */}
               {isAccountOpen && (
                 <div className="absolute right-0 top-full z-[1000] mt-2 w-56 overflow-hidden rounded-xl border border-primary/10 bg-white shadow-xl">
+                  {userAndToken?.user?.role === "admin" && (
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setIsAccountOpen(false)}
+                      className="flex items-center gap-3 border-b border-primary/10 bg-green-light/50 px-4 py-3 text-sm font-semibold text-primary eq hover:bg-primary hover:text-white"
+                    >
+                      <LayoutDashboard size={18} />
+
+                      <span>
+                        {language === "bn"
+                          ? "অ্যাডমিন ড্যাশবোর্ড"
+                          : "Admin Dashboard"}
+                      </span>
+                    </Link>
+                  )}
+
                   {/* Profile */}
                   <Link
                     href="/profile"
@@ -232,10 +273,18 @@ const Navbar = () => {
             aria-label="Wishlist"
             title="Wishlist"
           >
-            <Heart size={21} strokeWidth={1.8} />
-            <span className="absolute -right-0.5 -top-0.5 hidden min-w-4 rounded-full bg-primary px-1 text-center text-[9px] font-bold text-light">
-              0
-            </span>
+            <Heart
+              size={21}
+              strokeWidth={1.8}
+              className={
+                wishlistItems.length > 0 ? "fill-primary/20 text-primary" : ""
+              }
+            />
+            {wishlistItems.length > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-center text-[9px] font-bold text-light">
+                {wishlistItems.length}
+              </span>
+            )}
           </Link>
           {/*========== Mobile Menu Button ===========*/}
           <button
