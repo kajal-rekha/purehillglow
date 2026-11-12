@@ -190,45 +190,53 @@ const Navbar = () => {
               {/* ================= ACCOUNT DROPDOWN ================= */}
               {isAccountOpen && (
                 <div className="absolute right-0 top-full z-[1000] mt-2 w-56 overflow-hidden rounded-xl border border-primary/10 bg-white shadow-xl">
-                  {userAndToken?.user?.role === "admin" && (
+                  {userAndToken?.user?.role === "admin" ? (
                     <Link
                       href="/dashboard"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       onClick={() => setIsAccountOpen(false)}
-                      className="flex items-center gap-3 border-b border-primary/10 bg-green-light/50 px-4 py-3 text-sm font-semibold text-primary eq hover:bg-primary hover:text-white"
+                      className="flex items-center justify-between px-4 py-3 text-sm font-semibold text-primary eq hover:bg-primary/10"
                     >
-                      <LayoutDashboard size={18} />
-
-                      <span>
-                        {language === "bn"
-                          ? "অ্যাডমিন ড্যাশবোর্ড"
-                          : "Admin Dashboard"}
+                      <span className="flex items-center gap-3">
+                        <LayoutDashboard size={18} />
+                        <span>
+                          {language === "bn"
+                            ? "অ্যাডমিন ড্যাশবোর্ড"
+                            : "Admin Dashboard"}
+                        </span>
                       </span>
+                      <span className="text-xs opacity-70">↗</span>
                     </Link>
+                  ) : (
+                    <>
+                      {/* Profile */}
+                      <Link
+                        href="/profile"
+                        onClick={() => setIsAccountOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 text-sm text-dark eq hover:bg-primary/10 hover:text-primary"
+                      >
+                        <UserRound size={18} />
+
+                        <span>
+                          {language === "bn" ? "প্রোফাইল" : "Profile"}
+                        </span>
+                      </Link>
+
+                      {/*================ My Orders ==============*/}
+                      <Link
+                        href="/my-orders"
+                        onClick={() => setIsAccountOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 text-sm text-dark eq hover:bg-primary/10 hover:text-primary"
+                      >
+                        <Package size={18} />
+
+                        <span>
+                          {language === "bn" ? "আমার অর্ডার" : "My Orders"}
+                        </span>
+                      </Link>
+                    </>
                   )}
-
-                  {/* Profile */}
-                  <Link
-                    href="/profile"
-                    onClick={() => setIsAccountOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 text-sm text-dark eq hover:bg-primary/10 hover:text-primary"
-                  >
-                    <UserRound size={18} />
-
-                    <span>{language === "bn" ? "প্রোফাইল" : "Profile"}</span>
-                  </Link>
-
-                  {/*================ My Orders ==============*/}
-                  <Link
-                    href="/my-orders"
-                    onClick={() => setIsAccountOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 text-sm text-dark eq hover:bg-primary/10 hover:text-primary"
-                  >
-                    <Package size={18} />
-
-                    <span>
-                      {language === "bn" ? "আমার অর্ডার" : "My Orders"}
-                    </span>
-                  </Link>
 
                   <div className="border-t border-gray-100" />
 

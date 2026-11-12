@@ -39,11 +39,15 @@ export const getACategory = async (req, res, id) => {
 //======== Update Category ========//
 export const updateCategory = async (req, res, id) => {
     try {
-        const { name } = req.body;
+        const { name, image } = req.body;
+        const updates = {};
+        if (name) updates.name = name;
+        if (image) updates.image = image;
+
         const updatedCategory = await Category.findByIdAndUpdate(
             id,
-            { name },
-            { new: true }
+            updates,
+            { new: true, runValidators: true }
         );
         if (!updatedCategory) {
             return res.status(404).json({ error: "Category not found" });

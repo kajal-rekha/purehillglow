@@ -10,17 +10,18 @@ import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
+  const isStandaloneAdmin = router.pathname.startsWith("/dashboard");
 
   return (
     <ReduxProvider>
-      <TopNavbar />
-      <Navbar />
+      {!isStandaloneAdmin && <TopNavbar />}
+      {!isStandaloneAdmin && <Navbar />}
       {router.pathname === "/" && <CategoryNavbar />}
       <div className="min-h-screen">
         <Component {...pageProps} />
       </div>
-      <FloatingCart />
-      <Footer />
+      {!isStandaloneAdmin && <FloatingCart />}
+      {!isStandaloneAdmin && <Footer />}
       <Toaster position="top-center" />
     </ReduxProvider>
   );

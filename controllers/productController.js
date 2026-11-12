@@ -57,7 +57,10 @@ export const createProduct = async (req, res) => {
         });
 
         await product.save();
-        res.status(201).json(product);
+        const populatedProduct = await Product.findById(product._id)
+            .populate("category_id", "name")
+            .populate("subcategory_id", "name");
+        res.status(201).json(populatedProduct || product);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -182,6 +185,8 @@ export const updateProduct = async (req, res) => {
             if (!categoryExists) {
                 return res.status(400).json({ error: "Category not found" });
             }
+            updates.category_id = updates.category;
+            delete updates.category;
         }
 
         if (updates.subCategory) {
@@ -189,12 +194,16 @@ export const updateProduct = async (req, res) => {
             if (!subExists) {
                 return res.status(400).json({ error: "Subcategory not found" });
             }
+            updates.subcategory_id = updates.subCategory;
+            delete updates.subCategory;
         }
 
         const updatedProduct = await Product.findByIdAndUpdate(id, updates, {
             new: true,
             runValidators: true,
-        });
+        })
+            .populate("category_id", "name")
+            .populate("subcategory_id", "name");
 
         if (!updatedProduct) {
             return res.status(404).json({ error: "Product not found" });

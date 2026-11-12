@@ -65,7 +65,7 @@ export const getASubcategory = async (req, res, id) => {
 //========== Update a Subcategory ==========//
 export const updateSubcategory = async (req, res, id) => {
     try {
-        const { name, image, category_id } = req.body;
+        const { name, image, category_id, category } = req.body;
 
         if (!id) {
             return res
@@ -73,10 +73,22 @@ export const updateSubcategory = async (req, res, id) => {
                 .json({ error: "Subcategory ID is required." });
         }
 
+        const updates = {};
+        if (name) updates.name = name;
+        if (image) updates.image = image;
+        const parentCategoryId = category_id || category;
+        if (parentCategoryId) {
+            const existingCategory = await Category.findById(parentCategoryId);
+            if (!existingCategory) {
+                return res.status(404).json({ error: "Category not found." });
+            }
+            updates.category_id = parentCategoryId;
+        }
+
         const updatedSubcategory = await SubCategory.findByIdAndUpdate(
             id,
-            { name, image, category_id },
-            { new: true }
+            updates,
+            { new: true, runValidators: true }
         );
 
         if (!updatedSubcategory) {
