@@ -4565,10 +4565,22 @@ const DashboardPage = () => {
                                                     )}
                                                     <div className="overflow-hidden">
                                                         <p className="truncate text-xs font-bold text-white">
-                                                            {cat.name?.en}
+                                                            {localized(
+                                                                cat.name,
+                                                                language
+                                                            )}
                                                         </p>
                                                         <p className="truncate text-[11px] text-slate-400">
-                                                            {cat.name?.bn}
+                                                            {isBangla
+                                                                ? `${childSubs.length}টি সাব-ক্যাটাগরি`
+                                                                : `${
+                                                                      childSubs.length
+                                                                  } subcategor${
+                                                                      childSubs.length ===
+                                                                      1
+                                                                          ? "y"
+                                                                          : "ies"
+                                                                  }`}
                                                         </p>
                                                     </div>
                                                 </div>
