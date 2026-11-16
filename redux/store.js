@@ -22,6 +22,7 @@ import cartReducer, {
     addToCart,
     decreaseCart,
     increaseCart,
+    removeFromCart,
 } from "./features/cart/cartSlice";
 import languageSlice from "./features/language/languageSlice";
 import orderSlice from "./features/order/orderSlice";
@@ -74,6 +75,18 @@ listenerMiddleware.startListening({
             language === "bn"
                 ? `${productName}-এর পরিমাণ কমানো হয়েছে`
                 : `${productName} quantity decreased`
+        );
+    },
+});
+
+listenerMiddleware.startListening({
+    actionCreator: removeFromCart,
+    effect: (action, listenerApi) => {
+        const language = listenerApi.getState().language.language;
+        toast.error(
+            language === "bn"
+                ? "পণ্য কার্ট থেকে সরানো হয়েছে"
+                : "Item removed from cart"
         );
     },
 });

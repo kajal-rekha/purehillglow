@@ -6,6 +6,7 @@ import {
     removeFromWishlist,
 } from "@/redux/features/wishlist/wishlistSlice";
 import {
+    Check,
     ChevronRight,
     Heart,
     Leaf,
@@ -16,6 +17,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const localized = (value, language) => {
     if (typeof value === "string") return value;
@@ -28,22 +30,32 @@ const WishlistPage = () => {
     const wishlistItems = useSelector(
         (state) => state.wishlist?.wishlistItems || []
     );
+    const cartItems = useSelector((state) => state.cart?.cartItems || []);
     const isBangla = language === "bn";
 
     const formatPrice = (price) =>
         `৳${Number(price || 0).toLocaleString(isBangla ? "bn-BD" : "en-BD")}`;
 
     const handleMoveAllToCart = () => {
+        let count = 0;
         wishlistItems.forEach((product) => {
             if (Number(product.stock) > 0) {
                 dispatch(addToCart(product));
+                count++;
             }
         });
+        if (count > 0) {
+            toast.success(
+                isBangla
+                    ? `${count}টি পণ্য কার্টে যোগ করা হয়েছে!`
+                    : `${count} items added to cart!`
+            );
+        }
     };
 
     return (
-        <main className="min-h-screen bg-[#fbf8f2] pb-16 pt-[125px]">
-            {/* Hero Banner */}
+        <main className="min-h-screen bg-[#fbf8f2] pb-16 pt-[116px]">
+            {/* ============ Hero Banner ============ */}
             <section className="relative overflow-hidden bg-[linear-gradient(110deg,#14391f_0%,#1d4929_55%,#375c37_100%)] text-white">
                 <div className="pointer-events-none absolute -right-10 -top-20 h-56 w-56 rounded-full border-[28px] border-white/5" />
                 <Leaf
@@ -112,7 +124,7 @@ const WishlistPage = () => {
                     </section>
                 ) : (
                     <div className="relative z-10 -mt-5 space-y-6">
-                        {/* Action Bar */}
+                        {/* ============ Action Bar ============ */}
                         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#eee5d6] bg-white px-5 py-4 shadow-[0_8px_30px_rgba(54,58,39,0.06)]">
                             <p className="text-sm font-semibold text-dark">
                                 {isBangla
@@ -153,7 +165,7 @@ const WishlistPage = () => {
                             </div>
                         </div>
 
-                        {/* Wishlist Grid */}
+                        {/* ============ Wishlist Grid ============ */}
                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">
                             {wishlistItems.map((product) => {
                                 const name =
@@ -169,6 +181,10 @@ const WishlistPage = () => {
                                           )
                                         : null;
                                 const inStock = Number(product.stock) > 0;
+                                const cartEntry = cartItems.find(
+                                    (item) => item._id === product._id
+                                );
+                                const isInCart = Boolean(cartEntry);
 
                                 return (
                                     <article
@@ -246,22 +262,37 @@ const WishlistPage = () => {
 
                                         <button
                                             type="button"
-                                            onClick={() =>
-                                                dispatch(addToCart(product))
-                                            }
+                                            onClick={() => dispatch(addToCart(product))}
                                             disabled={!inStock}
-                                            className="mt-3 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-primary py-2.5 px-3 text-xs font-semibold text-white transition hover:bg-secondary disabled:cursor-not-allowed disabled:bg-gray disabled:text-black/45 sm:text-sm"
+                                            className={`mt-3 flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl py-2.5 px-3 text-xs font-semibold shadow-xs transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray disabled:text-black/45 sm:text-sm ${
+                                                isInCart
+                                                    ? "bg-[#1f542c] text-white ring-1 ring-emerald-400/40 hover:bg-[#184623]"
+                                                    : "bg-primary text-white hover:bg-secondary"
+                                            }`}
                                         >
-                                            <ShoppingCart size={15} />
-                                            <span>
-                                                {!inStock
-                                                    ? isBangla
-                                                        ? "স্টকে নেই"
-                                                        : "Out of Stock"
-                                                    : isBangla
-                                                    ? "কার্টে যোগ করুন"
-                                                    : "Add to Cart"}
-                                            </span>
+                                            {isInCart ? (
+                                                <>
+                                                    <Check size={14} className="text-emerald-300" />
+                                                    <span>
+                                                        {isBangla
+                                                            ? `কার্টে যোগ হয়েছে (${cartEntry.cartQuantity})`
+                                                            : `Added to Cart (${cartEntry.cartQuantity})`}
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <ShoppingCart size={15} />
+                                                    <span>
+                                                        {!inStock
+                                                            ? isBangla
+                                                                ? "স্টকে নেই"
+                                                                : "Out of Stock"
+                                                            : isBangla
+                                                            ? "কার্টে যোগ করুন"
+                                                            : "Add to Cart"}
+                                                    </span>
+                                                </>
+                                            )}
                                         </button>
                                     </article>
                                 );

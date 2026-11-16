@@ -139,7 +139,7 @@ const CheckoutPage = () => {
   };
 
   return (
-    <main className="min-h-screen bg-[#fbf8f2] pb-12 pt-[125px]">
+    <main className="min-h-screen bg-[#fbf8f2] pb-12 pt-[116px]">
       <section className="relative overflow-hidden bg-[linear-gradient(110deg,#14391f_0%,#1d4929_55%,#375c37_100%)] text-white">
         <div className="pointer-events-none absolute -right-10 -top-20 h-56 w-56 rounded-full border-[28px] border-white/5" />
         <Leaf

@@ -85,16 +85,16 @@ const ComboOffer = () => {
   return (
     <section className="w-full py-7 sm:py-9">
       <div className="wrapper grid items-stretch gap-4 px-4 lg:grid-cols-[minmax(0,2.15fr)_minmax(270px,0.9fr)] lg:gap-5">
-        {/* ================= LEFT MAIN COMBO CARD ================= */}
+        {/* ============ LEFT MAIN COMBO CARD ============ */}
         <div className="relative grid overflow-hidden rounded-3xl border border-[#e7decb] bg-gradient-to-br from-[#fffdf7] via-[#f6f1e1] to-[#e4eed8] shadow-[0_12px_35px_rgba(54,75,44,0.08)] md:grid-cols-[1.1fr_0.95fr]">
-          {/* Decorative Background Elements */}
+          {/* ============ Decorative Background Elements ============ */}
           <div className="pointer-events-none absolute -left-16 -top-16 h-52 w-52 rounded-full bg-[#cfe3c0]/35 blur-2xl" />
           <Leaf
             aria-hidden="true"
             className="pointer-events-none absolute -bottom-8 left-[40%] h-36 w-36 rotate-[-25deg] text-[#55713e]/8"
           />
 
-          {/* Left Text Details */}
+          {/* ============ Left Text Details ============ */}
           <div className="relative z-10 flex flex-col items-start justify-center p-6 sm:p-8 lg:p-10">
             <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-[#55713e]/20 bg-[#55713e]/10 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#3d562a]">
               <Gift size={13} />
@@ -113,7 +113,7 @@ const ComboOffer = () => {
                 : "A gentle collection of natural essentials for your daily skincare routine, bundled together for complete care."}
             </p>
 
-            {/* Price & Combo Info */}
+            {/* ============ Price & Combo Info ============ */}
             <div className="mt-5 flex flex-wrap items-center gap-3.5 rounded-2xl border border-[#dfe5d2] bg-white/80 px-4 py-2.5 shadow-2xs backdrop-blur-xs">
               <div className="flex items-baseline gap-2">
                 <span className="text-xl font-extrabold text-[#285b35] sm:text-2xl">
@@ -144,7 +144,7 @@ const ComboOffer = () => {
             </Link>
           </div>
 
-          {/* Right Single Featured Combo Image */}
+          {/* ============ Right Single Featured Combo Image ============ */}
           <div className="relative z-10 flex items-center justify-center p-5 pt-0 sm:p-7 md:pl-2 md:pt-7">
             <div className="group relative aspect-square w-full max-w-[330px] overflow-hidden rounded-2xl border-4 border-white bg-[#eef3e6] shadow-[0_14px_32px_rgba(45,68,36,0.16)]">
               <Image
@@ -165,7 +165,7 @@ const ComboOffer = () => {
           </div>
         </div>
 
-        {/* ================= RIGHT HIGHLIGHTS COLUMN ================= */}
+        {/* ============ RIGHT HIGHLIGHTS COLUMN ============ */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1">
           {highlights.map(({ icon: Icon, title, detail, badge }) => (
             <div

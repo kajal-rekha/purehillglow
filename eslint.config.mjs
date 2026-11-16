@@ -10,7 +10,10 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals"),
+  ...compat.extends("next/core-web-vitals").map((config) => ({
+    ...config,
+    files: config.files || ["**/*.{js,jsx,mjs,cjs}"],
+  })),
   {
     ignores: [
       "node_modules/**",

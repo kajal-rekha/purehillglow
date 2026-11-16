@@ -76,7 +76,7 @@ const AuthenticityPromise = () => {
       className="w-full overflow-hidden bg-gradient-to-b from-[#fbf8f1] to-[#f3efe2] py-10 sm:py-14"
     >
       <div className="wrapper px-4">
-        {/* ================= SECTION HEADER ================= */}
+        {/* ============ SECTION HEADER ============ */}
         <div className="mx-auto mb-8 max-w-xl text-center sm:mb-10">
           <span className="mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-[#55713e]/20 bg-[#eef3e3] px-3.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#3d5a2b]">
             <Sparkles size={13} />
@@ -96,7 +96,7 @@ const AuthenticityPromise = () => {
           </p>
         </div>
 
-        {/* ================= 4 PROMISE CARDS ================= */}
+        {/* ============ 4 PROMISE CARDS ============ */}
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
           {items.map(({ icon: Icon, title, description }) => (
             <div
@@ -118,10 +118,10 @@ const AuthenticityPromise = () => {
           ))}
         </div>
 
-        {/* ================= EDITORIAL STORY BANNER ================= */}
+        {/* ============ EDITORIAL STORY BANNER ============ */}
         <div className="mt-6 overflow-hidden rounded-3xl border border-[#e5dcc8] bg-white p-3 shadow-[0_14px_38px_rgba(45,68,36,0.07)] sm:mt-8 sm:p-4">
           <div className="grid items-stretch gap-4 lg:grid-cols-[1.08fr_1fr]">
-            {/* Left Framed Landscape Image */}
+            {/* ============ Left Framed Landscape Image ============ */}
             <div className="group relative min-h-[240px] overflow-hidden rounded-2xl sm:min-h-[300px]">
               <Image
                 src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=85"
@@ -150,7 +150,7 @@ const AuthenticityPromise = () => {
               </div>
             </div>
 
-            {/* Right Story Content Panel */}
+            {/* ============ Right Story Content Panel ============ */}
             <div className="relative flex flex-col justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#f8f4e6] via-[#eff3e3] to-[#e2ecd4] p-6 sm:p-8 lg:p-10">
               <Leaf
                 aria-hidden="true"

@@ -121,8 +121,8 @@ const MyOrdersPage = () => {
     }, [orders]);
 
     return (
-        <main className="min-h-screen bg-[#fbf8f2] pb-16 pt-[125px]">
-            {/* Hero Banner */}
+        <main className="min-h-screen bg-[#fbf8f2] pb-16 pt-[116px]">
+            {/* ============ Hero Banner ============ */}
             <section className="relative overflow-hidden bg-[linear-gradient(110deg,#14391f_0%,#1d4929_55%,#375c37_100%)] text-white">
                 <div className="pointer-events-none absolute -right-10 -top-20 h-56 w-56 rounded-full border-[28px] border-white/5" />
                 <Leaf
@@ -192,7 +192,7 @@ const MyOrdersPage = () => {
                     </section>
                 ) : (
                     <div className="relative z-10 -mt-5 space-y-6">
-                        {/* Filter Bar & Refresh */}
+                        {/* ============ Filter Bar & Refresh ============ */}
                         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#eee5d6] bg-white p-3.5 shadow-[0_8px_30px_rgba(54,58,39,0.06)] sm:px-5">
                             <div className="flex flex-wrap items-center gap-2">
                                 {STATUS_TABS.map((tab) => {
@@ -243,7 +243,7 @@ const MyOrdersPage = () => {
                             </button>
                         </div>
 
-                        {/* Orders List */}
+                        {/* ============ Orders List ============ */}
                         {isLoading ? (
                             <div className="rounded-2xl border border-[#eee5d6] bg-white p-12 text-center shadow-[0_8px_30px_rgba(54,58,39,0.05)]">
                                 <RefreshCw
@@ -316,7 +316,7 @@ const MyOrdersPage = () => {
                                             key={order._id}
                                             className="overflow-hidden rounded-2xl border border-[#eee5d6] bg-white shadow-[0_8px_30px_rgba(54,58,39,0.06)]"
                                         >
-                                            {/* Order Card Header */}
+                                            {/* ============ Order Card Header ============ */}
                                             <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[#eee8df] bg-[#f8fbf9] px-5 py-4 sm:px-6">
                                                 <div className="flex flex-wrap items-center gap-4">
                                                     <div>
@@ -373,9 +373,9 @@ const MyOrdersPage = () => {
                                                 </div>
                                             </header>
 
-                                            {/* Order Body */}
+                                            {/* ============ Order Body ============ */}
                                             <div className="grid gap-6 p-5 lg:grid-cols-[1.5fr_1fr] sm:p-6">
-                                                {/* Ordered Items */}
+                                                {/* ============ Ordered Items ============ */}
                                                 <div>
                                                     <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-black/50">
                                                         {isBangla
@@ -527,7 +527,7 @@ const MyOrdersPage = () => {
                                                     </div>
                                                 </div>
 
-                                                {/* Delivery Info & Price Summary */}
+                                                {/* ============ Delivery Info & Price Summary ============ */}
                                                 <div className="flex flex-col justify-between gap-4 rounded-xl border border-[#eee8df] bg-[#f8fbf9] p-4">
                                                     <div>
                                                         <h3 className="mb-2.5 text-xs font-bold uppercase tracking-wider text-black/50">

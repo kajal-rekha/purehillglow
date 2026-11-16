@@ -224,8 +224,8 @@ const ProfilePage = () => {
         "eq w-full rounded-xl border border-[#cfe0d5] bg-[#f8fbf9] py-2.5 pl-10 pr-4 text-sm text-dark outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/15";
 
     return (
-        <main className="min-h-screen bg-[#fbf8f2] pb-16 pt-[125px]">
-            {/* Hero Banner */}
+        <main className="min-h-screen bg-[#fbf8f2] pb-16 pt-[116px]">
+            {/* ============ Hero Banner ============ */}
             <section className="relative overflow-hidden bg-[linear-gradient(110deg,#14391f_0%,#1d4929_55%,#375c37_100%)] text-white">
                 <div className="pointer-events-none absolute -right-10 -top-20 h-56 w-56 rounded-full border-[28px] border-white/5" />
                 <Leaf
@@ -287,7 +287,7 @@ const ProfilePage = () => {
                     </section>
                 ) : (
                     <div className="relative z-10 -mt-5 grid items-start gap-6 lg:grid-cols-[320px_1fr]">
-                        {/* Left Column: User Card & Quick Navigation */}
+                        {/* ============ Left Column: User Card & Quick Navigation ============ */}
                         <aside className="overflow-hidden rounded-2xl border border-[#eee5d6] bg-white shadow-[0_8px_30px_rgba(54,58,39,0.07)]">
                             <div className="flex flex-col items-center border-b border-[#eee8df] bg-green-light/40 px-6 py-7 text-center">
                                 <div className="relative">
@@ -394,9 +394,9 @@ const ProfilePage = () => {
                             </div>
                         </aside>
 
-                        {/* Right Column: Stats, Profile Info / Edit Form, Recent Orders */}
+                        {/* ============ Right Column: Stats, Profile Info / Edit Form, Recent Orders ============ */}
                         <div className="flex flex-col gap-6">
-                            {/* Order Summary Stats */}
+                            {/* ============ Order Summary Stats ============ */}
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                                 <div className="flex items-center gap-4 rounded-2xl border border-[#eee5d6] bg-white p-4 shadow-[0_8px_30px_rgba(54,58,39,0.05)]">
                                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -451,7 +451,7 @@ const ProfilePage = () => {
                                 </div>
                             </div>
 
-                            {/* Personal Information Card */}
+                            {/* ============ Personal Information Card ============ */}
                             <section className="overflow-hidden rounded-2xl border border-[#eee5d6] bg-white shadow-[0_8px_30px_rgba(54,58,39,0.07)]">
                                 <header className="flex items-center justify-between border-b border-[#eee8df] px-5 py-4 sm:px-6">
                                     <div>
@@ -789,7 +789,7 @@ const ProfilePage = () => {
                                 )}
                             </section>
 
-                            {/* Recent Orders Preview */}
+                            {/* ============ Recent Orders Preview ============ */}
                             <section className="overflow-hidden rounded-2xl border border-[#eee5d6] bg-white shadow-[0_8px_30px_rgba(54,58,39,0.07)]">
                                 <header className="flex items-center justify-between border-b border-[#eee8df] px-5 py-4 sm:px-6">
                                     <h2 className="text-lg font-bold text-dark">

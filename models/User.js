@@ -23,7 +23,8 @@ const UserSchema = new Schema(
         },
         image: {
             type: String,
-            required: true,
+            required: false,
+            default: "",
         },
         address: {
             type: String,
@@ -52,7 +53,7 @@ UserSchema.statics.signup = async function (
     address,
     phone
 ) {
-    if (!username || !email || !password || !image || !address || !phone) {
+    if (!username || !email || !password || !address || !phone) {
         throw new Error("All fields must be filled");
     }
 
@@ -72,7 +73,7 @@ UserSchema.statics.signup = async function (
         username,
         email,
         password: hashPass,
-        image,
+        image: image || "",
         address,
         phone,
     });
