@@ -4,9 +4,8 @@ import {
   ChevronDown,
   ChevronRight,
   Flame,
-  LayoutGrid,
   Leaf,
-  Package,
+  Menu,
   Sparkles,
   X,
 } from "lucide-react";
@@ -89,134 +88,31 @@ const CategoryNavbar = () => {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [isDrawerOpen]);
 
-  // Featured categories for horizontal strip
-  const featuredCategories = categories.slice(0, 6);
-
   return (
     <>
-      {/* ============ HORIZONTAL CATEGORY BAR ============ */}
-      <div className="fixed inset-x-0 top-[116px] z-[997] h-12 border-b border-[#e4ded0] bg-[#fbf9f4]/95 shadow-[0_2px_12px_rgba(40,54,24,0.04)] backdrop-blur-md sm:h-13">
-        <div className="wrapper mx-auto flex h-full items-center justify-between gap-2 px-2 sm:px-4">
-          {/* ============ DESKTOP & TABLET VIEW ============ */}
-          <div className="hidden h-full min-w-0 flex-1 items-center gap-2 md:flex lg:gap-3">
-            {/* ============ Browse Categories Drawer Trigger ============ */}
-            <button
-              type="button"
-              onClick={() => setIsDrawerOpen(true)}
-              aria-expanded={isDrawerOpen}
-              aria-controls="product-category-drawer"
-              className="inline-flex h-9 shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap rounded-xl bg-[#2d4e35] px-3 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#1f3825] active:scale-95 sm:px-3.5"
-            >
-              <LayoutGrid size={15} className="shrink-0" />
+      {/* ============ HORIZONTAL CATEGORY BAR (FULL GREEN) ============ */}
+      <div className="fixed inset-x-0 top-[116px] z-997 h-13.5 border-b border-[#1b3622] bg-[#24452c] shadow-sm sm:h-14">
+        <div className="wrapper mx-auto flex h-full items-center px-2 sm:px-4">
+          {/* ============ Browse Categories Drawer Trigger ============ */}
+          <button
+            type="button"
+            onClick={() => setIsDrawerOpen(true)}
+            aria-expanded={isDrawerOpen}
+            aria-controls="product-category-drawer"
+            className="inline-flex h-10.5 min-w-52 shrink-0 cursor-pointer items-center justify-between gap-4 rounded-lg bg-white px-4 text-xs font-semibold text-[#24452c] shadow-xs transition-all hover:bg-[#f4f9f5] active:scale-95 sm:h-11 sm:min-w-60 sm:px-4.5 sm:text-sm"
+          >
+            <span className="inline-flex items-center gap-2.5">
+              <Menu size={17} strokeWidth={2.2} className="shrink-0 text-[#24452c]" />
               <span>{isBangla ? "সব ক্যাটাগরি" : "Browse Categories"}</span>
-              <ChevronDown
-                size={14}
-                className={`shrink-0 transition-transform duration-200 ${isDrawerOpen ? "rotate-180" : ""
-                  }`}
-              />
-            </button>
-
-            <span className="h-5 w-px shrink-0 bg-[#e4ded0]" />
-
-            {/* ============ Direct Category Links (Desktop) - Clean Single Line without Any Scrollbar ============ */}
-            <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-hidden py-1 lg:gap-1.5 xl:gap-2">
-              {featuredCategories.map((cat, index) => {
-                const catName = isBangla
-                  ? cat.name?.bn || cat.name?.en
-                  : cat.name?.en || cat.name?.bn;
-                const catLink = `/products?category=${cat._id}`;
-
-                return (
-                  <Link
-                    key={cat._id}
-                    href={catLink}
-                    className={`shrink-0 items-center whitespace-nowrap rounded-lg px-2 py-1 text-xs font-medium text-[#253928] transition-colors hover:bg-primary/10 hover:text-primary lg:px-2.5 lg:text-[13px] ${index > 4
-                        ? "hidden xl:inline-flex"
-                        : index > 3
-                          ? "hidden lg:inline-flex"
-                          : "inline-flex"
-                      }`}
-                  >
-                    {catName}
-                  </Link>
-                );
-              })}
-
-              {/* ============ Hot Offers Link ============ */}
-              <Link
-                href="/products?filter=offers"
-                className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg px-2 py-1 text-xs font-bold text-red-600 transition-colors hover:bg-red-50 lg:px-2.5 lg:text-[13px]"
-              >
-                <Flame size={14} className="shrink-0 text-red-500" />
-                <span>{isBangla ? "বিশেষ অফার" : "Hot Offers"}</span>
-              </Link>
-            </nav>
-          </div>
-
-          {/* ============ Right Side Desktop Link (My Orders / Track) ============ */}
-          <div className="hidden shrink-0 items-center pl-2 md:flex">
-            <Link
-              href="/my-orders"
-              className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-1 text-xs font-semibold text-[#405643] transition-colors hover:bg-primary/10 hover:text-primary"
-            >
-              <Package size={14} className="shrink-0" />
-              <span>{isBangla ? "অর্ডার ট্র্যাক করুন" : "Track Order"}</span>
-            </Link>
-          </div>
-
-          {/* ============ MOBILE VIEW (SCROLLABLE CATEGORY PILLS) ============ */}
-          <div className="flex h-full w-full items-center overflow-x-auto py-1 no-scrollbar md:hidden">
-            <div className="flex items-center gap-1.5 whitespace-nowrap px-1">
-              {/* ============ Category Drawer Trigger Pill ============ */}
-              <button
-                type="button"
-                onClick={() => setIsDrawerOpen(true)}
-                className="inline-flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg bg-[#2d4e35] px-2.5 text-xs font-semibold text-white shadow-2xs active:scale-95"
-              >
-                <LayoutGrid size={13} className="shrink-0" />
-                <span>{isBangla ? "ক্যাটাগরি" : "Categories"}</span>
-              </button>
-
-              {/* ============ Horizontal Scrollable Category Chips ============ */}
-              {categories.map((cat) => {
-                const catName = isBangla
-                  ? cat.name?.bn || cat.name?.en
-                  : cat.name?.en || cat.name?.bn;
-                const catLink = `/products?category=${cat._id}`;
-
-                return (
-                  <Link
-                    key={cat._id}
-                    href={catLink}
-                    className="inline-flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border border-[#e4ded0] bg-white px-2.5 text-xs font-medium text-[#2d4231] shadow-2xs transition-colors hover:border-primary/40 hover:text-primary"
-                  >
-                    {cat.image ? (
-                      <span className="relative h-4 w-4 shrink-0 overflow-hidden rounded-xs">
-                        <Image
-                          src={cat.image}
-                          alt={catName || "Category"}
-                          fill
-                          className="object-cover"
-                        />
-                      </span>
-                    ) : (
-                      <Leaf size={12} className="shrink-0 text-primary" />
-                    )}
-                    <span>{catName}</span>
-                  </Link>
-                );
-              })}
-
-              {/* ============ Mobile Offers Chip ============ */}
-              <Link
-                href="/products?filter=offers"
-                className="inline-flex h-8 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg border border-red-200 bg-red-50 px-2.5 text-xs font-bold text-red-600 shadow-2xs"
-              >
-                <Flame size={13} className="shrink-0" />
-                <span>{isBangla ? "অফার" : "Offers"}</span>
-              </Link>
-            </div>
-          </div>
+            </span>
+            <ChevronDown
+              size={15}
+              strokeWidth={2.2}
+              className={`shrink-0 text-[#24452c] transition-transform duration-200 ${
+                isDrawerOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
         </div>
       </div>
 

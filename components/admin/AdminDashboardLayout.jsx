@@ -127,8 +127,9 @@ export const compressImageFile = (file, maxSize = 600) =>
 export const parseListField = (value) => {
   if (Array.isArray(value)) return value.map((item) => String(item).trim()).filter(Boolean);
   if (typeof value !== "string") return [];
+  const separator = /\r?\n/.test(value) ? /\r?\n/ : /,/;
   return value
-    .split(/\r?\n|,/)
+    .split(separator)
     .map((item) => item.trim())
     .filter(Boolean);
 };

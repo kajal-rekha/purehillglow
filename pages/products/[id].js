@@ -45,8 +45,9 @@ const toList = (val) => {
   if (!val) return [];
   if (Array.isArray(val)) return val.filter(Boolean);
   if (typeof val === "string") {
+    const sep = /\r?\n/.test(val) ? /\r?\n/ : /[,;]+/;
     return val
-      .split(/[,;\n]+/)
+      .split(sep)
       .map((s) => s.trim())
       .filter(Boolean);
   }
@@ -331,37 +332,11 @@ const ProductDetailsPage = () => {
 
       <div className="mx-auto max-w-[1300px] px-4 pt-6 sm:px-6">
         {/* ============ MAIN PRODUCT HERO GRID ============ */}
-        <section className="grid gap-8 rounded-3xl border border-[#ede7dc] bg-white p-4 shadow-[0_4px_24px_rgba(40,54,24,0.04)] sm:p-7 lg:grid-cols-2 lg:gap-12">
-          {/* ============ LEFT GALLERY ============ */}
-          <div className="flex flex-col gap-3 sm:flex-row">
-            {/* ============ Thumbnails ============ */}
-            {product.images?.length > 1 && (
-              <div className="order-2 flex gap-2 overflow-x-auto sm:order-1 sm:w-20 sm:shrink-0 sm:flex-col sm:overflow-y-auto no-scrollbar">
-                {product.images.map((image, index) => (
-                  <button
-                    key={`${image}-${index}`}
-                    type="button"
-                    onClick={() => setSelectedImage(index)}
-                    aria-label={`View image ${index + 1}`}
-                    className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border bg-[#f9f7f2] transition-all sm:h-20 sm:w-20 ${selectedImage === index
-                      ? "border-[#2d4e35] ring-2 ring-[#2d4e35]/20 shadow-xs"
-                      : "border-[#e5ded1] hover:border-[#2d4e35]/50"
-                      }`}
-                  >
-                    <Image
-                      src={image}
-                      alt={`${name} thumbnail ${index + 1}`}
-                      fill
-                      sizes="80px"
-                      className="object-contain p-1"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* ============ Primary Main Image Stage ============ */}
-            <div className="relative order-1 aspect-square w-full flex-1 overflow-hidden rounded-2xl border border-[#ede7dc] bg-gradient-to-b from-[#f9f7f2] via-[#f4efe5] to-[#ece5d8] sm:order-2">
+        <section className="grid items-start gap-8 rounded-3xl border border-[#ede7dc] bg-white p-4 shadow-[0_4px_24px_rgba(40,54,24,0.04)] sm:p-7 lg:grid-cols-2 lg:gap-10">
+          {/* ============ LEFT GALLERY (Main Image + Bottom Thumbnails) ============ */}
+          <div className="flex flex-col gap-3">
+            {/* ============ Primary Main Image Stage (No Extra Gap) ============ */}
+            <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-[#ede7dc] bg-[#f8f5ee]">
               {product.images?.[selectedImage] ? (
                 <Image
                   src={product.images[selectedImage]}
@@ -369,7 +344,7 @@ const ProductDetailsPage = () => {
                   fill
                   priority
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
-                  className="object-contain p-4 transition-transform duration-500 ease-out hover:scale-105 sm:p-8"
+                  className="object-cover transition-transform duration-500 ease-out hover:scale-105"
                 />
               ) : (
                 <div className="flex h-full items-center justify-center text-sm text-dark/50">
@@ -410,10 +385,11 @@ const ProductDetailsPage = () => {
                       ? "পছন্দের তালিকায় যোগ করুন"
                       : "Add to favorites"
                 }
-                className={`absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full shadow-md transition-all duration-200 hover:scale-110 active:scale-95 ${isFavorite
-                  ? "bg-red-50 text-red-600 border border-red-200"
-                  : "bg-white/90 text-dark/60 backdrop-blur-xs hover:bg-white hover:text-red-500"
-                  }`}
+                className={`absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full shadow-md transition-all duration-200 hover:scale-110 active:scale-95 ${
+                  isFavorite
+                    ? "border border-red-200 bg-red-50 text-red-600"
+                    : "bg-white/90 text-dark/60 backdrop-blur-xs hover:bg-white hover:text-red-500"
+                }`}
               >
                 <Heart
                   size={19}
@@ -422,6 +398,33 @@ const ProductDetailsPage = () => {
                 />
               </button>
             </div>
+
+            {/* ============ Extra Product Thumbnails Below Main Image ============ */}
+            {product.images?.length > 1 && (
+              <div className="flex items-center gap-2.5 overflow-x-auto pb-1 no-scrollbar">
+                {product.images.map((image, index) => (
+                  <button
+                    key={`${image}-${index}`}
+                    type="button"
+                    onClick={() => setSelectedImage(index)}
+                    aria-label={`View image ${index + 1}`}
+                    className={`relative h-18 w-18 shrink-0 cursor-pointer overflow-hidden rounded-xl border bg-[#f9f7f2] transition-all sm:h-20 sm:w-20 ${
+                      selectedImage === index
+                        ? "border-[#2d4e35] ring-2 ring-[#2d4e35]/25 shadow-xs"
+                        : "border-[#e5ded1] opacity-80 hover:border-[#2d4e35]/50 hover:opacity-100"
+                    }`}
+                  >
+                    <Image
+                      src={image}
+                      alt={`${name} thumbnail ${index + 1}`}
+                      fill
+                      sizes="80px"
+                      className="object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ============ RIGHT BUY BOX & OVERVIEW ============ */}
@@ -521,40 +524,20 @@ const ProductDetailsPage = () => {
               </p>
             )}
 
-            {/* ============ Key Benefits Highlight Pills ============ */}
-            {benefitsList.length > 0 && (
-              <div className="mt-3.5 rounded-xl border border-[#e4eed8] bg-[#f5f9f2] p-3">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-[#355227]">
-                  {isBangla ? "প্রধান উপকারিতা:" : "Key Benefits:"}
-                </p>
-                <div className="mt-1.5 grid gap-1.5 sm:grid-cols-2">
-                  {benefitsList.map((benefit, index) => (
-                    <div
-                      key={`${benefit}-${index}`}
-                      className="flex items-center gap-1.5 text-xs font-medium text-[#2d4530]"
-                    >
-                      <Check size={14} className="shrink-0 text-[#3d6e42]" />
-                      <span>{benefit}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* ============ Quantity Selector & Add to Cart Action ============ */}
-            <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+            <div className="mt-5 flex items-center gap-2.5">
               {/* ============ Quantity Counter ============ */}
-              <div className="flex h-11 items-center justify-between rounded-xl border border-[#d8cfbe] bg-white px-2 shadow-2xs sm:w-32">
+              <div className="flex h-12 w-28 shrink-0 items-center justify-between rounded-xl border border-[#d8cfbe] bg-white px-2 shadow-2xs sm:w-32">
                 <button
                   type="button"
                   onClick={handleDecreaseQuantity}
                   disabled={displayQty <= 1}
                   aria-label="Decrease quantity"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-[#324534] transition hover:bg-[#f4efe5] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[#324534] transition hover:bg-[#f4efe5] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <Minus size={15} />
                 </button>
-                <span className="min-w-8 text-center font-mono text-sm font-bold text-[#1f3322]">
+                <span className="min-w-7 text-center font-mono text-sm font-bold text-[#1f3322]">
                   {displayQty}
                 </span>
                 <button
@@ -562,7 +545,7 @@ const ProductDetailsPage = () => {
                   onClick={handleIncreaseQuantity}
                   disabled={stockCount <= 0 || displayQty >= stockCount}
                   aria-label="Increase quantity"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-[#324534] transition hover:bg-[#f4efe5] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[#324534] transition hover:bg-[#f4efe5] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <Plus size={15} />
                 </button>
@@ -573,15 +556,16 @@ const ProductDetailsPage = () => {
                 type="button"
                 onClick={() => addProductToCart()}
                 disabled={stockCount <= 0}
-                className={`flex h-11 flex-1 items-center justify-center gap-2 rounded-xl text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400 sm:text-sm ${isMainInCart
-                  ? "bg-[#1f542c] ring-2 ring-emerald-400/40 hover:bg-[#184623]"
-                  : "bg-[#234d2c] hover:bg-[#183920] hover:shadow-md"
-                  }`}
+                className={`flex h-12 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400 sm:text-sm ${
+                  isMainInCart
+                    ? "bg-[#1f542c] ring-2 ring-emerald-400/40 hover:bg-[#184623]"
+                    : "bg-[#234d2c] hover:bg-[#183920] hover:shadow-md"
+                }`}
               >
                 {isMainInCart ? (
                   <>
-                    <Check size={17} className="text-emerald-300" />
-                    <span>
+                    <Check size={17} className="shrink-0 text-emerald-300" />
+                    <span className="truncate">
                       {isBangla
                         ? `কার্টে যোগ হয়েছে (${mainCartEntry.cartQuantity})`
                         : `Added to Cart (${mainCartEntry.cartQuantity})`}
@@ -589,8 +573,8 @@ const ProductDetailsPage = () => {
                   </>
                 ) : (
                   <>
-                    <ShoppingBag size={17} />
-                    <span>
+                    <ShoppingBag size={17} className="shrink-0" />
+                    <span className="truncate">
                       {stockCount <= 0
                         ? isBangla
                           ? "স্টকে নেই"
@@ -609,7 +593,7 @@ const ProductDetailsPage = () => {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2.5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#2d4e35]/30 bg-[#f3f9f3] text-xs font-bold text-[#234d2c] transition-all hover:bg-[#2d4e35] hover:text-white active:scale-[0.98] sm:text-sm"
+              className="mt-2.5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#2d4e35]/30 bg-[#f3f9f3] px-4 text-xs font-bold text-[#234d2c] transition-all hover:bg-[#2d4e35] hover:text-white active:scale-[0.98] sm:text-sm"
             >
               <Zap size={16} className="fill-current text-[#22c55e]" />
               <span>
@@ -715,7 +699,40 @@ const ProductDetailsPage = () => {
               </div>
             </div>
 
-            {/* ============ Card 2: Ingredients ============ */}
+            {/* ============ Card 2: Key Benefits (প্রধান উপকারিতা) ============ */}
+            {benefitsList.length > 0 && (
+              <div className="flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md">
+                <div className="flex items-center gap-2.5 border-b border-[#f2ece1] pb-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf4eb] text-[#2d4e35]">
+                    <Sparkles size={18} />
+                  </span>
+                  <div>
+                    <h3 className="text-sm font-bold text-[#1b2f1f]">
+                      {isBangla ? "প্রধান উপকারিতা" : "Key Benefits"}
+                    </h3>
+                    <p className="text-[11px] text-slate-500">
+                      {isBangla ? "নিয়মিত ব্যবহারের ফলাফল" : "Visible skincare results"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-3.5 flex-1">
+                  <ul className="space-y-2 text-xs leading-relaxed text-[#2d4530] sm:text-[13px]">
+                    {benefitsList.map((benefit, index) => (
+                      <li
+                        key={`${benefit}-${index}`}
+                        className="flex items-start gap-2"
+                      >
+                        <Check size={14} className="mt-0.5 shrink-0 text-[#3d6e42]" />
+                        <span>{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* ============ Card 3: Ingredients ============ */}
             <div className="flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md">
               <div className="flex items-center gap-2.5 border-b border-[#f2ece1] pb-3">
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf4eb] text-[#2d4e35]">
@@ -754,7 +771,7 @@ const ProductDetailsPage = () => {
               </div>
             </div>
 
-            {/* ============ Card 3: How to Use ============ */}
+            {/* ============ Card 4: How to Use ============ */}
             <div className="flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md">
               <div className="flex items-center gap-2.5 border-b border-[#f2ece1] pb-3">
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf4eb] text-[#2d4e35]">
@@ -792,8 +809,8 @@ const ProductDetailsPage = () => {
               </div>
             </div>
 
-            {/* ============ Card 4: Product Specifications Table ============ */}
-            <div className="flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md md:col-span-2 lg:col-span-2">
+            {/* ============ Card 5: Product Specifications Table ============ */}
+            <div className={`flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md ${benefitsList.length > 0 ? "" : "md:col-span-2 lg:col-span-2"}`}>
               <div className="flex items-center gap-2.5 border-b border-[#f2ece1] pb-3">
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf4eb] text-[#2d4e35]">
                   <Sparkles size={18} />
