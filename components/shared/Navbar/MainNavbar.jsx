@@ -26,6 +26,9 @@ import {
   ChevronRight,
   Leaf,
   Home,
+  Info,
+  HelpCircle,
+  Mail,
 } from "lucide-react";
 
 const Navbar = () => {
@@ -129,9 +132,19 @@ const Navbar = () => {
       icon: Leaf,
     },
     {
-      href: "/#best-sellers",
-      label: { en: "Best Sellers", bn: "সেরা বিক্রিত" },
-      icon: Sparkles,
+      href: "/about",
+      label: { en: "About Us", bn: "আমাদের সম্পর্কে" },
+      icon: Info,
+    },
+    {
+      href: "/faq",
+      label: { en: "FAQ", bn: "সাধারণ জিজ্ঞাসা" },
+      icon: HelpCircle,
+    },
+    {
+      href: "/contact",
+      label: { en: "Contact Us", bn: "যোগাযোগ" },
+      icon: Mail,
     },
     {
       href: "/products?filter=offers",

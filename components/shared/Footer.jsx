@@ -21,32 +21,26 @@ const Footer = () => {
     const quickLinks = [
         { label: isBangla ? "হোম" : "Home", href: "/" },
         { label: isBangla ? "সব পণ্য" : "All Products", href: "/products" },
-        { label: isBangla ? "সেরা পণ্য" : "Best Sellers", href: "/#best-sellers" },
-        {
-            label: isBangla ? "আমাদের অঙ্গীকার" : "Our Promise",
-            href: "/#authenticity-promise",
-        },
+        { label: isBangla ? "আমাদের সম্পর্কে" : "About Us", href: "/about" },
+        { label: isBangla ? "সাধারণ জিজ্ঞাসা" : "FAQ", href: "/faq" },
     ];
 
     const careLinks = [
         {
-            label: isBangla ? "অর্ডার ও পণ্য" : "Orders & Products",
-            href: "/products",
+            label: isBangla ? "আমার অর্ডার" : "My Orders",
+            href: "/my-orders",
         },
         {
             label: isBangla ? "ডেলিভারি তথ্য" : "Delivery Information",
-            href: "https://wa.me/8801762144200",
-            external: true,
+            href: "/faq",
         },
         {
             label: isBangla ? "রিটার্ন ও রিফান্ড" : "Returns & Refunds",
-            href: "mailto:hello@purehillglow.com?subject=Returns%20and%20Refunds",
-            external: true,
+            href: "/faq",
         },
         {
             label: isBangla ? "যোগাযোগ করুন" : "Contact Us",
-            href: "https://m.me/purehillglow",
-            external: true,
+            href: "/contact",
         },
     ];
 

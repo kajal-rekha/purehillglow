@@ -47,15 +47,16 @@ const LoginForm = () => {
                     );
                     setFormData({ email: "", password: "" });
                     setIsLoading(false);
-                    router.push("/");
+                    const redirectUrl = router.query.redirect || "/";
+                    router.push(redirectUrl);
                 }
             } catch (err) {
                 setIsLoading(false);
                 toast.error(
                     err?.response?.data?.error ||
-                        (isBangla
-                            ? "লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
-                            : "Login failed. Please try again.")
+                    (isBangla
+                        ? "লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
+                        : "Login failed. Please try again.")
                 );
             }
         },
@@ -201,11 +202,10 @@ const LoginForm = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className={`mt-1 w-full rounded-xl py-3 px-4 text-sm font-semibold shadow-sm ${
-                                isLoading
+                            className={`mt-1 w-full rounded-xl py-3 px-4 text-sm font-semibold shadow-sm ${isLoading
                                     ? "cursor-not-allowed bg-gray text-black/50"
                                     : "cursor-pointer bg-primary text-light hover:bg-secondary eq"
-                            }`}
+                                }`}
                         >
                             {isLoading ? (
                                 <Loading isLoading={isLoading} />
@@ -223,7 +223,13 @@ const LoginForm = () => {
                                     : `Don't have an account? `}
                             </span>
                             <Link
-                                href="/auth/signup"
+                                href={
+                                    router.query.redirect
+                                        ? `/auth/signup?redirect=${encodeURIComponent(
+                                            router.query.redirect
+                                        )}`
+                                        : "/auth/signup"
+                                }
                                 className="font-semibold text-primary hover:underline"
                             >
                                 {isBangla ? "রেজিস্টার করুন" : "Register"}

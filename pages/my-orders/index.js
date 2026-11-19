@@ -84,6 +84,8 @@ const MyOrdersPage = () => {
         } catch (err) {
             if (err?.response?.status === 404) {
                 setOrders([]);
+            } else if (err?.response?.status === 401) {
+                setOrders([]);
             } else {
                 setError(err?.response?.data?.error || "FETCH_ERROR");
             }
@@ -184,7 +186,7 @@ const MyOrdersPage = () => {
                                 : "Please sign in to view your order history."}
                         </p>
                         <Link
-                            href="/auth/login"
+                            href="/auth/login?redirect=/my-orders"
                             className="mt-5 inline-flex rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white transition hover:bg-secondary"
                         >
                             {isBangla ? "লগইন করুন" : "Sign In"}

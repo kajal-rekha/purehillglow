@@ -19,7 +19,7 @@ export default async function handler(req, res) {
             const token = jwt.sign(
                 { id: user._id, role: user.role },
                 process.env.JWT_SECRET,
-                { expiresIn: "7d" }
+                { expiresIn: "30d" }
             );
 
             // Do not send the password hash to the client

@@ -9,7 +9,18 @@ import AdminDashboardLayout, {
     useAdminDashboard,
 } from "@/components/admin/AdminDashboardLayout";
 import axios from "axios";
-import { Box, Edit3, ImagePlus, Plus, Search, Trash2, X } from "lucide-react";
+import {
+    Box,
+    ChevronLeft,
+    ChevronRight,
+    Edit3,
+    ImagePlus,
+    Plus,
+    Search,
+    Star,
+    Trash2,
+    X,
+} from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
@@ -56,6 +67,26 @@ function AdminProductsContent() {
     const [editingProductId, setEditingProductId] = useState(null);
     const [isSubmittingProduct, setIsSubmittingProduct] = useState(false);
     const [productForm, setProductForm] = useState(INITIAL_PRODUCT_FORM);
+    const [dragImageIdx, setDragImageIdx] = useState(null);
+
+    /* ============ Reorder Product Images Helper ============ */
+    const moveProductImage = (fromIdx, toIdx) => {
+        setProductForm((prev) => {
+            const list = [...(prev.images || [])];
+            if (
+                fromIdx < 0 ||
+                toIdx < 0 ||
+                fromIdx >= list.length ||
+                toIdx >= list.length ||
+                fromIdx === toIdx
+            ) {
+                return prev;
+            }
+            const [moved] = list.splice(fromIdx, 1);
+            list.splice(toIdx, 0, moved);
+            return { ...prev, images: list };
+        });
+    };
 
     const filteredProducts = useMemo(() => {
         if (!productSearch.trim()) return products;
@@ -302,8 +333,8 @@ function AdminProductsContent() {
                                         ? "পণ্য এডিট করুন (সব ফিল্ড)"
                                         : "Edit Product (Full Schema)"
                                     : isBangla
-                                    ? "নতুন পণ্য যোগ করুন (সব ফিল্ড)"
-                                    : "Add New Product (Full Schema)"}
+                                        ? "নতুন পণ্য যোগ করুন (সব ফিল্ড)"
+                                        : "Add New Product (Full Schema)"}
                             </h3>
                             <p className="mt-0.5 text-xs text-slate-400">
                                 {isBangla
@@ -414,9 +445,9 @@ function AdminProductsContent() {
                                                 !productForm.category ||
                                                 String(
                                                     s.category_id?._id ||
-                                                        s.category_id
+                                                    s.category_id
                                                 ) ===
-                                                    String(productForm.category)
+                                                String(productForm.category)
                                         )
                                         .map((sub) => (
                                             <option
@@ -817,22 +848,30 @@ function AdminProductsContent() {
                         </div>
 
                         <div>
-                            <label className="mb-2 block text-[11px] font-semibold text-slate-300">
-                                Product Images{" "}
-                                <span className="text-rose-400">*</span>{" "}
-                                <span className="font-normal text-slate-400">
-                                    ({productForm.images?.length || 0} uploaded
-                                    — you can select multiple images)
-                                </span>
-                            </label>
+                            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                                <label className="block text-[11px] font-semibold text-slate-300">
+                                    Product Images{" "}
+                                    <span className="text-rose-400">*</span>{" "}
+                                    <span className="font-normal text-slate-400">
+                                        ({productForm.images?.length || 0} uploaded)
+                                    </span>
+                                </label>
+                                {(productForm.images?.length || 0) > 1 && (
+                                    <span className="text-[11px] text-emerald-400">
+                                        {isBangla
+                                            ? "টিপস: যেকোনো ছবিকে ১ম (Main) করতে ★ বাটনে ক্লিক করুন অথবা মাউস দিয়ে টেনে (Drag) সাজান"
+                                            : "Tip: Click ★ to set as 1st (Main) image, use ←/→ arrows, or drag to reorder"}
+                                    </span>
+                                )}
+                            </div>
 
                             <div className="flex flex-wrap items-center gap-3">
-                                <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-xs font-bold text-emerald-400 transition hover:bg-emerald-500/20">
-                                    <ImagePlus size={16} />
+                                <label className="inline-flex h-24 cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-emerald-500/40 bg-emerald-500/10 px-4 text-xs font-bold text-emerald-400 transition hover:bg-emerald-500/20">
+                                    <ImagePlus size={18} />
                                     <span>
                                         {isBangla
-                                            ? "ডিভাইস থেকে ছবি যোগ করুন (একাধিক)"
-                                            : "Upload Product Images (Multiple)"}
+                                            ? "ছবি যোগ করুন"
+                                            : "Add Images"}
                                     </span>
                                     <input
                                         type="file"
@@ -869,40 +908,171 @@ function AdminProductsContent() {
                                     />
                                 </label>
 
-                                {productForm.images?.map((imgSrc, idx) => (
-                                    <div
-                                        key={idx}
-                                        className="group relative h-16 w-16 overflow-hidden rounded-xl border border-white/15 bg-[#0b1015]"
-                                    >
-                                        <Image
-                                            src={imgSrc}
-                                            alt={`Product ${idx + 1}`}
-                                            fill
-                                            sizes="64px"
-                                            className="object-cover"
-                                        />
-                                        {idx === 0 && (
-                                            <span className="absolute inset-x-0 bottom-0 bg-emerald-500/90 py-0.5 text-center text-[9px] font-bold text-slate-950">
-                                                MAIN
-                                            </span>
-                                        )}
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setProductForm((prev) => ({
-                                                    ...prev,
-                                                    images: prev.images.filter(
-                                                        (_, i) => i !== idx
-                                                    ),
-                                                }))
+                                {productForm.images?.map((imgSrc, idx) => {
+                                    const totalImgs =
+                                        productForm.images?.length || 0;
+                                    return (
+                                        <div
+                                            key={`${idx}-${imgSrc.slice(-18)}`}
+                                            draggable
+                                            onDragStart={() =>
+                                                setDragImageIdx(idx)
                                             }
-                                            className="absolute right-1 top-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-rose-500 text-white opacity-90 shadow hover:bg-rose-600"
-                                            title="Remove image"
+                                            onDragOver={(e) =>
+                                                e.preventDefault()
+                                            }
+                                            onDrop={() => {
+                                                if (
+                                                    dragImageIdx !== null &&
+                                                    dragImageIdx !== idx
+                                                ) {
+                                                    moveProductImage(
+                                                        dragImageIdx,
+                                                        idx
+                                                    );
+                                                }
+                                                setDragImageIdx(null);
+                                            }}
+                                            onDragEnd={() =>
+                                                setDragImageIdx(null)
+                                            }
+                                            className={`group relative h-24 w-24 cursor-grab overflow-hidden rounded-xl border bg-[#0b1015] transition active:cursor-grabbing ${idx === 0
+                                                    ? "border-emerald-500 ring-2 ring-emerald-500/25"
+                                                    : dragImageIdx === idx
+                                                        ? "border-emerald-400 opacity-50"
+                                                        : "border-white/15 hover:border-white/35"
+                                                }`}
                                         >
-                                            <X size={11} />
-                                        </button>
-                                    </div>
-                                ))}
+                                            <Image
+                                                src={imgSrc}
+                                                alt={`Product ${idx + 1}`}
+                                                fill
+                                                sizes="96px"
+                                                className="object-cover"
+                                            />
+
+                                            {/* ============ Top Bar: Position Badge & Remove Button ============ */}
+                                            <div className="absolute inset-x-1 top-1 z-10 flex items-center justify-between">
+                                                <span
+                                                    className={`rounded-md px-1.5 py-0.5 text-[9px] font-extrabold shadow ${idx === 0
+                                                            ? "bg-emerald-500 text-slate-950"
+                                                            : "bg-black/75 text-white"
+                                                        }`}
+                                                >
+                                                    {idx === 0
+                                                        ? "1st • MAIN"
+                                                        : `#${idx + 1}`}
+                                                </span>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setProductForm(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                images: prev.images.filter(
+                                                                    (_, i) =>
+                                                                        i !==
+                                                                        idx
+                                                                ),
+                                                            })
+                                                        )
+                                                    }
+                                                    className="flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-rose-500 text-white shadow hover:bg-rose-600"
+                                                    title={
+                                                        isBangla
+                                                            ? "ছবি মুছে ফেলুন"
+                                                            : "Remove image"
+                                                    }
+                                                >
+                                                    <X size={11} />
+                                                </button>
+                                            </div>
+
+                                            {/* ============ Bottom Reorder Controls Bar ============ */}
+                                            {totalImgs > 1 && (
+                                                <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-between bg-black/80 px-1 py-1 backdrop-blur-[2px]">
+                                                    <button
+                                                        type="button"
+                                                        disabled={idx === 0}
+                                                        onClick={() =>
+                                                            moveProductImage(
+                                                                idx,
+                                                                idx - 1
+                                                            )
+                                                        }
+                                                        className="flex h-5 w-5 cursor-pointer items-center justify-center rounded bg-white/10 text-white hover:bg-emerald-500 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-30"
+                                                        title={
+                                                            isBangla
+                                                                ? "বামে নিন"
+                                                                : "Move Left"
+                                                        }
+                                                    >
+                                                        <ChevronLeft
+                                                            size={12}
+                                                        />
+                                                    </button>
+
+                                                    {idx > 0 ? (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                moveProductImage(
+                                                                    idx,
+                                                                    0
+                                                                )
+                                                            }
+                                                            className="inline-flex cursor-pointer items-center gap-0.5 rounded bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-bold text-amber-300 hover:bg-amber-400 hover:text-slate-950"
+                                                            title={
+                                                                isBangla
+                                                                    ? "১ম (Main) ছবি করুন"
+                                                                    : "Make 1st (Main) Image"
+                                                            }
+                                                        >
+                                                            <Star
+                                                                size={9}
+                                                                className="fill-current"
+                                                            />
+                                                            <span>
+                                                                {isBangla
+                                                                    ? "১ম"
+                                                                    : "Main"}
+                                                            </span>
+                                                        </button>
+                                                    ) : (
+                                                        <span className="text-[9px] font-bold text-emerald-400">
+                                                            ★ Cover
+                                                        </span>
+                                                    )}
+
+                                                    <button
+                                                        type="button"
+                                                        disabled={
+                                                            idx ===
+                                                            totalImgs - 1
+                                                        }
+                                                        onClick={() =>
+                                                            moveProductImage(
+                                                                idx,
+                                                                idx + 1
+                                                            )
+                                                        }
+                                                        className="flex h-5 w-5 cursor-pointer items-center justify-center rounded bg-white/10 text-white hover:bg-emerald-500 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-30"
+                                                        title={
+                                                            isBangla
+                                                                ? "ডানে নিন"
+                                                                : "Move Right"
+                                                        }
+                                                    >
+                                                        <ChevronRight
+                                                            size={12}
+                                                        />
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
@@ -925,12 +1095,12 @@ function AdminProductsContent() {
                                     ? "সেভ হচ্ছে..."
                                     : "Saving..."
                                 : editingProductId
-                                ? isBangla
-                                    ? "পণ্য আপডেট করুন"
-                                    : "Update Product"
-                                : isBangla
-                                ? "পণ্য সেভ করুন"
-                                : "Save Product"}
+                                    ? isBangla
+                                        ? "পণ্য আপডেট করুন"
+                                        : "Update Product"
+                                    : isBangla
+                                        ? "পণ্য সেভ করুন"
+                                        : "Save Product"}
                         </button>
                     </div>
                 </form>

@@ -146,15 +146,16 @@ const SignUpForm = () => {
                     setImageName("");
 
                     setIsLoading(false);
-                    router.push("/");
+                    const redirectUrl = router.query.redirect || "/";
+                    router.push(redirectUrl);
                 }
             } catch (err) {
                 setIsLoading(false);
                 toast.error(
                     err?.response?.data?.error ||
-                        (isBangla
-                            ? "সাইনআপ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
-                            : "Signup failed. Please try again.")
+                    (isBangla
+                        ? "সাইনআপ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
+                        : "Signup failed. Please try again.")
                 );
             }
         },
@@ -442,11 +443,10 @@ const SignUpForm = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className={`mt-2 w-full rounded-xl py-3 px-4 text-sm font-semibold ${
-                                isLoading
-                                    ? "cursor-not-allowed bg-gray text-black/50"
-                                    : "cursor-pointer bg-primary text-light hover:bg-secondary eq"
-                            }`}
+                            className={`mt-2 w-full rounded-xl py-3 px-4 text-sm font-semibold ${isLoading
+                                ? "cursor-not-allowed bg-gray text-black/50"
+                                : "cursor-pointer bg-primary text-light hover:bg-secondary eq"
+                                }`}
                         >
                             {isLoading ? (
                                 <Loading isLoading={isLoading} />
@@ -464,7 +464,13 @@ const SignUpForm = () => {
                                     : "Already have an account? "}
                             </span>
                             <Link
-                                href="/auth/login"
+                                href={
+                                    router.query.redirect
+                                        ? `/auth/login?redirect=${encodeURIComponent(
+                                            router.query.redirect
+                                        )}`
+                                        : "/auth/login"
+                                }
                                 className="font-semibold text-primary hover:underline"
                             >
                                 {isBangla ? "লগইন" : "Login"}

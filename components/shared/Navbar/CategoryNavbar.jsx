@@ -11,12 +11,22 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const CategoryNavbar = () => {
+  const router = useRouter();
   const { language } = useSelector((state) => state.language);
   const isBangla = language === "bn";
+
+  const navLinks = [
+    { href: "/", en: "Home", bn: "হোম" },
+    { href: "/products", en: "Products", bn: "সব পণ্য" },
+    { href: "/about", en: "About", bn: "আমাদের সম্পর্কে" },
+    { href: "/faq", en: "FAQ", bn: "জিজ্ঞাসা" },
+    { href: "/contact", en: "Contact", bn: "যোগাযোগ" },
+  ];
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -90,9 +100,9 @@ const CategoryNavbar = () => {
 
   return (
     <>
-      {/* ============ HORIZONTAL CATEGORY BAR (FULL GREEN) ============ */}
-      <div className="fixed inset-x-0 top-[116px] z-997 h-13.5 border-b border-[#1b3622] bg-[#24452c] shadow-sm sm:h-14">
-        <div className="wrapper mx-auto flex h-full items-center px-2 sm:px-4">
+      {/* ============ HORIZONTAL CATEGORY BAR (DESKTOP / TABLET ONLY) ============ */}
+      <div className="fixed inset-x-0 top-[116px] z-997 hidden h-14 border-b border-[#1b3622] bg-[#24452c] shadow-sm md:block">
+        <div className="wrapper mx-auto flex h-full items-center justify-between gap-4 px-4">
           {/* ============ Browse Categories Drawer Trigger ============ */}
           <button
             type="button"
@@ -108,11 +118,36 @@ const CategoryNavbar = () => {
             <ChevronDown
               size={15}
               strokeWidth={2.2}
-              className={`shrink-0 text-[#24452c] transition-transform duration-200 ${
-                isDrawerOpen ? "rotate-180" : ""
-              }`}
+              className={`shrink-0 text-[#24452c] transition-transform duration-200 ${isDrawerOpen ? "rotate-180" : ""
+                }`}
             />
           </button>
+
+          {/* ============ Primary Navigation Links (Right Aligned) ============ */}
+          <nav
+            aria-label={isBangla ? "প্রধান মেনু" : "Primary navigation"}
+            className="no-scrollbar hidden items-center gap-1 overflow-x-auto sm:flex lg:gap-1.5"
+          >
+            {navLinks.map((item) => {
+              const isActive =
+                item.href === "/"
+                  ? router.pathname === "/"
+                  : router.pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`shrink-0 rounded-lg px-3 py-2 text-xs font-semibold tracking-wide transition-all duration-200 lg:px-3.5 lg:text-[13px] ${
+                    isActive
+                      ? "bg-white/12 text-[#efc477]"
+                      : "text-white/90 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  {isBangla ? item.bn : item.en}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </div>
 
@@ -123,8 +158,8 @@ const CategoryNavbar = () => {
         tabIndex={isDrawerOpen ? 0 : -1}
         onClick={() => setIsDrawerOpen(false)}
         className={`fixed inset-0 z-[1100] cursor-default bg-black/45 backdrop-blur-[1px] transition-opacity duration-300 ${isDrawerOpen
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none opacity-0"
+          ? "pointer-events-auto opacity-100"
+          : "pointer-events-none opacity-0"
           }`}
       />
 
@@ -207,8 +242,8 @@ const CategoryNavbar = () => {
                 >
                   <div
                     className={`flex items-center justify-between rounded-xl transition ${isExpanded
-                        ? "bg-[#eaf4ec] text-[#244b2d]"
-                        : "hover:bg-[#f5f9f6]"
+                      ? "bg-[#eaf4ec] text-[#244b2d]"
+                      : "hover:bg-[#f5f9f6]"
                       }`}
                   >
                     <Link

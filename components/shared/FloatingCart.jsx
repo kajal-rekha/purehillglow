@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import {
@@ -17,10 +18,13 @@ const localized = (value, language) => {
 };
 
 const FloatingCart = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const language = useSelector((state) => state.language.language);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const [isOpen, setIsOpen] = useState(false);
+  const isHiddenRoute =
+    router.pathname === "/cart" || router.pathname === "/checkout";
   const isBangla = language === "bn";
   const cartCount = cartItems.reduce(
     (total, item) => total + (Number(item.cartQuantity) || 0),
@@ -45,6 +49,8 @@ const FloatingCart = () => {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [isOpen]);
+
+  if (isHiddenRoute) return null;
 
   return (
     <>

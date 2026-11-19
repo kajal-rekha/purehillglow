@@ -128,6 +128,9 @@ const CheckoutPage = () => {
     } catch (error) {
       whatsappTab?.close();
       console.error("Order submission failed:", error);
+      if (error?.response?.status === 401) {
+        return;
+      }
       toast.error(
         error.response?.data?.error ||
           error.message ||
@@ -188,7 +191,7 @@ const CheckoutPage = () => {
                 : "Please sign in first so your order can be saved to your account."}
             </p>
             <Link
-              href="/auth/login"
+              href="/auth/login?redirect=/checkout"
               className="mt-5 inline-flex rounded-lg bg-[#20452b] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#17351f]"
             >
               {isBangla ? "লগইন করুন" : "Sign in"}
@@ -228,12 +231,12 @@ const CheckoutPage = () => {
                     size={19}
                   />
                   <div>
-                    <h3 className="font-semibold text-[#24452c]">
+                    <h3 className="!text-sm !font-bold text-[#24452c] sm:!text-base">
                       {isBangla
                         ? "ক্যাশ অন ডেলিভারিতে অর্ডার করুন"
                         : "Cash on Delivery"}
                     </h3>
-                    <p className="mt-1 text-xs leading-5 text-dark/70 sm:text-sm">
+                    <p className="mt-1 !text-xs leading-5 text-dark/70 sm:!text-sm">
                       {isBangla
                         ? "অর্ডার নিশ্চিত করতে নিচের তথ্যগুলো পূরণ করুন। পণ্য হাতে পেয়ে মূল্য পরিশোধ করবেন।"
                         : "Fill in your details to confirm your order. Pay when your products are delivered."}
@@ -321,19 +324,35 @@ const CheckoutPage = () => {
             </section>
 
             <aside className="overflow-hidden rounded-2xl border border-[#eee5d6] bg-white shadow-[0_8px_30px_rgba(54,58,39,0.07)] lg:sticky lg:top-32">
-              <h2 className="flex items-center gap-2 bg-[#183d23] px-4 py-3 font-playfair text-lg font-bold text-white">
-                <ShoppingBag size={18} />
-                {isBangla ? "অর্ডারের সারাংশ" : "Order Summary"}
-              </h2>
+              <div className="flex items-center justify-between gap-2 bg-[#183d23] px-4 py-3 text-white">
+                <h2 className="flex items-center gap-2 font-playfair !text-lg font-bold text-white">
+                  <ShoppingBag size={18} />
+                  {isBangla ? "অর্ডারের সারাংশ" : "Order Summary"}
+                </h2>
+                <Link
+                  href="/cart"
+                  className="rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/95 transition hover:bg-white/20"
+                >
+                  {isBangla ? "কার্ট এডিট" : "Edit Cart"}
+                </Link>
+              </div>
               <div className="p-4 sm:p-5">
                 <section aria-labelledby="checkout-products-heading">
-                  <h3
-                    id="checkout-products-heading"
-                    className="mb-2 text-sm font-bold text-[#203c28]"
-                  >
-                    {isBangla ? "আপনার অর্ডারের পণ্য" : "Your order"}
-                  </h3>
-                  <ul className="divide-y divide-[#eee8df]">
+                  <div className="mb-2 flex items-center justify-between">
+                    <h3
+                      id="checkout-products-heading"
+                      className="!text-sm !font-bold text-[#203c28]"
+                    >
+                      {isBangla ? "আপনার অর্ডারের পণ্য" : "Your order"}
+                    </h3>
+                    <span className="text-[11px] font-medium text-dark/55">
+                      {cartItems.length.toLocaleString(
+                        isBangla ? "bn-BD" : "en-BD"
+                      )}{" "}
+                      {isBangla ? "টি আইটেম" : cartItems.length === 1 ? "item" : "items"}
+                    </span>
+                  </div>
+                  <ul className="max-h-[320px] divide-y divide-[#eee8df] overflow-y-auto pr-1.5">
                     {cartItems.map((item) => {
                       const name =
                         localized(item.name, language) ||
@@ -345,14 +364,14 @@ const CheckoutPage = () => {
                           key={item._id}
                           className="flex items-center gap-3 py-3"
                         >
-                          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[#f7f5ef]">
+                          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-[#eee8df] bg-[#f7f5ef]">
                             {item.images?.[0] && (
                               <Image
                                 src={item.images[0]}
                                 alt={name}
                                 fill
                                 sizes="48px"
-                                className="object-contain p-1"
+                                className="object-cover"
                               />
                             )}
                           </div>
@@ -415,11 +434,11 @@ const CheckoutPage = () => {
                       ? "অর্ডার করুন"
                       : "Place Order"}
                 </button>
-                <div className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-[#f0f2e4] px-3 py-2 text-center text-[10px] leading-4 text-[#344b31]">
+                <div className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-[#f0f2e4] px-3 py-2 text-center text-[11px] leading-4 text-[#344b31]">
                   <ShieldCheck size={16} className="shrink-0" />
                   {isBangla
-                    ? "আপনার অর্ডার নিরাপদ ও সুরক্ষিত"
-                    : "Your order is safe & secure"}
+                    ? "অর্ডারটি আপনার অ্যাকাউন্টে সেভ হবে এবং WhatsApp-এ কনফার্ম হবে"
+                    : "Order is saved securely & confirmed via WhatsApp"}
                 </div>
               </div>
             </aside>

@@ -9,10 +9,12 @@ import {
   Check,
   ChevronDown,
   ChevronRight,
-  Filter,
   Heart,
   Leaf,
+  ShieldCheck,
   ShoppingBag,
+  SlidersHorizontal,
+  Sparkles,
   Tag,
   X,
 } from "lucide-react";
@@ -279,6 +281,15 @@ const ProductsCatalog = () => {
     );
   }, [subcategories, subcategoryId]);
 
+  const activeCategorySubcategories = useMemo(() => {
+    if (!activeCategory) return [];
+    return subcategories.filter(
+      (sub) =>
+        String(sub.category_id?._id || sub.category_id) ===
+        String(activeCategory._id)
+    );
+  }, [subcategories, activeCategory]);
+
   const brands = useMemo(
     () =>
       [...new Set(products.map((product) => getBrand(product, language)).filter(Boolean))].sort(
@@ -445,11 +456,12 @@ const ProductsCatalog = () => {
   }, [filtersOpen]);
 
   const renderFilterSections = (isMobile = false) => (
-    <>
-      <section className="rounded-xl border border-[#eee5d6] bg-[#fffdf8] p-3 shadow-2xs">
-        <h2 className="mb-2 flex items-center gap-2 text-sm font-bold text-[#344a31]">
-          <Leaf size={15} className="text-[#55713e]" />
-          {isBangla ? "ক্যাটাগরি অনুযায়ী খুঁজুন" : "Shop by Category"}
+    <div className="divide-y divide-[#efe8da] overflow-hidden rounded-2xl border border-[#e9e0cf] bg-white/95 shadow-[0_10px_30px_rgba(24,52,30,0.04)]">
+      {/* ============ Shop by Category ============ */}
+      <section className="p-4">
+        <h2 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-[#1c3922]">
+          <Leaf size={14} className="text-[#3f6b36]" />
+          {isBangla ? "ক্যাটাগরি" : "Categories"}
         </h2>
         <button
           type="button"
@@ -467,11 +479,23 @@ const ProductsCatalog = () => {
             minPrice === "" &&
             maxPrice === ""
           }
-          className="mb-1 w-full rounded-lg px-2 py-2 text-left text-[13px] font-semibold text-[#355b3d] transition hover:bg-[#edf0df]"
+          className={`mb-1.5 flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-left text-[13px] font-semibold transition ${
+            !categoryId && !subcategoryId
+              ? "bg-[#1e3f25] text-white shadow-xs"
+              : "text-[#2c4731] hover:bg-[#f2f5ec]"
+          }`}
         >
-          {isBangla ? "সব পণ্য দেখুন" : "All Products"}
+          <span>{isBangla ? "সব পণ্য দেখুন" : "All Products"}</span>
+          <span
+            className={`text-[11px] ${
+              !categoryId && !subcategoryId ? "text-white/80" : "text-[#7c8576]"
+            }`}
+          >
+            {products.length}
+          </span>
         </button>
-        <div className="max-h-56 space-y-0.5 overflow-y-auto pr-1">
+
+        <div className="max-h-72 space-y-1 overflow-y-auto pr-1">
           {categories.map((category) => {
             const name = localized(category.name, language);
             const categorySubcategories = subcategories.filter(
@@ -479,88 +503,93 @@ const ProductsCatalog = () => {
                 String(subcategory.category_id?._id || subcategory.category_id) ===
                 String(category._id)
             );
-            const isCategoryExpanded =
-              expandedCategoryId === category._id;
+            const isCategoryExpanded = expandedCategoryId === category._id;
+            const isSelected = categoryId === category._id;
+
             return (
               <div key={category._id}>
                 <div
-                  className={`flex items-center rounded-lg transition ${categoryId === category._id
-                    ? "bg-[#edf0df] font-semibold text-[#355b3d]"
-                    : "text-[#55594d] hover:bg-[#f4f3e9]"
-                    }`}
+                  className={`flex items-center rounded-xl transition ${
+                    isSelected
+                      ? "bg-[#eaf1e3] font-semibold text-[#1b3a21]"
+                      : "text-[#4c5548] hover:bg-[#f6f4ec]"
+                  }`}
                 >
                   <button
                     type="button"
                     onClick={() => {
-                      setCategoryId(
-                        categoryId === category._id ? "" : category._id
-                      );
+                      setCategoryId(isSelected ? "" : category._id);
                       setSubcategoryId("");
+                      if (!isSelected) setExpandedCategoryId(category._id);
                       if (isMobile) setFiltersOpen(false);
                     }}
-                    aria-pressed={categoryId === category._id}
-                    className="flex min-w-0 flex-1 items-center gap-2 px-2 py-2 text-left text-[13px]"
+                    aria-pressed={isSelected}
+                    className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 px-3 py-2 text-left text-[13px]"
                   >
-                    <Leaf size={14} className="shrink-0 text-[#78904f]" />
+                    <span
+                      className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                        isSelected ? "bg-[#1e3f25]" : "bg-[#b6c2ae]"
+                      }`}
+                    />
                     <span className="truncate">{name}</span>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setExpandedCategoryId(
-                        isCategoryExpanded ? "" : category._id
-                      )
-                    }
-                    aria-label={
-                      isBangla
-                        ? `${name} সাবক্যাটাগরি ${isCategoryExpanded ? "বন্ধ করুন" : "দেখুন"
-                        }`
-                        : `${isCategoryExpanded ? "Hide" : "Show"
-                        } ${name} subcategories`
-                    }
-                    aria-expanded={isCategoryExpanded}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#939581] hover:bg-[#e8eddf]"
-                  >
-                    {isCategoryExpanded ? (
-                      <ChevronDown size={13} />
-                    ) : (
-                      <ChevronRight size={13} />
-                    )}
-                  </button>
+                  {categorySubcategories.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandedCategoryId(
+                          isCategoryExpanded ? "" : category._id
+                        )
+                      }
+                      aria-label={
+                        isBangla
+                          ? `${name} সাবক্যাটাগরি ${
+                              isCategoryExpanded ? "বন্ধ করুন" : "দেখুন"
+                            }`
+                          : `${
+                              isCategoryExpanded ? "Hide" : "Show"
+                            } ${name} subcategories`
+                      }
+                      aria-expanded={isCategoryExpanded}
+                      className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-[#7c8475] hover:bg-[#dde6d4] hover:text-[#1b3a21]"
+                    >
+                      {isCategoryExpanded ? (
+                        <ChevronDown size={13} />
+                      ) : (
+                        <ChevronRight size={13} />
+                      )}
+                    </button>
+                  )}
                 </div>
-                {isCategoryExpanded && (
-                  <div className="ml-3 border-l border-[#e5e8d9] pl-2">
-                    {categorySubcategories.map((subcategory) => (
-                      <button
-                        key={subcategory._id}
-                        type="button"
-                        onClick={() => {
-                          setCategoryId(category._id);
-                          setSubcategoryId(
-                            subcategoryId === subcategory._id
-                              ? ""
-                              : subcategory._id
-                          );
-                          if (isMobile) setFiltersOpen(false);
-                        }}
-                        aria-pressed={subcategoryId === subcategory._id}
-                        className={`flex w-full items-center rounded-lg px-2 py-1.5 text-left text-xs transition ${subcategoryId === subcategory._id
-                          ? "font-semibold text-[#355b3d]"
-                          : "text-[#66695c] hover:bg-[#f4f3e9]"
+
+                {isCategoryExpanded && categorySubcategories.length > 0 && (
+                  <div className="ml-4 mt-1 space-y-0.5 border-l border-[#e3dccb] pl-2.5">
+                    {categorySubcategories.map((subcategory) => {
+                      const isSubSelected = subcategoryId === subcategory._id;
+                      return (
+                        <button
+                          key={subcategory._id}
+                          type="button"
+                          onClick={() => {
+                            setCategoryId(category._id);
+                            setSubcategoryId(
+                              isSubSelected ? "" : subcategory._id
+                            );
+                            if (isMobile) setFiltersOpen(false);
+                          }}
+                          aria-pressed={isSubSelected}
+                          className={`flex w-full cursor-pointer items-center rounded-lg px-2.5 py-1.5 text-left text-xs transition ${
+                            isSubSelected
+                              ? "bg-[#f3f6ee] font-semibold text-[#1e3f25]"
+                              : "text-[#636b5e] hover:bg-[#f7f4ec] hover:text-[#1e3f25]"
                           }`}
-                      >
-                        <span className="truncate">
-                          {localized(subcategory.name, language)}
-                        </span>
-                      </button>
-                    ))}
-                    {categorySubcategories.length === 0 && (
-                      <p className="px-2 py-1.5 text-xs text-[#858477]">
-                        {isBangla
-                          ? "কোনো সাবক্যাটাগরি নেই"
-                          : "No subcategories available"}
-                      </p>
-                    )}
+                        >
+                          <span className="truncate">
+                            {localized(subcategory.name, language)}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -579,16 +608,25 @@ const ProductsCatalog = () => {
         </div>
       </section>
 
-      <section className="rounded-xl border border-[#eee5d6] bg-[#fffdf8] p-3 shadow-2xs">
-        <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-[#242a22]">
-          <Tag size={18} fill="currentColor" className="text-[#24452c]" />
-          {isBangla ? "দাম অনুযায়ী ফিল্টার" : "Filter by Price"}
-        </h2>
-        <div className="px-1">
+      {/* ============ Filter by Price ============ */}
+      <section className="p-4">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-[#1c3922]">
+            <Tag size={13} className="text-[#3f6b36]" />
+            {isBangla ? "দাম" : "Price Range"}
+          </h2>
+          <span className="rounded-full bg-[#f3f6ee] px-2.5 py-0.5 text-[11px] font-semibold text-[#1e3f25]">
+            {formatPriceFilterLabel(minPriceValue)} –{" "}
+            {formatPriceFilterLabel(maxPriceValue)}
+            {maxPriceValue >= maxPriceLimit ? "+" : ""}
+          </span>
+        </div>
+
+        <div className="px-1 pt-1">
           <div className="relative h-5">
-            <div className="absolute left-0 right-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-[#d9dfd4]" />
+            <div className="absolute left-0 right-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-[#e3e7dc]" />
             <div
-              className="absolute top-1/2 h-1 -translate-y-1/2 rounded-full bg-[#24452c]"
+              className="absolute top-1/2 h-1 -translate-y-1/2 rounded-full bg-[#1e3f25]"
               style={priceRange}
             />
             <input
@@ -626,167 +664,210 @@ const ProductsCatalog = () => {
               className="price-range-input z-10"
             />
           </div>
-          <div className="mt-2 flex justify-between text-sm font-semibold text-[#363a33]">
-            <span>{formatPriceFilterLabel(minPriceValue)}</span>
-            <span>
-              {formatPriceFilterLabel(maxPriceValue)}
-              {maxPriceValue >= maxPriceLimit ? "+" : ""}
-            </span>
+          <div className="mt-2 flex justify-between text-[11px] font-medium text-[#70786b]">
+            <span>{formatPriceFilterLabel(0)}</span>
+            <span>{formatPriceFilterLabel(maxPriceLimit)}+</span>
           </div>
         </div>
       </section>
 
-      <section className="rounded-xl border border-[#eee5d6] bg-[#fffdf8] p-3 shadow-2xs">
-        <h2 className="mb-2 text-sm font-bold text-[#344a31]">
-          {isBangla ? "পণ্যের প্রাপ্যতা" : "Availability"}
+      {/* ============ Availability ============ */}
+      <section className="p-4">
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.12em] text-[#1c3922]">
+          {isBangla ? "স্টক অবস্থা" : "Availability"}
         </h2>
-        <div className="space-y-1.5">
+        <div className="flex flex-wrap gap-1.5">
           {[
-            ["all", isBangla ? "যেকোনো প্রাপ্যতা" : "Any availability"],
-            ["in-stock", isBangla ? "স্টকে আছে" : "In stock"],
-            ["out-of-stock", isBangla ? "স্টকে নেই" : "Out of stock"],
-          ].map(([value, label]) => (
-            <label
-              key={value}
-              className="flex cursor-pointer items-center gap-2 text-xs text-[#55594d]"
-            >
-              <input
-                type="radio"
-                name={`availability-${isMobile ? "mobile" : "desktop"}`}
-                checked={availability === value}
-                onChange={() => setAvailability(value)}
-                className="accent-[#55713e]"
-              />
-              {label}
-            </label>
-          ))}
+            ["all", isBangla ? "সব" : "All"],
+            ["in-stock", isBangla ? "স্টকে আছে" : "In Stock"],
+            ["out-of-stock", isBangla ? "স্টক শেষ" : "Out of Stock"],
+          ].map(([value, label]) => {
+            const active = availability === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setAvailability(value)}
+                aria-pressed={active}
+                className={`cursor-pointer rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                  active
+                    ? "bg-[#1e3f25] text-white shadow-xs"
+                    : "border border-[#e3dac7] bg-[#faf7f0] text-[#4c5649] hover:border-[#1e3f25]/40 hover:bg-white"
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       </section>
-    </>
+    </div>
   );
 
-  const inputClass =
-    "w-full rounded-lg border border-[#e5dfd1] bg-[#fffdf8] px-3 py-2 text-sm text-[#344a31] outline-none transition placeholder:text-[#9b9b8c] focus:border-[#78904f] focus:ring-2 focus:ring-[#78904f]/10";
-
   return (
-    <main className="min-h-screen bg-[#fbf8f2] pb-10 pt-[125px] md:pt-[130px]">
+    <main className="min-h-screen bg-[#faf6ee] pb-14 pt-[124px] md:pt-[132px]">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
+        {/* ============ Editorial Botanical Collection Banner ============ */}
         <section
-          className="relative mb-5 min-h-[140px] overflow-hidden rounded-xl border border-[#eee5d6] bg-[#f7f3e5] bg-cover bg-center px-5 py-4 sm:min-h-[180px] sm:px-8 sm:py-6 lg:min-h-[210px]"
+          className="relative mb-6 overflow-hidden rounded-2xl border border-[#e7ddc9] bg-[#f4efe1] bg-cover bg-center px-5 py-6 shadow-[0_14px_36px_rgba(24,52,30,0.06)] sm:rounded-3xl sm:px-9 sm:py-8 lg:min-h-[230px] lg:py-9"
           style={{
             backgroundImage:
-              "linear-gradient(90deg, rgba(247,243,229,0.34) 0%, rgba(247,243,229,0.2) 42%, rgba(247,243,229,0.02) 100%), url('/assets/purebanner.jpg')",
-            backgroundPosition: "center, center center",
+              "linear-gradient(95deg, rgba(250,246,238,0.95) 0%, rgba(250,246,238,0.82) 44%, rgba(250,246,238,0.18) 76%, rgba(250,246,238,0.04) 100%), url('/assets/purebanner.jpg')",
+            backgroundPosition: "center, right center",
             backgroundSize: "cover, cover",
           }}
         >
-          <div className="relative z-10 max-w-xl">
-            <h1 className="font-playfair text-2xl font-bold text-[#162d20] sm:text-3xl">
-              {activeCategory
-                ? localized(activeCategory.name, language)
+          <div className="relative z-10 flex max-w-2xl flex-col items-start">
+            {/* Integrated Editorial Breadcrumb */}
+            <nav
+              aria-label={isBangla ? "ব্রেডক্রাম্ব" : "Breadcrumb"}
+              className="mb-3 flex flex-wrap items-center gap-1.5 text-[11px] font-medium text-[#5e6a59]"
+            >
+              <Link href="/" className="transition hover:text-[#1e3f25]">
+                {isBangla ? "হোম" : "Home"}
+              </Link>
+              <ChevronRight size={11} className="text-[#9ea596]" />
+              <Link
+                href="/products"
+                onClick={clearFilters}
+                className={`transition hover:text-[#1e3f25] ${
+                  !activeCategory ? "font-semibold text-[#1e3f25]" : ""
+                }`}
+              >
+                {isBangla ? "সব পণ্য" : "Products"}
+              </Link>
+              {activeCategory && (
+                <>
+                  <ChevronRight size={11} className="text-[#9ea596]" />
+                  <button
+                    type="button"
+                    onClick={() => setSubcategoryId("")}
+                    className={`cursor-pointer transition hover:text-[#1e3f25] ${
+                      !activeSubcategory ? "font-semibold text-[#1e3f25]" : ""
+                    }`}
+                  >
+                    {localized(activeCategory.name, language)}
+                  </button>
+                </>
+              )}
+              {activeSubcategory && (
+                <>
+                  <ChevronRight size={11} className="text-[#9ea596]" />
+                  <span className="font-semibold text-[#1e3f25]">
+                    {localized(activeSubcategory.name, language)}
+                  </span>
+                </>
+              )}
+            </nav>
+
+            {/* Botanical Collection Eyebrow */}
+            <span className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-[#24452c]/15 bg-white/80 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#24452c] backdrop-blur-sm">
+              <Sparkles size={11} className="text-[#b8893b]" />
+              {showOffers
+                ? isBangla
+                  ? "বিশেষ অফার সংগ্রহ"
+                  : "Special Offers"
                 : isBangla
-                  ? "আমাদের পণ্য"
-                  : "Our Products"}
+                  ? "খাঁটি পাহাড়ি স্কিনকেয়ার সংগ্রহ"
+                  : "Authentic Botanical Collection"}
+            </span>
+
+            {/* Display Title */}
+            <h1 className="font-playfair text-2xl font-bold leading-tight tracking-[-0.015em] text-[#152e1b] sm:text-4xl">
+              {activeSubcategory
+                ? localized(activeSubcategory.name, language)
+                : activeCategory
+                  ? localized(activeCategory.name, language)
+                  : showOffers
+                    ? isBangla
+                      ? "হট অফার ও ডিসকাউন্ট"
+                      : "Hot Offers & Deals"
+                    : isBangla
+                      ? "আমাদের সব স্কিনকেয়ার পণ্য"
+                      : "Our Botanical Collection"}
             </h1>
-            <p className="mt-0.5 max-w-sm text-xs leading-4 text-[#344333] sm:text-sm sm:leading-5">
+
+            {/* Gold Accent Divider */}
+            <div className="mt-2.5 flex items-center gap-2">
+              <span className="h-[2px] w-9 rounded-full bg-[#c49a4c]" />
+              <span className="h-1 w-1 rounded-full bg-[#24452c]/40" />
+            </div>
+
+            {/* Subtitle */}
+            <p className="mt-2.5 max-w-lg text-xs leading-relaxed text-[#465344] sm:text-sm sm:leading-6">
               {activeCategory
                 ? isBangla
-                  ? `${localized(activeCategory.name, "bn")} ক্যাটাগরির খাঁটি ও প্রাকৃতিক পাহাড়ি স্কিনকেয়ার পণ্যসমূহ`
-                  : `Explore 100% authentic hill skincare in ${localized(activeCategory.name, "en")}`
+                  ? `${localized(activeCategory.name, "bn")} ক্যাটাগরির ১০০% আসল ও যত্নসহকারে বাছাইকৃত পাহাড়ি স্কিনকেয়ার পণ্যসমূহ।`
+                  : `Carefully curated 100% authentic hill & botanical skincare in ${localized(activeCategory.name, "en")}.`
                 : isBangla
-                  ? "মিয়ানমার ও থাইল্যান্ডের পাহাড়ি অঞ্চলের খাঁটি বিউটি পণ্য আবিষ্কার করুন।"
-                  : "Discover authentic beauty products from the hills of Myanmar & Thailand."}
+                  ? "বান্দরবান, মিয়ানমার ও থাইল্যান্ডের খাঁটি ঐতিহ্যবাহী স্কিনকেয়ার ও ভেষজ পণ্য আবিষ্কার করুন।"
+                  : "Discover 100% authentic traditional skincare & botanical essentials from Bandarban, Myanmar & Thailand."}
             </p>
+
+            {/* Authenticity Trust Micro-Pill */}
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/85 px-3.5 py-1.5 text-[11px] font-semibold text-[#1e3f25] shadow-xs backdrop-blur-sm">
+              <ShieldCheck size={14} className="text-[#2b6236]" />
+              <span>
+                {isBangla
+                  ? "১০০% অরিজিনাল পণ্য • সরাসরি বান্দরবান থেকে"
+                  : "100% Original Products • Direct from Bandarban"}
+              </span>
+            </div>
           </div>
         </section>
 
-        <nav
-          aria-label={isBangla ? "ব্রেডক্রাম্ব" : "Breadcrumb"}
-          className="mb-3 flex flex-wrap items-center gap-1.5 text-xs text-[#6d7159]"
-        >
-          <Link href="/" className="font-semibold text-[#55713e] hover:underline">
-            {isBangla ? "হোম" : "Home"}
-          </Link>
-          <ChevronRight size={12} />
-          <Link
-            href="/products"
-            onClick={clearFilters}
-            className={`font-semibold hover:underline ${!activeCategory ? "text-[#344a31]" : "text-[#55713e]"
+        {/* ============ Subcategory Quick-Filter Pill Strip ============ */}
+        {activeCategory && activeCategorySubcategories.length > 0 && (
+          <div className="no-scrollbar mb-5 flex items-center gap-2 overflow-x-auto pb-1">
+            <button
+              type="button"
+              onClick={() => setSubcategoryId("")}
+              className={`shrink-0 cursor-pointer rounded-full px-4 py-2 text-xs font-semibold transition ${
+                !subcategoryId
+                  ? "bg-[#1e3f25] text-white shadow-xs"
+                  : "border border-[#e5dcc9] bg-white text-[#354c37] hover:border-[#1e3f25]/40 hover:bg-[#f4f7f0]"
               }`}
-          >
-            {isBangla ? "সব পণ্য" : "Products"}
-          </Link>
-          {activeCategory && (
-            <>
-              <ChevronRight size={12} />
-              <button
-                type="button"
-                onClick={() => setSubcategoryId("")}
-                className={`font-semibold transition hover:underline ${!activeSubcategory ? "text-[#344a31]" : "text-[#55713e]"
+            >
+              {isBangla ? "সবগুলো" : `All ${localized(activeCategory.name, "en")}`}
+            </button>
+            {activeCategorySubcategories.map((sub) => {
+              const isSubActive = subcategoryId === sub._id;
+              return (
+                <button
+                  key={sub._id}
+                  type="button"
+                  onClick={() =>
+                    setSubcategoryId(isSubActive ? "" : sub._id)
+                  }
+                  className={`shrink-0 cursor-pointer rounded-full px-4 py-2 text-xs font-semibold transition ${
+                    isSubActive
+                      ? "bg-[#1e3f25] text-white shadow-xs"
+                      : "border border-[#e5dcc9] bg-white text-[#354c37] hover:border-[#1e3f25]/40 hover:bg-[#f4f7f0]"
                   }`}
-              >
-                {localized(activeCategory.name, language)}
-              </button>
-            </>
-          )}
-          {activeSubcategory && (
-            <>
-              <ChevronRight size={12} />
-              <span className="font-semibold text-[#344a31]">
-                {localized(activeSubcategory.name, language)}
-              </span>
-            </>
-          )}
-        </nav>
-
-        <div className="mb-4 hidden justify-end md:flex">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-[#6d7159]">
-              {isBangla ? "সাজান:" : "Sort by:"}
-            </span>
-            <div className="relative">
-              <select
-                value={sort}
-                onChange={(event) => setSort(event.target.value)}
-                aria-label={isBangla ? "পণ্য সাজান" : "Sort products"}
-                className="appearance-none rounded-lg border border-[#e5dfd1] bg-[#fffdf8] py-2 pl-3 pr-8 text-sm font-semibold text-[#344a31] outline-none focus:border-[#78904f]"
-              >
-                <option value="newest">{isBangla ? "নতুন" : "Newest"}</option>
-                <option value="price-low">
-                  {isBangla ? "দাম: কম থেকে বেশি" : "Price: low to high"}
-                </option>
-                <option value="price-high">
-                  {isBangla ? "দাম: বেশি থেকে কম" : "Price: high to low"}
-                </option>
-                <option value="popular">{isBangla ? "জনপ্রিয়" : "Popular"}</option>
-                <option value="best-selling">
-                  {isBangla ? "সেরা বিক্রিত" : "Best selling"}
-                </option>
-              </select>
-              <ChevronDown
-                size={13}
-                className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#55713e]"
-              />
-            </div>
+                >
+                  {localized(sub.name, language)}
+                </button>
+              );
+            })}
           </div>
-        </div>
+        )}
 
-        {/* ============ Mobile controls bar: Filters button on LEFT, Products count & Sort on RIGHT ============ */}
-        <div className="mb-3 flex items-center justify-between gap-2 md:hidden">
+        {/* ============ Mobile Controls Bar ============ */}
+        <div className="mb-4 flex items-center justify-between gap-2 rounded-2xl border border-[#ece3d2] bg-white/90 px-3 py-2.5 shadow-2xs md:hidden">
           <button
             type="button"
             onClick={() => setFiltersOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-[#dce3cf] bg-white px-3 py-2 text-xs font-semibold text-[#355b3d] shadow-xs active:bg-[#edf0df]"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#dce3cf] bg-[#f4f7f0] px-3.5 py-1.5 text-xs font-semibold text-[#1e3f25] active:bg-[#e5ecdd]"
           >
-            <Filter size={14} />
+            <SlidersHorizontal size={13} />
             <span>{isBangla ? "ফিল্টার" : "Filters"}</span>
             {hasActiveFilters && (
-              <span className="h-2 w-2 rounded-full bg-[#55713e]" />
+              <span className="h-2 w-2 rounded-full bg-[#1e3f25]" />
             )}
           </button>
 
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-[#6d7159]">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-medium text-[#646e5f]">
               {loading
                 ? "..."
                 : isBangla
@@ -798,23 +879,23 @@ const ProductsCatalog = () => {
                 value={sort}
                 onChange={(event) => setSort(event.target.value)}
                 aria-label={isBangla ? "পণ্য সাজান" : "Sort products"}
-                className="appearance-none rounded-lg border border-[#e5dfd1] bg-[#fffdf8] py-1.5 pl-2.5 pr-7 text-xs font-semibold text-[#344a31] outline-none focus:border-[#78904f]"
+                className="appearance-none rounded-full border border-[#e3dac7] bg-[#faf7f0] py-1.5 pl-3 pr-7 text-xs font-semibold text-[#1e3f25] outline-none focus:border-[#1e3f25]"
               >
+                <option value="best-selling">
+                  {isBangla ? "সেরা বিক্রিত" : "Best selling"}
+                </option>
                 <option value="newest">{isBangla ? "নতুন" : "Newest"}</option>
+                <option value="popular">{isBangla ? "জনপ্রিয়" : "Popular"}</option>
                 <option value="price-low">
                   {isBangla ? "দাম: কম-বেশি" : "Price: low to high"}
                 </option>
                 <option value="price-high">
                   {isBangla ? "দাম: বেশি-কম" : "Price: high to low"}
                 </option>
-                <option value="popular">{isBangla ? "জনপ্রিয়" : "Popular"}</option>
-                <option value="best-selling">
-                  {isBangla ? "সেরা বিক্রিত" : "Best selling"}
-                </option>
               </select>
               <ChevronDown
                 size={12}
-                className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#55713e]"
+                className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#1e3f25]"
               />
             </div>
           </div>
@@ -822,31 +903,32 @@ const ProductsCatalog = () => {
 
         {/* ============ Mobile Slide-Over Backdrop ============ */}
         <div
-          className={`fixed inset-0 z-[1001] bg-black/60 backdrop-blur-xs transition-opacity duration-300 md:hidden ${filtersOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-            }`}
+          className={`fixed inset-0 z-[1001] bg-black/55 backdrop-blur-xs transition-opacity duration-300 md:hidden ${
+            filtersOpen
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0"
+          }`}
           onClick={() => setFiltersOpen(false)}
           aria-hidden={!filtersOpen}
         />
 
-        {/* ============ Mobile Slide-Over Drawer (slides from left to right) ============ */}
+        {/* ============ Mobile Slide-Over Drawer ============ */}
         <aside
-          className={`fixed inset-y-0 left-0 z-[1002] flex w-[85%] max-w-xs flex-col bg-[#fffdf8] shadow-2xl transition-transform duration-300 ease-in-out md:hidden ${filtersOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
-            }`}
+          className={`fixed inset-y-0 left-0 z-[1002] flex w-[86%] max-w-xs flex-col bg-[#faf6ee] shadow-2xl transition-transform duration-300 ease-in-out md:hidden ${
+            filtersOpen ? "translate-x-0" : "pointer-events-none -translate-x-full"
+          }`}
           role="dialog"
           aria-modal="true"
           aria-label={isBangla ? "ফিল্টার প্যানেল" : "Filter panel"}
         >
-          {/* ============ Drawer Header ============ */}
-          <div className="flex items-center justify-between border-b border-[#eee5d6] bg-white px-4 py-3.5">
+          <div className="flex items-center justify-between border-b border-[#e9e0cf] bg-white px-4 py-3.5">
             <div className="flex items-center gap-2">
-              <Filter size={16} className="text-[#355b3d]" />
-              <h2 className="text-sm font-bold text-[#344a31]">
-                {isBangla ? "ফিল্টারসমূহ" : "Filters"}
+              <SlidersHorizontal size={15} className="text-[#1e3f25]" />
+              <h2 className="text-sm font-bold text-[#18311d]">
+                {isBangla ? "ফিল্টারসমূহ" : "Filter Products"}
               </h2>
               {hasActiveFilters && (
-                <span className="rounded-full bg-[#edf0df] px-2 py-0.5 text-[10px] font-bold text-[#355b3d]">
+                <span className="rounded-full bg-[#ebf2e5] px-2 py-0.5 text-[10px] font-bold text-[#1e3f25]">
                   {isBangla ? "সক্রিয়" : "Active"}
                 </span>
               )}
@@ -854,34 +936,32 @@ const ProductsCatalog = () => {
             <button
               type="button"
               onClick={() => setFiltersOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[#6d7159] hover:bg-[#edf0df] hover:text-[#344a31]"
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-[#667062] hover:bg-[#f2f5ec] hover:text-[#18311d]"
               aria-label={isBangla ? "বন্ধ করুন" : "Close"}
             >
               <X size={18} />
             </button>
           </div>
 
-          {/* ============ Drawer Scrollable Content ============ */}
-          <div className="flex-1 space-y-3 overflow-y-auto p-3.5">
+          <div className="flex-1 overflow-y-auto p-3.5">
             {renderFilterSections(true)}
           </div>
 
-          {/* ============ Drawer Footer Actions ============ */}
-          <div className="flex gap-2 border-t border-[#eee5d6] bg-white p-3">
+          <div className="flex gap-2.5 border-t border-[#e9e0cf] bg-white p-3.5">
             <button
               type="button"
               onClick={() => {
                 clearFilters();
                 setFiltersOpen(false);
               }}
-              className="flex-1 rounded-lg border border-[#dce3cf] py-2.5 text-xs font-semibold text-[#55594d] hover:bg-[#f4f3e9]"
+              className="flex-1 cursor-pointer rounded-full border border-[#d6decb] py-2.5 text-xs font-semibold text-[#4c5649] hover:bg-[#f4f6ee]"
             >
               {isBangla ? "রিসেট করুন" : "Reset All"}
             </button>
             <button
               type="button"
               onClick={() => setFiltersOpen(false)}
-              className="flex-1 rounded-lg bg-[#355b3d] py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-[#28452e]"
+              className="flex-1 cursor-pointer rounded-full bg-[#1e3f25] py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-[#142d1a]"
             >
               {isBangla
                 ? `পণ্য দেখুন (${filteredProducts.length})`
@@ -890,52 +970,109 @@ const ProductsCatalog = () => {
           </div>
         </aside>
 
-        <div className="grid items-start gap-4 md:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)]">
+        {/* ============ Main Catalog Grid ============ */}
+        <div className="grid items-start gap-5 md:grid-cols-[248px_minmax(0,1fr)] xl:grid-cols-[264px_minmax(0,1fr)]">
+          {/* ============ Desktop Botanical Sidebar ============ */}
           <aside className="hidden space-y-3 md:sticky md:top-36 md:block">
             {renderFilterSections(false)}
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="w-full rounded-lg border border-[#78947d] bg-transparent px-3 py-2 text-xs font-semibold text-[#355b3d] transition hover:bg-[#355b3d] hover:text-white"
-            >
-              {isBangla ? "সব ফিল্টার মুছুন" : "Clear All Filters"}
-            </button>
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-full border border-[#1e3f25]/25 bg-white px-4 py-2.5 text-xs font-semibold text-[#1e3f25] shadow-2xs transition hover:border-[#1e3f25] hover:bg-[#1e3f25] hover:text-white"
+              >
+                <X size={13} />
+                {isBangla ? "সব ফিল্টার মুছুন" : "Clear All Filters"}
+              </button>
+            )}
           </aside>
 
+          {/* ============ Products Area ============ */}
           <section aria-label={isBangla ? "পণ্য" : "Products"}>
-            <div className="mb-3 hidden items-center justify-between lg:flex">
-              <p className="text-sm text-[#6d7159]">
-                {loading
-                  ? isBangla
-                    ? "পণ্য লোড হচ্ছে..."
-                    : "Loading products..."
-                  : isBangla
-                    ? `${filteredProducts.length.toLocaleString("bn-BD")}টি পণ্য`
-                    : `${filteredProducts.length} products`}
-              </p>
-              {categoryId && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCategoryId("");
-                    setSubcategoryId("");
-                  }}
-                  className="inline-flex items-center gap-1 rounded-full bg-[#edf0df] px-2.5 py-1 text-xs font-semibold text-[#526c3c]"
-                >
-                  {localized(
-                    categories.find((item) => item._id === categoryId)?.name,
-                    language
-                  )}
-                  {subcategoryId &&
-                    ` · ${localized(
-                      subcategories.find(
-                        (item) => item._id === subcategoryId
-                      )?.name,
-                      language
-                    )}`}
-                  <X size={12} />
-                </button>
-              )}
+            {/* Unified Desktop Results & Sort Toolbar */}
+            <div className="mb-4 hidden items-center justify-between gap-3 rounded-2xl border border-[#ece3d2] bg-white/85 px-4 py-2.5 shadow-2xs backdrop-blur-xs md:flex">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-xs font-semibold text-[#4b5648] sm:text-sm">
+                  {loading
+                    ? isBangla
+                      ? "পণ্য লোড হচ্ছে..."
+                      : "Loading products..."
+                    : isBangla
+                      ? `মোট ${filteredProducts.length.toLocaleString("bn-BD")}টি পণ্য`
+                      : `Showing ${filteredProducts.length} ${
+                          filteredProducts.length === 1 ? "product" : "products"
+                        }`}
+                </p>
+
+                {categoryId && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCategoryId("");
+                      setSubcategoryId("");
+                    }}
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-[#ebf2e5] px-3 py-1 text-xs font-semibold text-[#1e3f25] transition hover:bg-[#dde8d4]"
+                  >
+                    <span>
+                      {localized(
+                        categories.find((item) => item._id === categoryId)?.name,
+                        language
+                      )}
+                      {subcategoryId &&
+                        ` · ${localized(
+                          subcategories.find(
+                            (item) => item._id === subcategoryId
+                          )?.name,
+                          language
+                        )}`}
+                    </span>
+                    <X size={12} />
+                  </button>
+                )}
+
+                {search && (
+                  <button
+                    type="button"
+                    onClick={() => setSearch("")}
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-[#f5efe0] px-3 py-1 text-xs font-semibold text-[#7a541a]"
+                  >
+                    <span>&ldquo;{search}&rdquo;</span>
+                    <X size={12} />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex shrink-0 items-center gap-2">
+                <span className="text-xs font-medium text-[#6c7567]">
+                  {isBangla ? "সাজান:" : "Sort by:"}
+                </span>
+                <div className="relative">
+                  <select
+                    value={sort}
+                    onChange={(event) => setSort(event.target.value)}
+                    aria-label={isBangla ? "পণ্য সাজান" : "Sort products"}
+                    className="cursor-pointer appearance-none rounded-full border border-[#e3dac7] bg-[#faf7f0] py-1.5 pl-3.5 pr-8 text-xs font-semibold text-[#1e3f25] outline-none transition focus:border-[#1e3f25]"
+                  >
+                    <option value="best-selling">
+                      {isBangla ? "সেরা বিক্রিত" : "Best selling"}
+                    </option>
+                    <option value="newest">{isBangla ? "নতুন" : "Newest"}</option>
+                    <option value="popular">
+                      {isBangla ? "জনপ্রিয়" : "Popular"}
+                    </option>
+                    <option value="price-low">
+                      {isBangla ? "দাম: কম থেকে বেশি" : "Price: low to high"}
+                    </option>
+                    <option value="price-high">
+                      {isBangla ? "দাম: বেশি থেকে কম" : "Price: high to low"}
+                    </option>
+                  </select>
+                  <ChevronDown
+                    size={13}
+                    className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#1e3f25]"
+                  />
+                </div>
+              </div>
             </div>
 
             {loading || (sort === "best-selling" && bestSellingLoading) ? (
@@ -963,30 +1100,39 @@ const ProductsCatalog = () => {
                 />
               </div>
             ) : filteredProducts.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-[#d9dfc8] bg-white/60 py-16 text-center">
-                <p className="text-sm font-semibold text-[#46543b]">
-                  {isBangla ? "কোনো পণ্য পাওয়া যায়নি" : "No products found"}
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#d9d2bf] bg-white/80 px-6 py-16 text-center">
+                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#ebf2e5] text-[#1e3f25]">
+                  <Leaf size={24} />
+                </span>
+                <p className="mt-4 font-playfair text-lg font-bold text-[#18311d]">
+                  {isBangla ? "কোনো পণ্য পাওয়া যায়নি" : "No Products Found"}
                 </p>
-                <p className="mt-1 text-sm text-[#81816f]">
+                <p className="mt-1 max-w-sm text-xs text-[#667062] sm:text-sm">
                   {isBangla
-                    ? "ফিল্টার পরিবর্তন করে আবার চেষ্টা করুন।"
-                    : "Try changing or clearing your filters."}
+                    ? "অন্য ক্যাটাগরি বা ফিল্টার পরিবর্তন করে আবার চেষ্টা করুন।"
+                    : "Try adjusting or clearing your filters to explore our botanical collection."}
                 </p>
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-3 text-sm font-semibold text-[#55713e] underline underline-offset-2"
+                  className="mt-5 cursor-pointer rounded-full bg-[#1e3f25] px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-[#142d1a]"
                 >
-                  {isBangla ? "ফিল্টার মুছুন" : "Clear filters"}
+                  {isBangla ? "সব ফিল্টার মুছুন" : "Reset All Filters"}
                 </button>
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 xl:grid-cols-4">
+                {/* ============ Gallery Skincare Product Grid ============ */}
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 xl:grid-cols-4">
                   {paginatedProducts.map((product) => {
                     const name =
                       localized(product.name, language) ||
                       (isBangla ? "পণ্য" : "Product");
+                    const unit = localized(product.unit, language);
+                    const catName = localized(
+                      product.category_id?.name,
+                      language
+                    );
                     const discount = Number(product.discount) || 0;
                     const originalPrice =
                       discount > 0 && discount < 100
@@ -995,25 +1141,33 @@ const ProductsCatalog = () => {
                     const isNew =
                       product.createdAt &&
                       Date.now() - new Date(product.createdAt).getTime() <
-                      30 * 24 * 60 * 60 * 1000;
+                        30 * 24 * 60 * 60 * 1000;
 
                     const isFavorite = wishlistItems.some(
                       (item) => item._id === product._id
                     );
-                    const cartEntry = cartItems.find((item) => item._id === product._id);
+                    const cartEntry = cartItems.find(
+                      (item) => item._id === product._id
+                    );
                     const isInCart = Boolean(cartEntry);
+                    const isOutOfStock = Number(product.stock) <= 0;
 
                     return (
                       <article
                         key={product._id}
-                        className="relative flex h-full flex-col overflow-hidden rounded-xl border border-[#eee8df] bg-white p-2 shadow-sm transition-shadow hover:shadow-md sm:p-2.5"
+                        className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[#ebe3d3] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#cad6c1] hover:shadow-[0_18px_38px_rgba(24,52,30,0.09)]"
                       >
+                        {/* Wishlist Button */}
                         <button
                           type="button"
                           onClick={() => dispatch(toggleWishlist(product))}
                           aria-label="Toggle wishlist"
                           aria-pressed={isFavorite}
-                          className="absolute right-3.5 top-3.5 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/95 text-[#a66d65] shadow-sm transition hover:scale-105"
+                          className={`absolute right-2.5 top-2.5 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/90 shadow-xs backdrop-blur-sm transition-all duration-200 hover:scale-105 ${
+                            isFavorite
+                              ? "text-[#c0483e]"
+                              : "text-[#6d7669] hover:text-[#c0483e]"
+                          }`}
                         >
                           <Heart
                             size={15}
@@ -1021,6 +1175,8 @@ const ProductsCatalog = () => {
                             strokeWidth={2}
                           />
                         </button>
+
+                        {/* Product Image Stage */}
                         <Link
                           href={`/products/${product._id}`}
                           aria-label={
@@ -1028,108 +1184,138 @@ const ProductsCatalog = () => {
                               ? `${name} পণ্যের বিস্তারিত দেখুন`
                               : `View details for ${name}`
                           }
-                          className="group"
+                          className="relative block aspect-square w-full overflow-hidden bg-[#f7f3ea]"
                         >
-                          <div className="relative aspect-square overflow-hidden rounded-lg bg-[#f0eadc]">
-                            {product.images?.[0] ? (
-                              <Image
-                                src={product.images[0]}
-                                alt={name}
-                                fill
-                                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 28vw, 20vw"
-                                className="object-contain p-1.5 transition-transform duration-300 group-hover:scale-105 sm:p-2"
-                              />
-                            ) : (
-                              <div className="flex h-full items-center justify-center text-sm text-dark/60">
-                                {isBangla ? "ছবি নেই" : "No image"}
-                              </div>
-                            )}
-                            {(isNew || product.featured || discount > 0) && (
-                              <span className="absolute left-1.5 top-1.5 rounded-full bg-[#fffdf8]/95 px-2 py-1 text-[11px] font-bold text-[#355b3d] shadow-sm">
-                                {discount > 0
-                                  ? `-${discount}%`
-                                  : isNew
-                                    ? isBangla
-                                      ? "নতুন"
-                                      : "New"
-                                    : isBangla
-                                      ? "জনপ্রিয়"
-                                      : "Popular"}
+                          {product.images?.[0] ? (
+                            <Image
+                              src={product.images[0]}
+                              alt={name}
+                              fill
+                              sizes="(max-width: 640px) 48vw, (max-width: 1024px) 30vw, 22vw"
+                              className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="flex h-full items-center justify-center text-xs text-dark/50">
+                              {isBangla ? "ছবি নেই" : "No image"}
+                            </div>
+                          )}
+
+                          {/* Single Clean Status Badge */}
+                          {(discount > 0 || isNew || product.featured) && (
+                            <span
+                              className={`absolute left-2.5 top-2.5 rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide shadow-xs ${
+                                discount > 0
+                                  ? "bg-[#a84232] text-white"
+                                  : "border border-[#e3dac7] bg-[#fffdf8]/95 text-[#1e3f25]"
+                              }`}
+                            >
+                              {discount > 0
+                                ? `-${discount}%`
+                                : isNew
+                                  ? isBangla
+                                    ? "নতুন"
+                                    : "New"
+                                  : isBangla
+                                    ? "জনপ্রিয়"
+                                    : "Popular"}
+                            </span>
+                          )}
+
+                          {isOutOfStock && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/35 backdrop-blur-[1px]">
+                              <span className="rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold text-[#2b3028]">
+                                {isBangla ? "স্টক শেষ" : "Out of Stock"}
+                              </span>
+                            </div>
+                          )}
+                        </Link>
+
+                        {/* Product Info Body */}
+                        <div className="flex flex-1 flex-col p-3 sm:p-3.5">
+                          {/* Micro Metadata (Unit / Category) */}
+                          {(unit || catName) && (
+                            <p className="truncate text-[10px] font-semibold uppercase tracking-[0.08em] text-[#7a8675]">
+                              {unit || catName}
+                            </p>
+                          )}
+
+                          {/* Product Name */}
+                          <Link
+                            href={`/products/${product._id}`}
+                            className="mt-1 line-clamp-2 min-h-[2.4rem] text-[13px] font-semibold leading-snug text-[#18311d] transition-colors group-hover:text-[#2a5432] sm:text-sm"
+                          >
+                            {name}
+                          </Link>
+
+                          {/* Clean Price Row (No duplicate OFF badge) */}
+                          <div className="mt-2 flex items-baseline gap-2">
+                            <span className="text-[15px] font-bold text-[#1e4326] sm:text-base">
+                              {formatPrice(product.price)}
+                            </span>
+                            {originalPrice && (
+                              <span className="text-xs text-[#8f958a] line-through">
+                                {formatPrice(originalPrice)}
                               </span>
                             )}
                           </div>
-                          <p className="mt-2 line-clamp-2 min-h-8 text-xs font-semibold leading-5 text-[#344a31] sm:text-sm">
-                            {name}
-                          </p>
-                        </Link>
 
-                        <div className="mt-1 flex min-h-6 flex-wrap items-center gap-x-1.5 gap-y-0.5">
-                          <span className="text-sm font-bold text-[#285b35] sm:text-base">
-                            {formatPrice(product.price)}
-                          </span>
-                          {originalPrice && (
-                            <>
-                              <span className="text-[11px] text-dark/45 line-through">
-                                {formatPrice(originalPrice)}
-                              </span>
-                              <span className="rounded-full bg-[#ffe4df] px-1.5 py-0.5 text-[10px] font-semibold text-[#c4473e]">
-                                {discount}% {isBangla ? "ছাড়" : "OFF"}
-                              </span>
-                            </>
-                          )}
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => dispatch(addToCart(product))}
-                          disabled={Number(product.stock) <= 0}
-                          className={`mt-auto flex w-full items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold shadow-xs transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-100 disabled:text-gray-500 sm:mt-2 sm:text-sm ${isInCart
-                            ? "bg-[#1f542c] text-white ring-1 ring-emerald-400/40 hover:bg-[#184623]"
-                            : "border border-[#78947d] text-[#355b3d] hover:bg-[#355b3d] hover:text-white"
+                          {/* Tactile Botanical Add-to-Cart Button */}
+                          <button
+                            type="button"
+                            onClick={() => dispatch(addToCart(product))}
+                            disabled={isOutOfStock}
+                            className={`mt-auto flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-semibold transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-[#e5e5e5] disabled:bg-[#f5f5f5] disabled:text-[#9a9a9a] sm:mt-3 ${
+                              isInCart
+                                ? "bg-[#1e3f25] text-white shadow-xs hover:bg-[#142d1a]"
+                                : "border border-[#d5e1ce] bg-[#f3f7ef] text-[#1e4025] hover:border-[#1e3f25] hover:bg-[#1e3f25] hover:text-white"
                             }`}
-                        >
-                          {isInCart ? (
-                            <>
-                              <Check size={14} className="text-emerald-300" />
-                              <span>
-                                {isBangla
-                                  ? `কার্টে যোগ হয়েছে (${cartEntry.cartQuantity})`
-                                  : `Added to Cart (${cartEntry.cartQuantity})`}
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <ShoppingBag size={14} />
-                              <span>
-                                {Number(product.stock) <= 0
-                                  ? isBangla
-                                    ? "স্টকে নেই"
-                                    : "Out of stock"
-                                  : isBangla
-                                    ? "কার্টে যোগ করুন"
-                                    : "Add to Cart"}
-                              </span>
-                            </>
-                          )}
-                        </button>
+                          >
+                            {isInCart ? (
+                              <>
+                                <Check size={14} className="text-emerald-300" />
+                                <span>
+                                  {isBangla
+                                    ? `কার্টে আছে (${cartEntry.cartQuantity})`
+                                    : `In Cart (${cartEntry.cartQuantity})`}
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <ShoppingBag size={14} />
+                                <span>
+                                  {isOutOfStock
+                                    ? isBangla
+                                      ? "স্টকে নেই"
+                                      : "Out of stock"
+                                    : isBangla
+                                      ? "কার্টে যোগ করুন"
+                                      : "Add to Cart"}
+                                </span>
+                              </>
+                            )}
+                          </button>
+                        </div>
                       </article>
                     );
                   })}
                 </div>
 
+                {/* ============ Editorial Pagination ============ */}
                 {totalPages > 1 && (
                   <nav
                     aria-label={isBangla ? "পণ্য পৃষ্ঠা" : "Product pages"}
-                    className="mt-5 flex items-center justify-center gap-2"
+                    className="mt-8 flex items-center justify-center gap-2"
                   >
                     <button
                       type="button"
-                      onClick={() => setPage((current) => Math.max(1, current - 1))}
+                      onClick={() =>
+                        setPage((current) => Math.max(1, current - 1))
+                      }
                       disabled={page === 1}
                       aria-label={isBangla ? "আগের পৃষ্ঠা" : "Previous page"}
-                      className="flex h-8 w-8 items-center justify-center rounded-full border border-[#e5dfd1] bg-white text-[#526c3c] disabled:opacity-40"
+                      className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#e3dac7] bg-white text-[#1e3f25] transition hover:border-[#1e3f25] hover:bg-[#1e3f25] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      <ChevronRight size={14} className="rotate-180" />
+                      <ChevronRight size={15} className="rotate-180" />
                     </button>
                     {Array.from({ length: totalPages }, (_, index) => index + 1)
                       .slice(
@@ -1142,10 +1328,11 @@ const ProductsCatalog = () => {
                           type="button"
                           onClick={() => setPage(pageNumber)}
                           aria-current={page === pageNumber ? "page" : undefined}
-                          className={`h-8 min-w-8 rounded-full px-2 text-sm font-semibold ${page === pageNumber
-                            ? "bg-[#24452c] text-white"
-                            : "border border-[#e5dfd1] bg-white text-[#526c3c]"
-                            }`}
+                          className={`h-9 min-w-9 cursor-pointer rounded-full px-3 text-xs font-bold transition ${
+                            page === pageNumber
+                              ? "bg-[#1e3f25] text-white shadow-xs"
+                              : "border border-[#e3dac7] bg-white text-[#354c37] hover:border-[#1e3f25]/40 hover:bg-[#f4f7f0]"
+                          }`}
                         >
                           {pageNumber.toLocaleString(isBangla ? "bn-BD" : "en-BD")}
                         </button>
@@ -1157,9 +1344,9 @@ const ProductsCatalog = () => {
                       }
                       disabled={page === totalPages}
                       aria-label={isBangla ? "পরের পৃষ্ঠা" : "Next page"}
-                      className="flex h-8 w-8 items-center justify-center rounded-full border border-[#e5dfd1] bg-white text-[#526c3c] disabled:opacity-40"
+                      className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#e3dac7] bg-white text-[#1e3f25] transition hover:border-[#1e3f25] hover:bg-[#1e3f25] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      <ChevronRight size={14} />
+                      <ChevronRight size={15} />
                     </button>
                   </nav>
                 )}

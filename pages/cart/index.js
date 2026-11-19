@@ -15,7 +15,6 @@ import {
   ShieldCheck,
   ShoppingBag,
   ShoppingCart,
-  Star,
   Trash2,
   Truck,
 } from "lucide-react";
@@ -26,7 +25,6 @@ import {
   increaseCart,
   removeFromCart,
 } from "@/redux/features/cart/cartSlice";
-import toast from "react-hot-toast";
 
 const localized = (value, language) => {
   if (typeof value === "string") return value;
@@ -61,7 +59,7 @@ const CartPage = () => {
           throw new Error("Unexpected products response format.");
         }
 
-        setRecommendations(products.filter((item) => item.images?.[0]).slice(0, 8));
+        setRecommendations(products.filter((item) => item.images?.[0]));
       } catch (error) {
         if (error.name !== "AbortError") {
           console.error("Failed to load cart recommendations:", error);
@@ -246,7 +244,7 @@ const CartPage = () => {
                           >
                             {itemName}
                           </Link>
-                          <p className="mt-0.5 line-clamp-1 text-[11px] text-dark/60">
+                          <p className="mt-0.5 truncate text-[11px] text-dark/60">
                             {localized(item.description, language)}
                           </p>
                           <div className="mt-1.5 flex flex-wrap items-center gap-2">
@@ -402,27 +400,27 @@ const CartPage = () => {
                 {
                   icon: Leaf,
                   title: isBangla ? "১০০% খাঁটি" : "100% Authentic",
-                  detail: isBangla ? "বিশ্বস্ত পণ্য" : "Hill Products",
+                  detail: isBangla ? "সরাসরি বান্দরবান থেকে" : "Direct from Bandarban",
                 },
                 {
-                  icon: ShieldCheck,
-                  title: isBangla ? "নিরাপদ পেমেন্ট" : "Secure Payments",
-                  detail: isBangla ? "সহজ ও সুরক্ষিত" : "bKash, Nagad & More",
+                  icon: PackageCheck,
+                  title: isBangla ? "ক্যাশ অন ডেলিভারি" : "Cash on Delivery",
+                  detail: isBangla ? "পণ্য হাতে পেয়ে পেমেন্ট" : "Pay when you receive",
                 },
                 {
                   icon: Truck,
                   title: isBangla ? "দ্রুত ডেলিভারি" : "Fast Delivery",
-                  detail: isBangla ? "সারা বাংলাদেশে" : "Across Bangladesh",
+                  detail: isBangla ? "সারা বাংলাদেশের ৬৪ জেলায়" : "Across 64 Districts",
                 },
                 {
                   icon: Headphones,
-                  title: isBangla ? "কাস্টমার সাপোর্ট" : "24/7 Customer Support",
-                  detail: isBangla ? "আমরা পাশে আছি" : "We're here to help",
+                  title: isBangla ? "সরাসরি সাপোর্ট" : "Direct Support",
+                  detail: isBangla ? "০১৭৬২-১৪৪২০০" : "01762-144200",
                 },
               ].map(({ icon: Icon, title, detail }, index) => (
                 <div
                   key={title}
-                  className={`flex items-center gap-2 px-3 py-3 sm:px-4 ${
+                  className={`flex items-center gap-2.5 px-3 py-3.5 sm:px-4 ${
                     index % 2 === 0 ? "border-r border-[#dedbc9]" : ""
                   } ${
                     index < 2 ? "border-b border-[#dedbc9] sm:border-b-0" : ""
@@ -432,10 +430,10 @@ const CartPage = () => {
                 >
                   <Icon size={20} className="shrink-0 text-[#24452c]" />
                   <div className="min-w-0">
-                    <p className="text-[10px] font-bold text-[#273b2b] sm:text-xs">
+                    <p className="truncate text-[11px] font-bold text-[#273b2b] sm:text-xs">
                       {title}
                     </p>
-                    <p className="text-[9px] text-dark/60 sm:text-[10px]">
+                    <p className="truncate text-[10px] text-dark/60 sm:text-[11px]">
                       {detail}
                     </p>
                   </div>
@@ -444,63 +442,88 @@ const CartPage = () => {
             </section>
 
             {recommendedProducts.length > 0 && (
-              <section className="mt-8">
-                <div className="mb-4 flex items-center justify-center gap-3">
+              <section className="mt-9">
+                <div className="mb-5 flex items-center justify-center gap-3">
                   <span className="h-px w-10 bg-[#c4cdb9]" />
-                  <h2 className="font-playfair text-xl font-bold text-[#24452c]">
+                  <h2 className="font-playfair text-xl font-bold text-[#18311d] sm:text-2xl">
                     {isBangla ? "আপনার পছন্দ হতে পারে" : "You May Also Like"}
                   </h2>
                   <Leaf size={15} className="text-[#315d3b]" />
                   <span className="h-px w-10 bg-[#c4cdb9]" />
                 </div>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
                   {recommendedProducts.map((item) => {
                     const itemName = localized(item.name, language);
+                    const itemUnit = localized(item.unit, language);
+                    const itemDiscount = Number(item.discount) || 0;
+                    const itemOriginalPrice =
+                      itemDiscount > 0 && itemDiscount < 100
+                        ? Math.round(Number(item.price) / (1 - itemDiscount / 100))
+                        : null;
+
                     return (
                       <article
                         key={item._id}
-                        className="group flex flex-col overflow-hidden rounded-xl border border-[#eee5d6] bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                        className="group flex flex-col overflow-hidden rounded-2xl border border-[#ebe3d3] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#cad6c1] hover:shadow-[0_14px_30px_rgba(24,52,30,0.08)]"
                       >
                         <Link
                           href={`/products/${item._id}`}
-                          className="relative block aspect-square overflow-hidden bg-[#f0eadc]"
+                          className="relative block aspect-square overflow-hidden bg-[#f7f3ea]"
                         >
                           <Image
                             src={item.images[0]}
                             alt={itemName || "Product"}
                             fill
-                            sizes="(max-width: 640px) 45vw, 23vw"
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 640px) 48vw, (max-width: 1024px) 32vw, 23vw"
+                            className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                           />
-                          {Number(item.discount) > 0 && (
-                            <span className="absolute left-2 top-2 rounded-full bg-[#f6e5b7] px-2 py-1 text-[10px] font-semibold text-[#604b2d]">
-                              -{item.discount}%
+                          {itemDiscount > 0 ? (
+                            <span className="absolute left-2.5 top-2.5 rounded-full bg-[#a84232] px-2.5 py-1 text-[10px] font-bold text-white shadow-xs">
+                              -{itemDiscount}%
+                            </span>
+                          ) : (
+                            <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border border-[#e3dac7] bg-[#fffdf8]/95 px-2.5 py-1 text-[10px] font-bold text-[#1e3f25] shadow-xs">
+                              <Leaf size={10} className="text-[#3f6b36]" />
+                              {isBangla ? "আসল পণ্য" : "Authentic"}
                             </span>
                           )}
                         </Link>
-                        <div className="flex flex-1 flex-col p-2.5">
+                        <div className="flex flex-1 flex-col p-3 sm:p-3.5">
+                          {itemUnit && (
+                            <p className="truncate text-[10px] font-semibold uppercase tracking-[0.08em] text-[#7a8675]">
+                              {itemUnit}
+                            </p>
+                          )}
                           <Link
                             href={`/products/${item._id}`}
-                            className="line-clamp-1 text-xs font-semibold text-[#263c2b] hover:text-[#43804e]"
+                            className="mt-1 line-clamp-2 min-h-[2.3rem] text-xs font-semibold leading-snug text-[#18311d] transition-colors group-hover:text-[#2a5432] sm:text-sm"
                           >
                             {itemName}
                           </Link>
-                          <div className="mt-1 flex items-center gap-0.5 text-amber-500">
-                            {Array.from({ length: 5 }, (_, index) => (
-                              <Star key={index} size={10} />
-                            ))}
+                          <div className="mt-2 flex items-baseline gap-2">
+                            <span className="text-sm font-bold text-[#1e4326] sm:text-base">
+                              {formatPrice(item.price)}
+                            </span>
+                            {itemOriginalPrice && (
+                              <span className="text-xs text-[#8f958a] line-through">
+                                {formatPrice(itemOriginalPrice)}
+                              </span>
+                            )}
                           </div>
-                          <p className="mt-1 text-sm font-bold text-[#24452c]">
-                            {formatPrice(item.price)}
-                          </p>
                           <button
                             type="button"
                             onClick={() => dispatch(addToCart(item))}
                             disabled={Number(item.stock) <= 0}
-                            className="mt-auto inline-flex items-center justify-center gap-1 rounded-lg bg-[#20452b] py-2 text-[10px] font-semibold text-white transition hover:bg-[#17351f] disabled:cursor-not-allowed disabled:opacity-50"
+                            className="mt-auto inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-full border border-[#d5e1ce] bg-[#f3f7ef] py-2 text-xs font-semibold text-[#1e4025] transition hover:border-[#1e3f25] hover:bg-[#1e3f25] hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:mt-3"
                           >
-                            <ShoppingCart size={12} />
-                            {isBangla ? "কার্টে যোগ করুন" : "Add to Cart"}
+                            <ShoppingBag size={13} />
+                            {Number(item.stock) <= 0
+                              ? isBangla
+                                ? "স্টকে নেই"
+                                : "Out of Stock"
+                              : isBangla
+                                ? "কার্টে যোগ করুন"
+                                : "Add to Cart"}
                           </button>
                         </div>
                       </article>

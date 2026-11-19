@@ -19,9 +19,7 @@ import {
   RotateCcw,
   ShieldCheck,
   ShoppingBag,
-  ShoppingCart,
   Sparkles,
-  Star,
   Truck,
   Zap,
 } from "lucide-react";
@@ -70,7 +68,6 @@ const ProductDetailsPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeInfoTab, setActiveInfoTab] = useState("all");
 
   const isFavorite = wishlistItems.some((item) => item._id === product?._id);
 
@@ -385,11 +382,10 @@ const ProductDetailsPage = () => {
                       ? "পছন্দের তালিকায় যোগ করুন"
                       : "Add to favorites"
                 }
-                className={`absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full shadow-md transition-all duration-200 hover:scale-110 active:scale-95 ${
-                  isFavorite
+                className={`absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full shadow-md transition-all duration-200 hover:scale-110 active:scale-95 ${isFavorite
                     ? "border border-red-200 bg-red-50 text-red-600"
                     : "bg-white/90 text-dark/60 backdrop-blur-xs hover:bg-white hover:text-red-500"
-                }`}
+                  }`}
               >
                 <Heart
                   size={19}
@@ -408,11 +404,10 @@ const ProductDetailsPage = () => {
                     type="button"
                     onClick={() => setSelectedImage(index)}
                     aria-label={`View image ${index + 1}`}
-                    className={`relative h-18 w-18 shrink-0 cursor-pointer overflow-hidden rounded-xl border bg-[#f9f7f2] transition-all sm:h-20 sm:w-20 ${
-                      selectedImage === index
+                    className={`relative h-18 w-18 shrink-0 cursor-pointer overflow-hidden rounded-xl border bg-[#f9f7f2] transition-all sm:h-20 sm:w-20 ${selectedImage === index
                         ? "border-[#2d4e35] ring-2 ring-[#2d4e35]/25 shadow-xs"
                         : "border-[#e5ded1] opacity-80 hover:border-[#2d4e35]/50 hover:opacity-100"
-                    }`}
+                      }`}
                   >
                     <Image
                       src={image}
@@ -448,26 +443,20 @@ const ProductDetailsPage = () => {
               {name}
             </h1>
 
-            {/* ============ Rating & Trust Stat ============ */}
-            <div className="mt-2.5 flex items-center gap-3 text-xs sm:text-sm">
-              <div className="flex items-center gap-1 text-amber-500">
-                <div className="flex items-center">
-                  {Array.from({ length: 5 }, (_, index) => (
-                    <Star
-                      key={index}
-                      size={14}
-                      className="fill-amber-400 text-amber-400"
-                    />
-                  ))}
-                </div>
-                <span className="font-bold text-dark/80">5.0</span>
-              </div>
-              <span className="text-slate-300">•</span>
-              <span className="text-[#566858]">
-                {isBangla
-                  ? "১০০% খাঁটি ও পরীক্ষিত উপাদান"
-                  : "100% Certified Hill Botanical"}
+            {/* ============ Authentic Origin & Quality Line ============ */}
+            <div className="mt-2.5 flex flex-wrap items-center gap-2.5 text-xs sm:text-sm">
+              <span className="inline-flex items-center gap-1.5 font-semibold text-[#1e4326]">
+                <ShieldCheck size={15} className="text-[#2b6236]" />
+                {isBangla ? "১০০% খাঁটি ও আসল পণ্য" : "100% Authentic Product"}
               </span>
+              {origin && (
+                <>
+                  <span className="text-[#c5beb0]">•</span>
+                  <span className="text-[#566858]">
+                    {isBangla ? `উৎপত্তিস্থল: ${origin}` : `Origin: ${origin}`}
+                  </span>
+                </>
+              )}
             </div>
 
             {/* ============ Price Box ============ */}
@@ -556,11 +545,10 @@ const ProductDetailsPage = () => {
                 type="button"
                 onClick={() => addProductToCart()}
                 disabled={stockCount <= 0}
-                className={`flex h-12 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400 sm:text-sm ${
-                  isMainInCart
+                className={`flex h-12 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 disabled:text-gray-400 sm:text-sm ${isMainInCart
                     ? "bg-[#1f542c] ring-2 ring-emerald-400/40 hover:bg-[#184623]"
                     : "bg-[#234d2c] hover:bg-[#183920] hover:shadow-md"
-                }`}
+                  }`}
               >
                 {isMainInCart ? (
                   <>
@@ -603,51 +591,59 @@ const ProductDetailsPage = () => {
               </span>
             </Link>
 
-            {/* ============ Trust Assurance Strip ============ */}
-            <div className="mt-5 grid grid-cols-2 gap-2.5 border-t border-[#ede7dc] pt-4 sm:grid-cols-4">
-              <div className="flex items-center gap-2 rounded-xl bg-[#fbf9f5] p-2">
-                <Truck size={17} className="shrink-0 text-[#2d4e35]" />
-                <div>
-                  <p className="text-[11px] font-bold text-[#1f3322]">
+            {/* ============ Trust Assurance Strip (Clean 2x2 Grid) ============ */}
+            <div className="mt-5 grid grid-cols-2 gap-2.5 border-t border-[#ede7dc] pt-4">
+              <div className="flex items-center gap-2.5 rounded-xl border border-[#efe9dc] bg-[#faf7f0] px-3 py-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#eaf2e4] text-[#1e4326]">
+                  <Truck size={15} />
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-bold text-[#18311d]">
                     {isBangla ? "দ্রুত ডেলিভারি" : "Fast Delivery"}
                   </p>
-                  <p className="text-[10px] text-slate-500">
-                    {isBangla ? "২-৫ কর্মদিবস" : "2-5 Days across BD"}
+                  <p className="truncate text-[11px] text-[#667062]">
+                    {isBangla ? "২-৫ কর্মদিবস (৬৪ জেলা)" : "2–5 Days Nationwide"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 rounded-xl bg-[#fbf9f5] p-2">
-                <PackageCheck size={17} className="shrink-0 text-[#2d4e35]" />
-                <div>
-                  <p className="text-[11px] font-bold text-[#1f3322]">
+              <div className="flex items-center gap-2.5 rounded-xl border border-[#efe9dc] bg-[#faf7f0] px-3 py-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#eaf2e4] text-[#1e4326]">
+                  <PackageCheck size={15} />
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-bold text-[#18311d]">
                     {isBangla ? "ক্যাশ অন ডেলিভারি" : "Cash on Delivery"}
                   </p>
-                  <p className="text-[10px] text-slate-500">
-                    {isBangla ? "সারাদেশে উপলব্ধ" : "Nationwide Available"}
+                  <p className="truncate text-[11px] text-[#667062]">
+                    {isBangla ? "পণ্য হাতে পেয়ে পেমেন্ট" : "Pay when you receive"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 rounded-xl bg-[#fbf9f5] p-2">
-                <ShieldCheck size={17} className="shrink-0 text-[#2d4e35]" />
-                <div>
-                  <p className="text-[11px] font-bold text-[#1f3322]">
+              <div className="flex items-center gap-2.5 rounded-xl border border-[#efe9dc] bg-[#faf7f0] px-3 py-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#eaf2e4] text-[#1e4326]">
+                  <ShieldCheck size={15} />
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-bold text-[#18311d]">
                     {isBangla ? "১০০% আসল পণ্য" : "100% Authentic"}
                   </p>
-                  <p className="text-[10px] text-slate-500">
-                    {isBangla ? "বান্দরবান অরিজিন" : "Pure Bandarban"}
+                  <p className="truncate text-[11px] text-[#667062]">
+                    {isBangla ? "সরাসরি বান্দরবান থেকে" : "Direct from Bandarban"}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 rounded-xl bg-[#fbf9f5] p-2">
-                <Headphones size={17} className="shrink-0 text-[#2d4e35]" />
-                <div>
-                  <p className="text-[11px] font-bold text-[#1f3322]">
-                    {isBangla ? "সাপোর্ট হেল্পলাইন" : "Direct Support"}
+              <div className="flex items-center gap-2.5 rounded-xl border border-[#efe9dc] bg-[#faf7f0] px-3 py-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#eaf2e4] text-[#1e4326]">
+                  <Headphones size={15} />
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-bold text-[#18311d]">
+                    {isBangla ? "সরাসরি সাপোর্ট" : "Direct Support"}
                   </p>
-                  <p className="text-[10px] text-slate-500">01762-144200</p>
+                  <p className="truncate text-[11px] text-[#667062]">01762-144200</p>
                 </div>
               </div>
             </div>
@@ -655,266 +651,316 @@ const ProductDetailsPage = () => {
         </section>
 
         {/* =========================================================
-            PRODUCT INFORMATION SHOWCASE — DIRECT DISPLAY (NO DROPDOWNS)
+            EDITORIAL SKINCARE DOSSIER — CLEAN 2-COLUMN LAYOUT
         ========================================================= */}
-        <section className="mt-10">
-          <div className="mb-6 text-center">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#55713e]/20 bg-[#55713e]/10 px-3.5 py-1 text-xs font-semibold text-[#3d562a]">
-              <Leaf className="h-3.5 w-3.5 text-[#55713e]" />
-              <span>{isBangla ? "সম্পূর্ণ বিস্তারিত তথ্য" : "Comprehensive Product Information"}</span>
+        <section className="mt-12">
+          <div className="mb-7 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-end">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#24452c]/15 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#24452c] shadow-2xs">
+                <Leaf size={12} className="text-[#3e6b36]" />
+                {isBangla ? "সম্পূর্ণ বিস্তারিত তথ্য" : "Skincare Dossier"}
+              </span>
+              <h2 className="mt-2 font-playfair text-2xl font-bold tracking-tight text-[#162d1b] sm:text-3xl">
+                {isBangla
+                  ? "পণ্যের উপকারিতা, উপাদান ও ব্যবহারবিধি"
+                  : "Everything You Need to Know"}
+              </h2>
             </div>
-
-            <h2 className="mt-2 font-playfair text-2xl font-bold tracking-tight text-[#162a1a] sm:text-3xl">
-              {isBangla ? "পণ্যের বিবরণ ও উপাদানসমূহ" : "Everything You Need to Know"}
-            </h2>
+            <div className="hidden items-center gap-2 sm:flex">
+              <span className="h-[2px] w-10 rounded-full bg-[#c49a4c]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[#24452c]/40" />
+            </div>
           </div>
 
-          {/* ============ Direct Visual Information Grid ============ */}
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {/* ============ Card 1: About the Product ============ */}
-            <div className="flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md">
-              <div className="flex items-center gap-2.5 border-b border-[#f2ece1] pb-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf4eb] text-[#2d4e35]">
-                  <Leaf size={18} />
-                </span>
-                <div>
-                  <h3 className="text-sm font-bold text-[#1b2f1f]">
-                    {isBangla ? "পণ্য সম্পর্কে বিস্তারিত" : "About the Product"}
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
-                    {isBangla ? "উৎপাদন ও ত্বকের উপকারিতা" : "Natural origins & purpose"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-3.5 flex-1 text-xs leading-relaxed text-[#415143] sm:text-[13px]">
-                <p>{description || (isBangla ? "কোনো বিবরণ দেওয়া নেই।" : "No detailed description provided.")}</p>
-
-                {origin && (
-                  <div className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[#f6fbf6] px-2.5 py-1 text-xs font-semibold text-[#2d4e35]">
-                    <Sparkles size={13} />
-                    <span>{isBangla ? `উৎস: ${origin}` : `Origin: ${origin}`}</span>
+          <div className="grid items-start gap-6 lg:grid-cols-12">
+            {/* ============ LEFT MAIN COLUMN (7 Cols): Unified Dossier ============ */}
+            <div className="divide-y divide-[#efe8da] overflow-hidden rounded-3xl border border-[#e9e0cf] bg-white shadow-[0_12px_36px_rgba(24,52,30,0.04)] lg:col-span-7">
+              {/* Block 1: Key Benefits */}
+              {benefitsList.length > 0 && (
+                <div className="p-5 sm:p-7">
+                  <div className="mb-4 flex items-center gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#eaf3e4] text-[#1e4326]">
+                      <Sparkles size={18} />
+                    </span>
+                    <div>
+                      <h3 className="font-playfair text-lg font-bold text-[#162d1b]">
+                        {isBangla ? "প্রধান উপকারিতা" : "Key Skincare Benefits"}
+                      </h3>
+                      <p className="text-xs text-[#667062]">
+                        {isBangla
+                          ? "নিয়মিত ব্যবহারে ত্বকের যত্নে কার্যকর ভূমিকা"
+                          : "How this botanical formula supports your skin"}
+                      </p>
+                    </div>
                   </div>
-                )}
-              </div>
-            </div>
 
-            {/* ============ Card 2: Key Benefits (প্রধান উপকারিতা) ============ */}
-            {benefitsList.length > 0 && (
-              <div className="flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md">
-                <div className="flex items-center gap-2.5 border-b border-[#f2ece1] pb-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf4eb] text-[#2d4e35]">
-                    <Sparkles size={18} />
+                  <ul className="space-y-3">
+                    {benefitsList.map((benefit, index) => {
+                      const colonIdx = benefit.indexOf(":");
+                      const hasTitle = colonIdx > 0 && colonIdx < 48;
+                      const benefitTitle = hasTitle
+                        ? benefit.slice(0, colonIdx).trim()
+                        : "";
+                      const benefitBody = hasTitle
+                        ? benefit.slice(colonIdx + 1).trim()
+                        : benefit;
+
+                      return (
+                        <li
+                          key={`${benefit}-${index}`}
+                          className="flex items-start gap-3 rounded-2xl bg-[#faf8f3] px-4 py-3 text-xs leading-relaxed text-[#3e4b3e] sm:text-sm"
+                        >
+                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#1e3f25] text-white">
+                            <Check size={11} strokeWidth={2.5} />
+                          </span>
+                          <span>
+                            {hasTitle && (
+                              <strong className="font-semibold text-[#162d1b]">
+                                {benefitTitle}:{" "}
+                              </strong>
+                            )}
+                            {benefitBody}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+
+              {/* ============Block 2: Natural Ingredients =============*/}
+              <div className="p-5 sm:p-7">
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#eaf3e4] text-[#1e4326]">
+                    <Droplets size={18} />
                   </span>
                   <div>
-                    <h3 className="text-sm font-bold text-[#1b2f1f]">
-                      {isBangla ? "প্রধান উপকারিতা" : "Key Benefits"}
+                    <h3 className="font-playfair text-lg font-bold text-[#162d1b]">
+                      {isBangla ? "প্রাকৃতিক উপাদানসমূহ" : "Key Ingredients"}
                     </h3>
-                    <p className="text-[11px] text-slate-500">
-                      {isBangla ? "নিয়মিত ব্যবহারের ফলাফল" : "Visible skincare results"}
+                    <p className="text-xs text-[#667062]">
+                      {isBangla
+                        ? "খাঁটি ভেষজ ও কার্যকর উপাদানের সমন্বয়"
+                        : "Authentic botanical & active skincare elements"}
                     </p>
                   </div>
                 </div>
 
-                <div className="mt-3.5 flex-1">
-                  <ul className="space-y-2 text-xs leading-relaxed text-[#2d4530] sm:text-[13px]">
-                    {benefitsList.map((benefit, index) => (
-                      <li
-                        key={`${benefit}-${index}`}
-                        className="flex items-start gap-2"
-                      >
-                        <Check size={14} className="mt-0.5 shrink-0 text-[#3d6e42]" />
-                        <span>{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-
-            {/* ============ Card 3: Ingredients ============ */}
-            <div className="flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md">
-              <div className="flex items-center gap-2.5 border-b border-[#f2ece1] pb-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf4eb] text-[#2d4e35]">
-                  <Droplets size={18} />
-                </span>
-                <div>
-                  <h3 className="text-sm font-bold text-[#1b2f1f]">
-                    {isBangla ? "উপাদানসমূহ" : "Natural Ingredients"}
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
-                    {isBangla ? "সম্পূর্ণ রাসায়নিকমুক্ত" : "100% Pure & Active Elements"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-3.5 flex-1">
                 {ingredientsList.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {ingredientsList.map((item, idx) => (
                       <span
                         key={`${item}-${idx}`}
-                        className="inline-flex items-center gap-1.5 rounded-xl border border-[#d9e6d4] bg-[#f8fbf7] px-3 py-1.5 text-xs font-medium text-[#2d4e35]"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-[#dce6d5] bg-[#f4f8f1] px-3.5 py-1.5 text-xs font-semibold text-[#1e4326]"
                       >
-                        <Leaf size={11} className="text-[#55713e]" />
+                        <Leaf size={12} className="text-[#4a7841]" />
                         <span>{item}</span>
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#667062] sm:text-sm">
                     {isBangla
                       ? "প্রাকৃতিক ভেষজ উপাদানসমূহ যুক্ত।"
-                      : "Handpicked hill herbs and natural ingredients."}
+                      : "Handpicked hill herbs and authentic natural ingredients."}
                   </p>
                 )}
               </div>
-            </div>
 
-            {/* ============ Card 4: How to Use ============ */}
-            <div className="flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md">
-              <div className="flex items-center gap-2.5 border-b border-[#f2ece1] pb-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf4eb] text-[#2d4e35]">
-                  <Clock size={18} />
-                </span>
-                <div>
-                  <h3 className="text-sm font-bold text-[#1b2f1f]">
-                    {isBangla ? "ব্যবহারের সঠিক নিয়ম" : "How to Use"}
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
-                    {isBangla ? "সেরা ফলাফলের জন্য নির্দেশনা" : "Step-by-step application guide"}
-                  </p>
+              {/*============= Block 3: How to Use (Daily Ritual) =============*/}
+              <div className="p-5 sm:p-7">
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#eaf3e4] text-[#1e4326]">
+                    <Clock size={18} />
+                  </span>
+                  <div>
+                    <h3 className="font-playfair text-lg font-bold text-[#162d1b]">
+                      {isBangla ? "ব্যবহারের সঠিক নিয়ম" : "How to Use"}
+                    </h3>
+                    <p className="text-xs text-[#667062]">
+                      {isBangla
+                        ? "সেরা ফলাফলের জন্য ধাপে ধাপে নির্দেশনা"
+                        : "Step-by-step daily skincare ritual"}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="mt-3.5 flex-1 text-xs leading-relaxed text-[#415143] sm:text-[13px]">
                 {usageList.length > 0 ? (
-                  <ul className="space-y-2">
+                  <ol className="space-y-3.5">
                     {usageList.map((step, idx) => (
-                      <li key={`${step}-${idx}`} className="flex items-start gap-2">
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#2d4e35] text-[10px] font-bold text-white">
-                          {idx + 1}
+                      <li
+                        key={`${step}-${idx}`}
+                        className="flex items-start gap-3.5 text-xs leading-relaxed text-[#3e4b3e] sm:text-sm"
+                      >
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#c49a4c]/40 bg-[#faf5e8] font-mono text-xs font-bold text-[#8a6121]">
+                          {String(idx + 1).padStart(2, "0")}
                         </span>
-                        <span>{step}</span>
+                        <span className="pt-0.5">{step}</span>
                       </li>
                     ))}
-                  </ul>
+                  </ol>
                 ) : (
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#667062] sm:text-sm">
                     {isBangla
-                      ? "প্রতিদিন পরিমিত পরিমাণে ত্বকে হালকা ম্যাসাজ করে ব্যবহার করুন।"
-                      : "Apply gently on clean skin as needed."}
+                      ? "প্রতিদিন পরিমিত পরিমাণে পরিষ্কার ত্বকে হালকাভাবে ব্যবহার করুন।"
+                      : "Apply gently on clean skin as part of your daily routine."}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* ============ Card 5: Product Specifications Table ============ */}
-            <div className={`flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md ${benefitsList.length > 0 ? "" : "md:col-span-2 lg:col-span-2"}`}>
-              <div className="flex items-center gap-2.5 border-b border-[#f2ece1] pb-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf4eb] text-[#2d4e35]">
-                  <Sparkles size={18} />
-                </span>
-                <div>
-                  <h3 className="text-sm font-bold text-[#1b2f1f]">
-                    {isBangla ? "পণ্যের বিবরণ ও বৈশিষ্ট্য" : "Product Specifications"}
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
-                    {isBangla ? "ক্যাটাগরি, সাইজ ও অন্যান্য তথ্য" : "Essential specifications"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-3.5 grid gap-2.5 sm:grid-cols-2 text-xs">
-                {categoryName && (
-                  <div className="flex items-center justify-between rounded-xl bg-[#f9f7f2] px-3.5 py-2">
-                    <span className="font-medium text-slate-500">{isBangla ? "ক্যাটাগরি" : "Category"}</span>
-                    <span className="font-bold text-[#1f3322]">{categoryName}</span>
-                  </div>
-                )}
-                {subcategoryName && (
-                  <div className="flex items-center justify-between rounded-xl bg-[#f9f7f2] px-3.5 py-2">
-                    <span className="font-medium text-slate-500">{isBangla ? "সাব-ক্যাটাগরি" : "Subcategory"}</span>
-                    <span className="font-bold text-[#1f3322]">{subcategoryName}</span>
-                  </div>
-                )}
-                {origin && (
-                  <div className="flex items-center justify-between rounded-xl bg-[#f9f7f2] px-3.5 py-2">
-                    <span className="font-medium text-slate-500">{isBangla ? "উৎপত্তিস্থল" : "Origin"}</span>
-                    <span className="font-bold text-[#1f3322]">{origin}</span>
-                  </div>
-                )}
-                {unit && (
-                  <div className="flex items-center justify-between rounded-xl bg-[#f9f7f2] px-3.5 py-2">
-                    <span className="font-medium text-slate-500">{isBangla ? "নেট পরিমাণ / সাইজ" : "Net Weight / Volume"}</span>
-                    <span className="font-bold text-[#1f3322]">{unit}</span>
-                  </div>
-                )}
-                <div className="flex items-center justify-between rounded-xl bg-[#f9f7f2] px-3.5 py-2">
-                  <span className="font-medium text-slate-500">{isBangla ? "ত্বকের ধরন" : "Skin Suitability"}</span>
-                  <span className="font-bold text-[#2d4e35]">{isBangla ? "সব ধরনের ত্বকের জন্য উপযোগী" : "Suitable for All Skin Types"}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl bg-[#f9f7f2] px-3.5 py-2">
-                  <span className="font-medium text-slate-500">{isBangla ? "স্টক স্ট্যাটাস" : "Stock Status"}</span>
-                  <span className="font-bold text-[#2d4e35]">
-                    {stockCount > 0 ? (isBangla ? "রেডি স্টক" : "Ready in Stock") : (isBangla ? "স্টক শেষ" : "Out of Stock")}
+            {/* ============ RIGHT SUMMARY COLUMN (5 Cols): Specs + Delivery ============ */}
+            <div className="space-y-5 lg:sticky lg:top-36 lg:col-span-5">
+              {/*================= Card A: Clean Key-Value Specifications Table ===============*/}
+              <div className="overflow-hidden rounded-3xl border border-[#e9e0cf] bg-white p-5 shadow-[0_12px_36px_rgba(24,52,30,0.04)] sm:p-6">
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#f5efe0] text-[#9b6c24]">
+                    <PackageCheck size={18} />
                   </span>
+                  <div>
+                    <h3 className="font-playfair text-lg font-bold text-[#162d1b]">
+                      {isBangla ? "পণ্যের বৈশিষ্ট্য" : "Product Details"}
+                    </h3>
+                    <p className="text-xs text-[#667062]">
+                      {isBangla
+                        ? "ক্যাটাগরি, পরিমাণ ও উৎপত্তিস্থল"
+                        : "Specifications & origin details"}
+                    </p>
+                  </div>
                 </div>
+
+                <dl className="divide-y divide-[#f0e9db] text-xs sm:text-sm">
+                  {categoryName && (
+                    <div className="flex items-center justify-between gap-4 py-3">
+                      <dt className="font-medium text-[#6b7568]">
+                        {isBangla ? "ক্যাটাগরি" : "Category"}
+                      </dt>
+                      <dd className="text-right font-semibold text-[#18311d]">
+                        {categoryName}
+                      </dd>
+                    </div>
+                  )}
+                  {subcategoryName && (
+                    <div className="flex items-center justify-between gap-4 py-3">
+                      <dt className="font-medium text-[#6b7568]">
+                        {isBangla ? "সাব-ক্যাটাগরি" : "Subcategory"}
+                      </dt>
+                      <dd className="text-right font-semibold text-[#18311d]">
+                        {subcategoryName}
+                      </dd>
+                    </div>
+                  )}
+                  {origin && (
+                    <div className="flex items-center justify-between gap-4 py-3">
+                      <dt className="font-medium text-[#6b7568]">
+                        {isBangla ? "উৎপত্তিস্থল" : "Origin"}
+                      </dt>
+                      <dd className="text-right font-semibold text-[#18311d]">
+                        {origin}
+                      </dd>
+                    </div>
+                  )}
+                  {unit && (
+                    <div className="flex items-center justify-between gap-4 py-3">
+                      <dt className="font-medium text-[#6b7568]">
+                        {isBangla ? "নেট পরিমাণ" : "Net Weight / Size"}
+                      </dt>
+                      <dd className="text-right font-semibold text-[#18311d]">
+                        {unit}
+                      </dd>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between gap-4 py-3">
+                    <dt className="font-medium text-[#6b7568]">
+                      {isBangla ? "ত্বকের ধরন" : "Skin Type"}
+                    </dt>
+                    <dd className="text-right font-semibold text-[#1e4326]">
+                      {isBangla ? "সব ধরনের ত্বকের জন্য" : "All Skin Types"}
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 py-3">
+                    <dt className="font-medium text-[#6b7568]">
+                      {isBangla ? "স্টক অবস্থা" : "Availability"}
+                    </dt>
+                    <dd
+                      className={`text-right font-semibold ${stockCount > 0 ? "text-[#1e4326]" : "text-red-600"
+                        }`}
+                    >
+                      {stockCount > 0
+                        ? isBangla
+                          ? "রেডি স্টক"
+                          : "Ready in Stock"
+                        : isBangla
+                          ? "স্টক শেষ"
+                          : "Out of Stock"}
+                    </dd>
+                  </div>
+                </dl>
+
+                {tags.length > 0 && (
+                  <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-[#f0e9db] pt-4">
+                    {tags.slice(0, 6).map((t) => (
+                      <span
+                        key={t}
+                        className="rounded-full bg-[#f5f3ec] px-2.5 py-1 text-[10px] font-medium text-[#5a6657]"
+                      >
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {tags.length > 0 && (
-                <div className="mt-3.5 flex flex-wrap items-center gap-1.5 border-t border-[#f2ece1] pt-3">
-                  <span className="text-[11px] font-bold text-slate-400">{isBangla ? "ট্যাগসমূহ:" : "Tags:"}</span>
-                  {tags.map((t) => (
-                    <span key={t} className="rounded-md bg-[#edf4eb] px-2 py-0.5 text-[10px] font-medium text-[#355227]">
-                      #{t}
+              {/*===============Card B: Delivery & Return Assurance ================*/}
+              <div className="rounded-3xl border border-[#dce6d5] bg-[#f4f8f1] p-5 sm:p-6">
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#1e3f25] text-white">
+                    <RotateCcw size={17} />
+                  </span>
+                  <div>
+                    <h3 className="font-playfair text-lg font-bold text-[#162d1b]">
+                      {isBangla ? "ডেলিভারি ও রিটার্ন" : "Shipping & Returns"}
+                    </h3>
+                    <p className="text-xs text-[#556353]">
+                      {isBangla
+                        ? "নিরাপদ প্যাকেজিং ও নিশ্চিন্ত কেনাকাটা"
+                        : "Safe packaging & hassle-free support"}
+                    </p>
+                  </div>
+                </div>
+
+                <ul className="space-y-2.5 text-xs leading-relaxed text-[#354635] sm:text-[13px]">
+                  <li className="flex items-start gap-2.5">
+                    <Truck size={15} className="mt-0.5 shrink-0 text-[#1e4326]" />
+                    <span>
+                      {isBangla
+                        ? "সারাদেশের ৬৪ জেলায় দ্রুত হোম ডেলিভারি (২–৫ কর্মদিবস)।"
+                        : "Fast nationwide delivery across all 64 districts (2–5 business days)."}
                     </span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* ============ Card 5: Shipping, Cash on Delivery & Returns ============ */}
-            <div className="flex flex-col rounded-2xl border border-[#ede7dc] bg-white p-5 shadow-xs transition hover:border-[#ccd9c2] hover:shadow-md">
-              <div className="flex items-center gap-2.5 border-b border-[#f2ece1] pb-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf4eb] text-[#2d4e35]">
-                  <RotateCcw size={18} />
-                </span>
-                <div>
-                  <h3 className="text-sm font-bold text-[#1b2f1f]">
-                    {isBangla ? "শিপিং ও রিটার্ন পলিসি" : "Shipping & Returns"}
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
-                    {isBangla ? "নিরাপদ প্যাকেজিং ও সহজ রিটার্ন" : "Easy 7-day return policy"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-3.5 space-y-2.5 text-xs text-[#415143]">
-                <div className="flex items-start gap-2">
-                  <Check size={14} className="mt-0.5 shrink-0 text-[#2d4e35]" />
-                  <span>
-                    {isBangla
-                      ? "সারাদেশে বিশ্বস্ত কুরিয়ারে দ্রুত ডেলিভারি (২–৫ কর্মদিবস)।"
-                      : "Fast delivery nationwide via trusted couriers (2–5 business days)."}
-                  </span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Check size={14} className="mt-0.5 shrink-0 text-[#2d4e35]" />
-                  <span>
-                    {isBangla
-                      ? "পণ্য হাতে পেয়ে মূল্য পরিশোধ (ক্যাশ অন ডেলিভারি) সুবিধা।"
-                      : "Cash on delivery available all across Bangladesh."}
-                  </span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <Check size={14} className="mt-0.5 shrink-0 text-[#2d4e35]" />
-                  <span>
-                    {isBangla
-                      ? "পণ্য প্রাপ্তির ৭ দিনের মধ্যে সহজ রিটার্ন ও এক্সচেঞ্জ সাপোর্ট।"
-                      : "7 days easy return & replacement for defective or wrong items."}
-                  </span>
-                </div>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <PackageCheck
+                      size={15}
+                      className="mt-0.5 shrink-0 text-[#1e4326]"
+                    />
+                    <span>
+                      {isBangla
+                        ? "পণ্য হাতে পেয়ে যাচাই করে মূল্য পরিশোধের (Cash on Delivery) সুবিধা।"
+                        : "Cash on delivery available nationwide — pay when you receive."}
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <ShieldCheck
+                      size={15}
+                      className="mt-0.5 shrink-0 text-[#1e4326]"
+                    />
+                    <span>
+                      {isBangla
+                        ? "ক্ষতিগ্রস্ত বা ভুল পণ্যের ক্ষেত্রে ৭ দিনের মধ্যে সহজ রিটার্ন ও এক্সচেঞ্জ।"
+                        : "7-day easy return & replacement for any damaged or wrong item."}
+                    </span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -923,17 +969,26 @@ const ProductDetailsPage = () => {
         {/* ============ RELATED PRODUCTS ============ */}
         {relatedProducts.length > 0 && (
           <section className="mt-14">
-            <div className="mb-6 text-center">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-[#55713e]/20 bg-[#55713e]/10 px-3.5 py-1 text-xs font-semibold text-[#3d562a]">
-                <Sparkles size={13} className="text-[#55713e]" />
-                <span>{isBangla ? "আপনার পছন্দের হতে পারে" : "You May Also Like"}</span>
+            <div className="mb-7 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-end">
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#24452c]/15 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#24452c] shadow-2xs">
+                  <Sparkles size={11} className="text-[#b8893b]" />
+                  {isBangla ? "আপনার পছন্দের হতে পারে" : "You May Also Like"}
+                </span>
+                <h2 className="mt-2 font-playfair text-2xl font-bold tracking-tight text-[#162d1b] sm:text-3xl">
+                  {isBangla ? "সম্পর্কিত অন্যান্য পণ্য" : "Related Hill Skincare"}
+                </h2>
               </div>
-              <h2 className="mt-2 font-playfair text-2xl font-bold tracking-tight text-[#162a1a] sm:text-3xl">
-                {isBangla ? "সম্পর্কিত অন্যান্য পণ্য" : "Related Hill Skincare"}
-              </h2>
+              <Link
+                href="/products"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#1e3f25] hover:underline"
+              >
+                <span>{isBangla ? "সব পণ্য দেখুন" : "View All Products"}</span>
+                <ChevronRight size={14} />
+              </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
               {relatedProducts.map((item) => {
                 const itemName = localized(item.name, language);
                 const itemUnit = localized(item.unit, language);
@@ -951,7 +1006,7 @@ const ProductDetailsPage = () => {
                 return (
                   <article
                     key={item._id}
-                    className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[#ede7dc] bg-white p-2.5 shadow-[0_4px_16px_rgba(40,54,24,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#ccd9c2] hover:shadow-[0_12px_28px_rgba(45,78,53,0.12)] sm:p-3"
+                    className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[#ebe3d3] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#cad6c1] hover:shadow-[0_18px_38px_rgba(24,52,30,0.09)]"
                   >
                     <Link
                       href={`/products/${item._id}`}
@@ -960,14 +1015,14 @@ const ProductDetailsPage = () => {
                     />
 
                     {/* ============ Image Stage ============ */}
-                    <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gradient-to-b from-[#f9f7f2] via-[#f4efe5] to-[#ece5d8]">
+                    <div className="relative aspect-square w-full overflow-hidden bg-[#f7f3ea]">
                       {item.images?.[0] ? (
                         <Image
                           src={item.images[0]}
                           alt={itemName || "Product"}
                           fill
-                          sizes="(max-width: 640px) 45vw, 25vw"
-                          className="object-contain p-2 transition-transform duration-500 ease-out group-hover:scale-108 sm:p-3"
+                          sizes="(max-width: 640px) 48vw, 25vw"
+                          className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                         />
                       ) : (
                         <div className="flex h-full items-center justify-center text-xs text-dark/50">
@@ -975,15 +1030,15 @@ const ProductDetailsPage = () => {
                         </div>
                       )}
 
-                      {/* ============ Top Badges ============ */}
-                      <div className="absolute left-2 top-2 z-[2] flex flex-col items-start gap-1">
+                      {/* ============ Top Badge ============ */}
+                      <div className="absolute left-2.5 top-2.5 z-[2]">
                         {itemDiscount > 0 ? (
-                          <span className="rounded-full bg-[#a33d30] px-2 py-0.5 text-[9px] font-bold text-white shadow-sm sm:text-[10px]">
+                          <span className="rounded-full bg-[#a84232] px-2.5 py-1 text-[10px] font-bold text-white shadow-xs">
                             -{itemDiscount}%
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-[#2d4e35]/90 px-2 py-0.5 text-[9px] font-semibold text-white shadow-sm">
-                            <Leaf size={10} className="text-[#a2cf95]" />
+                          <span className="inline-flex items-center gap-1 rounded-full border border-[#e3dac7] bg-[#fffdf8]/95 px-2.5 py-1 text-[10px] font-bold text-[#1e3f25] shadow-xs">
+                            <Leaf size={10} className="text-[#3f6b36]" />
                             {isBangla ? "আসল পণ্য" : "Authentic"}
                           </span>
                         )}
@@ -997,13 +1052,13 @@ const ProductDetailsPage = () => {
                           dispatch(toggleWishlist(item));
                         }}
                         aria-label="Wishlist"
-                        className={`absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full shadow-sm transition-all duration-200 hover:scale-110 sm:h-8 sm:w-8 ${itemIsFavorite
-                          ? "bg-red-50 text-red-600 border border-red-200"
-                          : "bg-white/90 text-dark/60 backdrop-blur-xs hover:bg-white hover:text-red-500"
+                        className={`absolute right-2.5 top-2.5 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/90 shadow-xs backdrop-blur-sm transition-all duration-200 hover:scale-105 ${itemIsFavorite
+                            ? "text-[#c0483e]"
+                            : "text-[#6d7669] hover:text-[#c0483e]"
                           }`}
                       >
                         <Heart
-                          size={14}
+                          size={15}
                           fill={itemIsFavorite ? "currentColor" : "none"}
                           strokeWidth={2}
                         />
@@ -1011,43 +1066,29 @@ const ProductDetailsPage = () => {
                     </div>
 
                     {/* ============ Content ============ */}
-                    <div className="flex flex-1 flex-col pt-2.5">
-                      <div className="flex items-center justify-between text-[11px]">
-                        <div className="flex items-center gap-1 text-amber-500">
-                          <div className="flex items-center">
-                            {Array.from({ length: 5 }, (_, index) => (
-                              <Star
-                                key={index}
-                                size={10}
-                                className="fill-amber-400 text-amber-400"
-                              />
-                            ))}
-                          </div>
-                          <span className="text-[10px] font-bold text-dark/70">5.0</span>
-                        </div>
-                        {itemUnit && (
-                          <span className="rounded-xs bg-[#f2efe8] px-1.5 py-0.5 text-[9px] font-medium text-[#5f6c5f]">
-                            {itemUnit}
-                          </span>
-                        )}
-                      </div>
+                    <div className="flex flex-1 flex-col p-3 sm:p-3.5">
+                      {itemUnit && (
+                        <p className="truncate text-[10px] font-semibold uppercase tracking-[0.08em] text-[#7a8675]">
+                          {itemUnit}
+                        </p>
+                      )}
 
-                      <h3 className="mt-1.5 line-clamp-2 min-h-[2.2rem] text-xs font-semibold leading-tight text-[#1b2b1d] transition-colors group-hover:text-[#2d4e35] sm:min-h-[2.4rem] sm:text-[13px]">
+                      <h3 className="mt-1 line-clamp-2 min-h-[2.4rem] text-[13px] font-semibold leading-snug text-[#18311d] transition-colors group-hover:text-[#2a5432] sm:text-sm">
                         {itemName}
                       </h3>
 
-                      <div className="mt-1.5 flex items-baseline gap-1.5">
-                        <span className="text-sm font-bold text-[#274f2f] sm:text-base">
+                      <div className="mt-2 flex items-baseline gap-2">
+                        <span className="text-[15px] font-bold text-[#1e4326] sm:text-base">
                           {formatPrice(item.price)}
                         </span>
                         {itemOriginalPrice && (
-                          <span className="text-[11px] text-[#8c948c] line-through">
+                          <span className="text-xs text-[#8f958a] line-through">
                             {formatPrice(itemOriginalPrice)}
                           </span>
                         )}
                       </div>
 
-                      <div className="mt-3">
+                      <div className="mt-auto pt-3">
                         <button
                           type="button"
                           onClick={(e) => {
@@ -1055,9 +1096,9 @@ const ProductDetailsPage = () => {
                             addProductToCart(item, 1);
                           }}
                           disabled={item.stock <= 0}
-                          className={`relative z-[2] flex w-full items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold shadow-xs transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400 ${isItemInCart
-                            ? "bg-[#1f542c] text-white ring-1 ring-emerald-400/40 hover:bg-[#184623]"
-                            : "bg-[#2d4e35] text-white hover:bg-[#1f3825]"
+                          className={`relative z-[2] flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-full py-2.5 text-xs font-semibold transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-[#f5f5f5] disabled:text-[#9a9a9a] ${isItemInCart
+                              ? "bg-[#1e3f25] text-white shadow-xs hover:bg-[#142d1a]"
+                              : "border border-[#d5e1ce] bg-[#f3f7ef] text-[#1e4025] hover:border-[#1e3f25] hover:bg-[#1e3f25] hover:text-white"
                             }`}
                         >
                           {isItemInCart ? (
@@ -1065,8 +1106,8 @@ const ProductDetailsPage = () => {
                               <Check size={13} className="text-emerald-300" />
                               <span>
                                 {isBangla
-                                  ? `কার্টে যোগ হয়েছে (${itemCartEntry.cartQuantity})`
-                                  : `Added to Cart (${itemCartEntry.cartQuantity})`}
+                                  ? `কার্টে আছে (${itemCartEntry.cartQuantity})`
+                                  : `In Cart (${itemCartEntry.cartQuantity})`}
                               </span>
                             </>
                           ) : (
